@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState} from 'react'
+
 
 function App() {
+
+  const [backendData, setBackendData] = useState([{}]) //i dont really understand this but it sets the backend data
+
+  //this function fetches the api
+  useEffect(() => {
+    fetch("/api").then(
+      response => response.json() //storing the response as a json
+    ).then(
+      data => {
+        setBackendData(data)
+      }
+    )
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    //just testing out the fetched api to see if data moved to the front end
+    //areeb is really so cool
+   
+    <div>
+      {(typeof backendData.users === 'undefined') ? (
+        <p>loading.... Areeb is so cooooool</p>
+      ): (
+        backendData.users.map((user,i) => (
+          <p key={i}>{user}</p>
+        ))
+      )}
+      <p>also areeb is soooo coooool B) </p> 
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
