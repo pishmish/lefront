@@ -7,7 +7,7 @@ const Navbar = () => {
     <nav className="navbar">
       {/* Logo Section */}
       <div className="navbar-logo">
-        <a href="/">BagStore</a>
+        <a href="/">Zad à Dos</a>
       </div>
 
       {/* Center Navigation Links */}

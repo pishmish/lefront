@@ -14,7 +14,6 @@ const HomePage = () => {
 
       {/* Category Section */}
       <section className="category-section">
-        <h2>Shop by Category</h2>
         <CategorySection />
       </section>
 
