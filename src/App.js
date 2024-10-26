@@ -1,36 +1,24 @@
-import React, { useEffect, useState} from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar/Navbar';
+import HomePage from './pages/HomePage/HomePage';
+import ProductListingPage from './pages/ProductListingPage/ProductListingPage';
+import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
+import './App.css';
 
-
-function App() {
-
-  const [backendData, setBackendData] = useState([{}]) //i dont really understand this but it sets the backend data
-
-  //this function fetches the api
-  useEffect(() => {
-    fetch("/api").then(
-      response => response.json() //storing the response as a json
-    ).then(
-      data => {
-        setBackendData(data)
-      }
-    )
-  }, [])
-
+const App = () => {
   return (
-    //just testing out the fetched api to see if data moved to the front end
-    //areeb is really so cool
-   
-    <div>
-      {(typeof backendData.users === 'undefined') ? (
-        <p>loading.... Areeb is so cooooool</p>
-      ): (
-        backendData.users.map((user,i) => (
-          <p key={i}>{user}</p>
-        ))
-      )}
-      <p>also areeb is soooo coooool B) </p> 
-    </div>
-  )
-}
+    <Router>
+      <div className="app">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/category/:categoryName" element={<ProductListingPage />} />
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+};
 
-export default App
+export default App;

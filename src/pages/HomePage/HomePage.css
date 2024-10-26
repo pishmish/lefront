@@ -1,0 +1,83 @@
+/* HomePage.css */
+
+/* Main container for the home page */
+.home-page {
+    padding: 2rem 0;
+  }
+  
+  /* Category Section Styles */
+  .category-section {
+    margin: 3rem 0;
+    text-align: center;
+  }
+  
+  .category-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  /* Featured Products Section Styles */
+  .featured-products-section {
+    margin: 3rem 0;
+    text-align: center;
+  }
+  
+  .featured-products-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  /* Call-to-Action Section (e.g., Newsletter Signup) */
+  .cta-section {
+    background-color: #f4f4f4;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 3rem;
+  }
+  
+  .cta-section .cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .cta-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .cta-section p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #555;
+  }
+  
+  .newsletter-form {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .newsletter-form input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 60%;
+  }
+  
+  .newsletter-form .button {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .newsletter-form .button:hover {
+    background-color: #555;
+  }
+  

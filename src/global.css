@@ -1,0 +1,107 @@
+/* global.css - Consolidated global styles */
+
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Typography */
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #333;
+    background-color: #ffffff;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #222;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+  /* Utility Classes */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .margin-3rem {
+    margin: 3rem 0;
+  }
+  
+  .padding-2rem {
+    padding: 2rem;
+  }
+  
+  /* Button Styles */
+  .button {
+    display: inline-block;
+    padding: 0.8rem 1.2rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #555;
+  }
+  
+  /* Link Styles */
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s;
+  }
+  
+  a:hover {
+    color: #000;
+  }
+  
+  /* Flex Utility Classes */
+  .flex {
+    display: flex;
+  }
+  
+  .flex-center {
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .flex-space-between {
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Accessibility: Focus States */
+  button:focus, a:focus, input:focus {
+    outline: 3px solid #555;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 10px;
+    }
+  
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  
