@@ -7,7 +7,7 @@ Contains front-end part of the CS-308 project. In this project we are tasked wit
 
 * Musab Ahmed Khan
 
-* Guanghui Ma 1
+* Guanghui Ma
 
 * Muhammad Haris
 
