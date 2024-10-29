@@ -13,4 +13,4 @@ Contains front-end part of the CS-308 project. In this project we are tasked wit
 
 * Areeb Kamal
 
-* 
+* Cem Gorkem Baysal
