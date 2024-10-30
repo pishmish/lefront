@@ -1,6 +1,6 @@
 import React from 'react';
 import './HomePage.css';
-// test
+
 // Components
 import HeroBanner from '../../components/HeroBanner/HeroBanner';  // A HeroBanner component for the main banner
 import CategorySection from '../../components/CategorySection/CategorySection';  // Category section with links to different types of bags

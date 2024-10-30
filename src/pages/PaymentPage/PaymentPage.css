@@ -1,0 +1,134 @@
+/* PaymentPage.css */
+
+.payment-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f8;
+    padding: 2rem;
+    min-height: calc(100vh - 80px); /* Navbar yüksekliği çıkarıldı */
+  }
+  
+  .payment-container {
+    display: flex;
+    gap: 2rem;
+    max-width: 1000px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .payment-form-section {
+    flex: 1.5;
+    padding: 2rem;
+  }
+  
+  .payment-form-section h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .billing-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .submit-button {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+  }
+  
+  .submit-button:hover {
+    background-color: #45A049;
+  }
+  
+  .cart-summary-section {
+    flex: 1;
+    background-color: #f7f7f7;
+    padding: 2rem;
+    border-left: 1px solid #e0e0e0;
+    overflow-y: auto;
+  }
+  
+  .cart-summary-section h2 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .cart-items {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  
+  .cart-item-info {
+    flex-grow: 1;
+  }
+  
+  .cart-item-info h3 {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .cart-item-info p {
+    margin: 0.3rem 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .cart-total {
+    margin-top: 2rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #333;
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid #ddd;
+  }
+  

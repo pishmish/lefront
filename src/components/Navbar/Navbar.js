@@ -1,40 +1,57 @@
-import React from 'react';
-import './Navbar.css'; // Custom CSS file for styles
-import { FiSearch, FiUser, FiShoppingCart } from 'react-icons/fi'; // React Icons for User and Cart
+// Navbar.js
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css';
+import { FiSearch, FiUser, FiShoppingCart } from 'react-icons/fi';
+import CartSidebar from '../CartSidebar/CartSidebar';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleUserIconClick = () => {
+    navigate('/login');
+  };
+
+  const toggleCartSidebar = () => {
+    setIsCartOpen(!isCartOpen);
+  };
+
   return (
-    <nav className="navbar">
-      {/* Logo Section */}
-      <div className="navbar-logo">
-        <a href="/">Zad à Dos</a>
-      </div>
+    <>
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <Link to="/">Zad à Dos</Link>
+        </div>
 
-      {/* Center Navigation Links */}
-      <ul className="navbar-links">
-        <li><a href="/category/tote-bags">Tote Bags</a></li>
-        <li><a href="/category/backpacks">Backpacks</a></li>
-        <li><a href="/category/clutches">Clutches</a></li>
-        <li><a href="/category/shoulder-bags">Shoulder Bags</a></li>
-      </ul>
+        <ul className="navbar-links">
+          <li><Link to="/category/tote-bags">Tote Bags</Link></li>
+          <li><Link to="/category/backpacks">Backpacks</Link></li>
+          <li><Link to="/category/clutches">Clutches</Link></li>
+          <li><Link to="/category/shoulder-bags">Shoulder Bags</Link></li>
+        </ul>
 
-      {/* Right Side Icons and Search */}
-      <div className="navbar-icons">
-        {/* Search Bar */}
-        <div className="navbar-search">
-          <input type="text" placeholder="Search bags..." />
-          <button><FiSearch /></button>
+        <div className="navbar-icons">
+          <div className="navbar-search">
+            <input type="text" placeholder="Search bags..." />
+            <button><FiSearch /></button>
+          </div>
+
+          {/* User Icon Button */}
+          <div className="navbar-user" onClick={handleUserIconClick} role="button" tabIndex={0}>
+            <FiUser size={20} />
+          </div>
+
+          {/* Cart Icon Button */}
+          <div className="navbar-cart" onClick={toggleCartSidebar} role="button" tabIndex={0}>
+            <FiShoppingCart size={20} />
+          </div>
         </div>
-        
-        {/* User and Cart Icons */}
-        <div className="navbar-user">
-          <FiUser size={20} />
-        </div>
-        <div className="navbar-cart">
-          <FiShoppingCart size={20} />
-        </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Cart Sidebar */}
+      <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} />
+    </>
   );
 };
 

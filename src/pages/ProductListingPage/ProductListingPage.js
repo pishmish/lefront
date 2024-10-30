@@ -1,65 +1,62 @@
-import React, { useState } from 'react';
+// ProductListingPage.js
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import './ProductListingPage.css';
 
-// Components
-import ProductCard from '../../components/ProductCard/ProductCard'; // Component to display individual product cards
-import FilterSidebar from '../../components/FilterSidebar/FilterSidebar'; // Sidebar for filters
-import SortingDropdown from '../../components/SortingDropdown/SortingDropdown'; // Dropdown for sorting options
+import ProductCard from '../../components/ProductCard/ProductCard';
+import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
+import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
 
-// Mock data for now
 const mockProducts = [
   {
     id: 1,
     name: 'Elegant Tote Bag',
     price: 75,
     imageUrl: '/assets/images/tote-bag.jpg',
-    category: 'Tote Bags',
+    category: 'tote-bags',
   },
   {
     id: 2,
     name: 'Casual Backpack',
     price: 120,
     imageUrl: '/assets/images/backpack.jpg',
-    category: 'Backpacks',
+    category: 'backpacks',
   },
   {
     id: 3,
     name: 'Classic Clutch',
     price: 45,
     imageUrl: '/assets/images/clutch.jpg',
-    category: 'Clutches',
+    category: 'clutches',
   },
-  // Add more mock products as needed
 ];
 
 const ProductListingPage = () => {
-  const [products, setProducts] = useState(mockProducts);
+  const { categoryName } = useParams();
+  const [products, setProducts] = useState([]);
 
-  // Placeholder for filter and sorting logic
-  const handleFilterChange = (filters) => {
-    // Logic to filter products based on filters
-  };
-
-  const handleSortChange = (sortOption) => {
-    // Logic to sort products based on sort option
-  };
+  useEffect(() => {
+    const filteredProducts = mockProducts.filter(
+      (product) => product.category.toLowerCase() === categoryName.toLowerCase()
+    );
+    setProducts(filteredProducts);
+  }, [categoryName]);
 
   return (
     <div className="product-listing-page">
-      {/* Sidebar for Filters */}
       <aside className="filter-sidebar">
-        <FilterSidebar onFilterChange={handleFilterChange} />
+        <FilterSidebar onFilterChange={() => {}} />
       </aside>
 
-      {/* Main Content - Product Grid */}
       <div className="product-listing-content">
         <div className="sorting-bar">
-          <SortingDropdown onSortChange={handleSortChange} />
+          <SortingDropdown onSortChange={() => {}} />
         </div>
         <div className="product-grid">
           {products.map((product) => (
             <ProductCard
               key={product.id}
+              id={product.id} // Burada id prop'unu ekliyoruz
               name={product.name}
               price={product.price}
               imageUrl={product.imageUrl}
