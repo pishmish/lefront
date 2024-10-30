@@ -7,6 +7,7 @@ import ProductListingPage from './pages/ProductListingPage/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
+import AdminPage from './pages/AdminPage/AdminPage';
 import './App.css';
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/product/:productId" element={<ProductDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/payment" element={<PaymentPage />} /> {/* PaymentPage rotası */}
+          <Route path="/admin" element={<AdminPage />} /> {/* AdminPage rotası */}
         </Routes>
       </div>
     </Router>

@@ -1,0 +1,145 @@
+/* ProductManagement.css */
+
+/* Ana başlık */
+.product-management-container {
+    padding: 1.5rem;
+  }
+  
+  .product-management-container h3 {
+    font-size: 1.8rem;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Ürün Arama Barı */
+  .product-search-bar {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .product-search-bar:focus {
+    border-color: #4CAF50;
+  }
+  
+  /* Ürün kartı görünümü */
+  .product-management-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .product-management-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .product-management-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Ürün adı ve fiyat */
+  .product-management-item strong {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .product-price {
+    font-size: 1rem;
+    color: #777;
+    margin-top: 0.2rem;
+  }
+  
+  .product-discount {
+    font-size: 0.9rem;
+    color: #f44336;
+    font-weight: bold;
+  }
+  
+  /* Ürün açıklaması */
+  .product-management-item p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  /* İndirim Girişi */
+  .discount-input {
+    width: 50%;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .discount-input:focus {
+    border-color: #4CAF50;
+  }
+  
+  /* Ekle düğmesi */
+  .add-product-button {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    background-color: #4CAF50;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 1rem;
+  }
+  
+  .add-product-button:hover {
+    background-color: #45A049;
+  }
+  
+  /* Düzenle ve Sil düğmeleri */
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .edit-button {
+    background-color: #2196F3;
+    color: #ffffff;
+  }
+  
+  .edit-button:hover {
+    background-color: #1E88E5;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+    color: #ffffff;
+  }
+  
+  .delete-button:hover {
+    background-color: #e53935;
+  }
+  
