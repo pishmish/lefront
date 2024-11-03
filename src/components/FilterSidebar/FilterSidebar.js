@@ -3,10 +3,18 @@ import './FilterSidebar.css';
 
 const FilterSidebar = ({ onFilterChange }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [selectedPriceRange, setSelectedPriceRange] = useState('');
 
-  // Example category and price options (you can modify these)
-  const categories = ['Tote Bags', 'Backpacks', 'Clutches', 'Shoulder Bags', 'Crossbody Bags'];
+  // Category structure with main and subcategories
+  const categories = {
+    Handbags: ['Tote Bags', 'Crossbody Bags', 'Clutch Bags', 'Satchels', 'Shoulder Bags', 'Hobo Bags'],
+    Backpacks: ['Casual Backpacks', 'Laptop Backpacks', 'Hiking Backpacks', 'Travel Backpacks', 'Mini Backpacks'],
+    Luggage: ['Carry-On Bags', 'Checked Luggage', 'Duffel Bags', 'Garment Bags', 'Luggage Sets'],
+    'Travel Bags': ['Weekender Bags', 'Rolling Bags', 'Messenger Bags', 'Toiletry Bags'],
+    'Sports Bags': ['Gym Bags', 'Yoga Bags', 'Sports Duffle Bags', 'Cooler Bags'],
+  };
+
   const priceRanges = [
     { label: 'Under $50', value: 'under-50' },
     { label: '$50 - $100', value: '50-100' },
@@ -17,13 +25,20 @@ const FilterSidebar = ({ onFilterChange }) => {
   // Handle category selection
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    onFilterChange({ category, priceRange: selectedPriceRange });
+    setSelectedSubcategory('');
+    onFilterChange({ category, subcategory: '', priceRange: selectedPriceRange });
+  };
+
+  // Handle subcategory selection
+  const handleSubcategoryChange = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    onFilterChange({ category: selectedCategory, subcategory, priceRange: selectedPriceRange });
   };
 
   // Handle price range selection
   const handlePriceRangeChange = (priceRange) => {
     setSelectedPriceRange(priceRange);
-    onFilterChange({ category: selectedCategory, priceRange });
+    onFilterChange({ category: selectedCategory, subcategory: selectedSubcategory, priceRange });
   };
 
   return (
@@ -34,8 +49,8 @@ const FilterSidebar = ({ onFilterChange }) => {
       <div className="filter-section">
         <h3>Category</h3>
         <ul className="filter-list">
-          {categories.map((category) => (
-            <li key={category}>
+          {Object.keys(categories).map((category) => (
+            <li key={category} className="main-category">
               <label>
                 <input
                   type="radio"
@@ -46,6 +61,26 @@ const FilterSidebar = ({ onFilterChange }) => {
                 />
                 {category}
               </label>
+
+              {/* Subcategory Filter */}
+              {selectedCategory === category && (
+                <ul className="subcategory-list">
+                  {categories[category].map((subcategory) => (
+                    <li key={subcategory}>
+                      <label>
+                        <input
+                          type="radio"
+                          name="subcategory"
+                          value={subcategory}
+                          checked={selectedSubcategory === subcategory}
+                          onChange={() => handleSubcategoryChange(subcategory)}
+                        />
+                        {subcategory}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -73,11 +108,15 @@ const FilterSidebar = ({ onFilterChange }) => {
       </div>
 
       {/* Reset Filters Button */}
-      <button className="reset-filters-button" onClick={() => {
-        setSelectedCategory('');
-        setSelectedPriceRange('');
-        onFilterChange({ category: '', priceRange: '' });
-      }}>
+      <button
+        className="reset-filters-button"
+        onClick={() => {
+          setSelectedCategory('');
+          setSelectedSubcategory('');
+          setSelectedPriceRange('');
+          onFilterChange({ category: '', subcategory: '', priceRange: '' });
+        }}
+      >
         Reset Filters
       </button>
     </div>
