@@ -1,13 +1,14 @@
 // Navbar.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
 import './Navbar.css';
-import { FiSearch, FiUser, FiShoppingCart } from 'react-icons/fi';
 import CartSidebar from '../CartSidebar/CartSidebar';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState(null);
 
   const handleUserIconClick = () => {
     navigate('/login');
@@ -17,10 +18,65 @@ const Navbar = () => {
     setIsCartOpen(!isCartOpen);
   };
 
-  // Navigate to category with filter
-  const navigateWithFilter = (category, filter) => {
-    navigate(`/category/${category}`, { state: { filter } });
+  const handleCategoryHover = (category) => {
+    setHoveredCategory(category);
   };
+
+  const handleCategoryLeave = () => {
+    setHoveredCategory(null);
+  };
+
+  const categories = [
+    {
+      name: 'Handbags',
+      items: [
+        { name: 'Tote Bags', link: '/category/handbags/tote-bags', img: '/assets/images/tote-bags.jpg' },
+        { name: 'Crossbody Bags', link: '/category/handbags/crossbody-bags', img: '/assets/images/crossbody-bags.jpg' },
+        { name: 'Clutch Bags', link: '/category/handbags/clutch-bags', img: '/assets/images/clutch-bags.jpg' },
+        { name: 'Satchels', link: '/category/handbags/satchels', img: '/assets/images/satchels.jpg' },
+        { name: 'Shoulder Bags', link: '/category/handbags/shoulder-bags', img: '/assets/images/shoulder-bags.jpg' },
+        { name: 'Hobo Bags', link: '/category/handbags/hobo-bags', img: '/assets/images/hobo-bags.jpg' },
+      ],
+    },
+    {
+      name: 'Backpacks',
+      items: [
+        { name: 'Casual Backpacks', link: '/category/backpacks/casual-backpacks', img: '/assets/images/casual-backpacks.jpg' },
+        { name: 'Laptop Backpacks', link: '/category/backpacks/laptop-backpacks', img: '/assets/images/laptop-backpacks.jpg' },
+        { name: 'Hiking Backpacks', link: '/category/backpacks/hiking-backpacks', img: '/assets/images/hiking-backpacks.jpg' },
+        { name: 'Travel Backpacks', link: '/category/backpacks/travel-backpacks', img: '/assets/images/travel-backpacks.jpg' },
+        { name: 'Mini Backpacks', link: '/category/backpacks/mini-backpacks', img: '/assets/images/mini-backpacks.jpg' },
+      ],
+    },
+    {
+      name: 'Luggage',
+      items: [
+        { name: 'Carry-On Bags', link: '/category/luggage/carry-on-bags', img: '/assets/images/carry-on-bags.jpg' },
+        { name: 'Checked Luggage', link: '/category/luggage/checked-luggage', img: '/assets/images/checked-luggage.jpg' },
+        { name: 'Duffel Bags', link: '/category/luggage/duffel-bags', img: '/assets/images/duffel-bags.jpg' },
+        { name: 'Garment Bags', link: '/category/luggage/garment-bags', img: '/assets/images/garment-bags.jpg' },
+        { name: 'Luggage Sets', link: '/category/luggage/luggage-sets', img: '/assets/images/luggage-sets.jpg' },
+      ],
+    },
+    {
+      name: 'Travel Bags',
+      items: [
+        { name: 'Weekender Bags', link: '/category/travel-bags/weekender-bags', img: '/assets/images/weekender-bags.jpg' },
+        { name: 'Rolling Bags', link: '/category/travel-bags/rolling-bags', img: '/assets/images/rolling-bags.jpg' },
+        { name: 'Messenger Bags', link: '/category/travel-bags/messenger-bags', img: '/assets/images/messenger-bags.jpg' },
+        { name: 'Toiletry Bags', link: '/category/travel-bags/toiletry-bags', img: '/assets/images/toiletry-bags.jpg' },
+      ],
+    },
+    {
+      name: 'Sports Bags',
+      items: [
+        { name: 'Gym Bags', link: '/category/sports-bags/gym-bags', img: '/assets/images/gym-bags.jpg' },
+        { name: 'Yoga Bags', link: '/category/sports-bags/yoga-bags', img: '/assets/images/yoga-bags.jpg' },
+        { name: 'Sports Duffle Bags', link: '/category/sports-bags/sports-duffle-bags', img: '/assets/images/sports-duffle-bags.jpg' },
+        { name: 'Cooler Bags', link: '/category/sports-bags/cooler-bags', img: '/assets/images/cooler-bags.jpg' },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -30,76 +86,52 @@ const Navbar = () => {
         </div>
 
         <ul className="navbar-links">
-          <li>
-            <Link to="/category/handbags">Handbags</Link>
-            <ul className="dropdown">
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'tote-bags')}>Tote Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'crossbody-bags')}>Crossbody Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'clutch-bags')}>Clutch Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'satchels')}>Satchels</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'shoulder-bags')}>Shoulder Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('handbags', 'hobo-bags')}>Hobo Bags</li>
-            </ul>
-          </li>
-          <li>
-            <Link to="/category/backpacks">Backpacks</Link>
-            <ul className="dropdown">
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('backpacks', 'casual-backpacks')}>Casual Backpacks</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('backpacks', 'laptop-backpacks')}>Laptop Backpacks</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('backpacks', 'hiking-backpacks')}>Hiking Backpacks</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('backpacks', 'travel-backpacks')}>Travel Backpacks</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('backpacks', 'mini-backpacks')}>Mini Backpacks</li>
-            </ul>
-          </li>
-          <li>
-            <Link to="/category/luggage">Luggage</Link>
-            <ul className="dropdown">
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('luggage', 'carry-on-bags')}>Carry-On Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('luggage', 'checked-luggage')}>Checked Luggage</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('luggage', 'duffel-bags')}>Duffel Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('luggage', 'garment-bags')}>Garment Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('luggage', 'luggage-sets')}>Luggage Sets</li>
-            </ul>
-          </li>
-          <li>
-            <Link to="/category/travel-bags">Travel Bags</Link>
-            <ul className="dropdown">
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('travel-bags', 'weekender-bags')}>Weekender Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('travel-bags', 'rolling-bags')}>Rolling Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('travel-bags', 'messenger-bags')}>Messenger Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('travel-bags', 'toiletry-bags')}>Toiletry Bags</li>
-            </ul>
-          </li>
-          <li>
-            <Link to="/category/sports-bags">Sports Bags</Link>
-            <ul className="dropdown">
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('sports-bags', 'gym-bags')}>Gym Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('sports-bags', 'yoga-bags')}>Yoga Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('sports-bags', 'sports-duffle-bags')}>Sports Duffle Bags</li>
-              <li role="button" tabIndex="0" onClick={() => navigateWithFilter('sports-bags', 'cooler-bags')}>Cooler Bags</li>
-            </ul>
-          </li>
+          {categories.map((category) => (
+            <li
+              key={category.name}
+              onMouseEnter={() => handleCategoryHover(category.name)}
+              onMouseLeave={handleCategoryLeave}
+            >
+              <Link to={`/category/${category.name.toLowerCase()}`}>{category.name}</Link>
+              {hoveredCategory === category.name && (
+                <div className="dropdown-menu">
+                  <div className="category-grid">
+                    {category.items.map((item) => (
+                      <div
+                        key={item.name}
+                        className="category-item"
+                        onClick={() => navigate(item.link)}
+                      >
+                        <img src={item.img} alt={item.name} />
+                        <p>{item.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
         </ul>
 
         <div className="navbar-icons">
           <div className="navbar-search">
             <input type="text" placeholder="Search bags..." />
-            <button><FiSearch /></button>
+            <button>
+              <FiSearch />
+            </button>
           </div>
-
-          {/* User Icon Button */}
-          <div className="navbar-user" onClick={handleUserIconClick} role="button" tabIndex={0}>
+          <Link to="/wishlist">
+            <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />
+          </Link>
+          <div className="navbar-user" onClick={handleUserIconClick}>
             <FiUser size={20} />
           </div>
-
-          {/* Cart Icon Button */}
-          <div className="navbar-cart" onClick={toggleCartSidebar} role="button" tabIndex={0}>
+          <div className="navbar-cart" onClick={toggleCartSidebar}>
             <FiShoppingCart size={20} />
           </div>
         </div>
       </nav>
 
-      {/* Cart Sidebar */}
       <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} />
     </>
   );
