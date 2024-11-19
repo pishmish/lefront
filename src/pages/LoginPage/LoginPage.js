@@ -1,4 +1,3 @@
-// pages/LoginPage/LoginPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
@@ -10,8 +9,10 @@ const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (username === 'admin' && password === 'admin') {
-      navigate('/admin'); // Navigate to admin page on correct credentials
+    if (username === 'customer' && password === 'customer') {
+      navigate('/customer');
+    } else if (username === 'admin' && password === 'admin') {
+      navigate('/admin');
     } else {
       alert('Incorrect username or password');
     }

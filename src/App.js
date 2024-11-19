@@ -8,6 +8,7 @@ import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
 import AdminPage from './pages/AdminPage/AdminPage';
+import CustomerLoginPage from './pages/CustomerLoginPage/CustomerLoginPage';
 import './App.css';
 
 
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/payment" element={<PaymentPage />} /> {/* PaymentPage rotası */}
           <Route path="/admin" element={<AdminPage />} /> {/* AdminPage rotası */}
+          <Route path="/customer" element={<CustomerLoginPage />} />
         </Routes>
       </div>
     </Router>
