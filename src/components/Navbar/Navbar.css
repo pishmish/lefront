@@ -1,4 +1,4 @@
-/* Genel Navbar Stilleri */
+/* General Navbar Styles */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -31,33 +31,36 @@
   text-decoration: none;
   color: #555;
   font-size: 1rem;
-  transition: color 0.3s ease, font-weight 0.3s ease; /* Animasyon ekledik */
+  transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
 .navbar-links > li a:hover {
-  color: #000; /* Renk değişimi */
-  font-weight: bold; /* Koyulaşma efekti */
+  color: #000;
+  font-weight: bold;
 }
 
-/* Dropdown Genel Yapısı */
+/* Dropdown General Styles */
 .dropdown-menu {
-  position: fixed; /* Her zaman ekranın sabit bir yerinde açılır */
-  top: 6%; /* Ekranın üst kısmından %6 boşluk bırak */
-  left: 45%; /* Ekranın sol kenarından %50 boşluk bırak */
-  transform: translateX(-50%); /* Ortalamak için translateX kullanılır */
+  position: absolute;
+  top: 40px; /* Adjust as per the navbar height */
+  left: 0;
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 1000;
-  width: 800px; /* Dropdown menü genişliği */
-  display: flex;
-  flex-wrap: wrap; /* İçerikleri sarar */
+  width: 250px; /* Adjust width based on content */
+  display: none;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
-/* Alt Kategoriler için Yapı */
+.navbar-links > li:hover .dropdown-menu {
+  display: flex;
+}
+
+/* Category Grid */
 .category-grid {
   display: flex;
   flex-wrap: wrap;
@@ -66,7 +69,7 @@
 }
 
 .category-item {
-  width: 180px;
+  width: 100%;
   text-align: center;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -84,25 +87,20 @@
   font-size: 1rem;
   color: #555;
   font-weight: normal;
-  transition: color 0.3s ease, font-weight 0.3s ease; /* Hover animasyonu */
+  transition: color 0.3s ease, font-weight 0.3s ease;
 }
 
 .category-item:hover p {
-  font-weight: bold; /* Yazı koyulaşır */
-  color: #007bff; /* Renk değişimi */
+  font-weight: bold;
+  color: #007bff;
 }
 
 .category-item:hover {
-  transform: scale(1.05); /* Görsel büyüme efekti */
+  transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* Dropdown Menü Hover ile Görünürlük */
-.navbar-links > li:hover .dropdown-menu {
-  display: flex; /* Hover ile dropdown görünür */
-}
-
-/* Navbar İkonları */
+/* Navbar Icons */
 .navbar-icons {
   display: flex;
   align-items: center;
@@ -129,17 +127,48 @@
   cursor: pointer;
 }
 
-.navbar-user, .navbar-cart, .navbar-wishlist {
+.navbar-user,
+.navbar-cart,
+.navbar-wishlist {
   cursor: pointer;
   color: #555;
   transition: color 0.3s;
 }
 
-.navbar-user:hover, .navbar-cart:hover, .navbar-wishlist:hover {
+.navbar-user:hover,
+.navbar-cart:hover,
+.navbar-wishlist:hover {
   color: #000;
 }
 
-/* Klavye Erişilebilirliği */
-.dropdown li:focus {
-  outline: 2px solid #000;
+/* Dropdown for Login/Sign-Up */
+.user-dropdown {
+  position: absolute;
+  top: 40px; /* Adjust for navbar height */
+  right: 0;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  width: 150px;
+}
+
+.user-dropdown button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  color: #555;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.user-dropdown button:hover {
+  background-color: #f0f0f0;
+  color: #000;
 }

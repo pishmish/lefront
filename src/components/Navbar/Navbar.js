@@ -9,10 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-
-  const handleUserIconClick = () => {
-    navigate('/login');
-  };
+  const [showUserDropdown, setShowUserDropdown] = useState(false); // For Login/Sign-Up hover
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
@@ -24,6 +21,10 @@ const Navbar = () => {
 
   const handleCategoryLeave = () => {
     setHoveredCategory(null);
+  };
+
+  const toggleUserDropdown = () => {
+    setShowUserDropdown((prev) => !prev);
   };
 
   const categories = [
@@ -123,8 +124,18 @@ const Navbar = () => {
           <Link to="/wishlist">
             <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />
           </Link>
-          <div className="navbar-user" onClick={handleUserIconClick}>
+          <div
+            className="navbar-user"
+            onMouseEnter={() => setShowUserDropdown(true)}
+            onMouseLeave={() => setShowUserDropdown(false)}
+          >
             <FiUser size={20} />
+            {showUserDropdown && (
+              <div className="user-dropdown">
+                <button onClick={() => navigate('/login')}>Login</button>
+                <button onClick={() => navigate('/signup')}>Sign Up</button>
+              </div>
+            )}
           </div>
           <div className="navbar-cart" onClick={toggleCartSidebar}>
             <FiShoppingCart size={20} />
