@@ -1,5 +1,5 @@
 // Navbar.js
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
 import './Navbar.css';
@@ -10,17 +10,21 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false); // For Login/Sign-Up hover
+  const dropdownTimeout = useRef(null); // Ref to handle hover delay
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
   };
 
   const handleCategoryHover = (category) => {
+    clearTimeout(dropdownTimeout.current); // Clear timeout when hovering
     setHoveredCategory(category);
   };
 
   const handleCategoryLeave = () => {
-    setHoveredCategory(null);
+    dropdownTimeout.current = setTimeout(() => {
+      setHoveredCategory(null);
+    }, 300); // Delay of 300ms before hiding
   };
 
   const toggleUserDropdown = () => {
@@ -96,7 +100,11 @@ const Navbar = () => {
               <Link to={`/category/${category.name.toLowerCase()}`}>{category.name}</Link>
               {hoveredCategory === category.name && (
                 <div className="dropdown-menu">
-                  <div className="category-grid">
+                  <div
+                    className="category-grid"
+                    onMouseEnter={() => clearTimeout(dropdownTimeout.current)} // Prevent hiding
+                    onMouseLeave={handleCategoryLeave} // Hide on leave
+                  >
                     {category.items.map((item) => (
                       <div
                         key={item.name}
