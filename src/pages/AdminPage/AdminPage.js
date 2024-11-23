@@ -3,10 +3,11 @@ import React, { useState } from 'react';
 import SalesChart from '../../components/SalesChart/SalesChart';
 import OrderList from '../../components/OrderList/OrderList';
 import ProductManagement from '../../components/ProductManagement/ProductManagement';
+import ReviewApproval from '../../components/ReviewApproval/ReviewApproval'; // Yeni component
 import './AdminPage.css';
 
 const AdminPage = () => {
-  const [activeTab, setActiveTab] = useState('sales'); // Default olarak "Sales" tab'ını seçili yapıyoruz
+  const [activeTab, setActiveTab] = useState('sales');
 
   const renderContent = () => {
     if (activeTab === 'sales') {
@@ -26,30 +27,39 @@ const AdminPage = () => {
           <ProductManagement />
         </section>
       );
+    } else if (activeTab === 'reviews') {
+      return (
+        <section className="admin-section">
+          <h2>Review Approval</h2>
+          <ReviewApproval />
+        </section>
+      );
     }
   };
 
   return (
     <div className="admin-page">
       <h1>Admin Dashboard</h1>
-
-      {/* Tab Menü */}
       <div className="admin-tabs">
-        <button 
+        <button
           className={`tab-button ${activeTab === 'sales' ? 'active' : ''}`}
           onClick={() => setActiveTab('sales')}
         >
           Sales
         </button>
-        <button 
+        <button
           className={`tab-button ${activeTab === 'product' ? 'active' : ''}`}
           onClick={() => setActiveTab('product')}
         >
           Product
         </button>
+        <button
+          className={`tab-button ${activeTab === 'reviews' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          Reviews
+        </button>
       </div>
-
-      {/* Seçilen sekmeye göre içerik */}
       {renderContent()}
     </div>
   );
