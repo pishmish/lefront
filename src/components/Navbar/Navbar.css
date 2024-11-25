@@ -39,20 +39,21 @@
   font-weight: bold;
 }
 
-/* Dropdown General Styles */
+/* Dropdown Genel Yapısı */
 .dropdown-menu {
-  position: absolute;
-  top: 40px; /* Adjust as per the navbar height */
-  left: 0;
+  position: fixed; /* Her zaman ekranın sabit bir yerinde açılır */
+  top: 6%; /* Ekranın üst kısmından %6 boşluk bırak */
+  left: 45%; /* Ekranın sol kenarından %50 boşluk bırak */
+  transform: translateX(-50%); /* Ortalamak için translateX kullanılır */
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 1000;
-  width: 250px; /* Adjust width based on content */
-  display: none;
-  flex-wrap: wrap;
+  width: 800px; /* Dropdown menü genişliği */
+  display: flex;
+  flex-wrap: wrap; /* İçerikleri sarar */
   gap: 1rem;
 }
 
