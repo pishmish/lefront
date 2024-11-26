@@ -27,10 +27,6 @@ const Navbar = () => {
     }, 300); // Delay of 300ms before hiding
   };
 
-  const toggleUserDropdown = () => {
-    setShowUserDropdown((prev) => !prev);
-  };
-
   const categories = [
     {
       name: 'Handbags',

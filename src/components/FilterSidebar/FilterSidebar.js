@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './FilterSidebar.css';
-import { fetchCategories } from '../../api/api'; // Import the API function
+import { fetchCategories } from '../../api/storeapi'; // Import the API function
 
 const FilterSidebar = ({ onFilterChange }) => {
   const [categories, setCategories] = useState([]);

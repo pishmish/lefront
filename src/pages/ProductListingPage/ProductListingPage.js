@@ -6,7 +6,7 @@ import './ProductListingPage.css';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
 import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
-import { fetchProducts } from '../../api/api'; // Import the API function
+import { fetchProducts } from '../../api/storeapi'; // Import the API function
 
 const ProductListingPage = () => {
   const { categoryName } = useParams();
