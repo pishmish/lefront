@@ -1,55 +1,47 @@
-import React from "react";
-import "./ProductDetailPage.css";
-import ReviewComponent from "../../components/ReviewComponent/ReviewComponent"; // Yolu güncelledik
-
-const mockProduct = {
-  id: 1,
-  name: "Premium Leather Tote",
-  price: 120,
-  description:
-    "This premium leather tote is designed for style and durability. Perfect for any occasion, it offers ample space while maintaining a sleek and modern look.",
-  images: [
-    "/assets/images/leather-tote-1.jpg",
-    "/assets/images/leather-tote-2.jpg",
-    "/assets/images/leather-tote-3.jpg",
-  ],
-  category: "Tote Bags",
-  features: [
-    "100% genuine leather",
-    "Multiple inner compartments",
-    "Durable handles",
-    "Available in multiple colors",
-  ],
-};
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import './ProductDetailPage.css';
+import { fetchProductById } from '../../api/api'; // Import the API function
 
 const ProductDetailPage = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const response = await fetchProductById(productId);
+        setProduct(response.data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
+    };
+
+    getProduct();
+  }, [productId]);
+
+  if (!product) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="product-detail-page">
-      <div className="product-gallery">
-        {mockProduct.images.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`${mockProduct.name} ${index + 1}`}
-            className="product-image"
-          />
+      <div className="product-images">
+        {product.images.map((image, index) => (
+          <img key={index} src={image} alt={`${product.name} ${index + 1}`} className="product-image" />
         ))}
       </div>
-
       <div className="product-details">
-        <h1 className="product-name">{mockProduct.name}</h1>
-        <p className="product-price">${mockProduct.price.toFixed(2)}</p>
-        <p className="product-description">{mockProduct.description}</p>
+        <h1 className="product-name">{product.name}</h1>
+        <p className="product-price">${product.price.toFixed(2)}</p>
+        <p className="product-description">{product.description}</p>
         <ul className="product-features">
-          {mockProduct.features.map((feature, index) => (
+          {product.features.map((feature, index) => (
             <li key={index}>{feature}</li>
           ))}
         </ul>
-
         <button className="add-to-cart-button">Add to Cart</button>
       </div>
-
-      <ReviewComponent />
     </div>
   );
 };

@@ -6,40 +6,27 @@ import './ProductListingPage.css';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
 import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
-
-const mockProducts = [
-  {
-    id: 1,
-    name: 'Elegant Tote Bag',
-    price: 75,
-    imageUrl: '/assets/images/tote-bag.jpg',
-    category: 'tote-bags',
-  },
-  {
-    id: 2,
-    name: 'Casual Backpack',
-    price: 120,
-    imageUrl: '/assets/images/backpack.jpg',
-    category: 'backpacks',
-  },
-  {
-    id: 3,
-    name: 'Classic Clutch',
-    price: 45,
-    imageUrl: '/assets/images/clutch.jpg',
-    category: 'clutches',
-  },
-];
+import { fetchProducts } from '../../api/api'; // Import the API function
 
 const ProductListingPage = () => {
   const { categoryName } = useParams();
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const filteredProducts = mockProducts.filter(
-      (product) => product.category.toLowerCase() === categoryName.toLowerCase()
-    );
-    setProducts(filteredProducts);
+    const getProducts = async () => {
+      try {
+        const response = await fetchProducts();
+        console.log('Products response:', response); // Add this line
+        const filteredProducts = response.data.filter(
+          (product) => product.category.toLowerCase() === categoryName.toLowerCase()
+        );
+        setProducts(filteredProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    getProducts();
   }, [categoryName]);
 
   return (
@@ -56,7 +43,7 @@ const ProductListingPage = () => {
           {products.map((product) => (
             <ProductCard
               key={product.id}
-              id={product.id} // Burada id prop'unu ekliyoruz
+              id={product.id}
               name={product.name}
               price={product.price}
               imageUrl={product.imageUrl}
