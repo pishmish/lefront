@@ -1,0 +1,19 @@
+.wishlist-page {
+  padding: 20px;
+}
+
+.wishlist-page h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.wishlist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wishlist-items p {
+  font-size: 1.2em;
+  color: #666;
+}

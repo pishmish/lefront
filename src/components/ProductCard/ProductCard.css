@@ -11,6 +11,7 @@
     overflow: hidden;
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    position: relative;
   }
   
   .product-card:hover {
@@ -80,4 +81,17 @@
   .view-product-button:hover {
     background-color: #555;
   }
+
+  .wishlist-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: grey;
+    z-index: 10; /* Ensure the icon is on top */
+  }
   
+  .wishlist-icon.wishlisted {
+    color: red;
+  }
