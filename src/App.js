@@ -1,3 +1,4 @@
+// App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
@@ -10,6 +11,7 @@ import PaymentPage from './pages/PaymentPage/PaymentPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import CustomerLoginPage from './pages/CustomerLoginPage/CustomerLoginPage';
 import WishListPage from './pages/WishListPage/WishListPage';
+import SearchResultPage from './pages/SearchResultPage/SearchResultPage';
 import './App.css';
 
 const App = () => {
@@ -27,6 +29,7 @@ const App = () => {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/customer" element={<CustomerLoginPage />} />
           <Route path="/wishlist" element={<WishListPage />} />
+          <Route path="/search" element={<SearchResultPage />} />
         </Routes>
       </div>
     </Router>

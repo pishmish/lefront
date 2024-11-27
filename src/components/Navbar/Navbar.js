@@ -1,4 +1,3 @@
-// Navbar.js
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
@@ -62,6 +61,7 @@ const Navbar = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false); // For Login/Sign-Up hover
+  const [searchQuery, setSearchQuery] = useState('');
   const dropdownTimeout = useRef(null); // Ref to handle hover delay
 
   const toggleCartSidebar = () => {
@@ -69,14 +69,22 @@ const Navbar = () => {
   };
 
   const handleCategoryHover = (category) => {
-    clearTimeout(dropdownTimeout.current); // Clear timeout when hovering
+    clearTimeout(dropdownTimeout.current);
     setHoveredCategory(category);
   };
 
   const handleCategoryLeave = () => {
     dropdownTimeout.current = setTimeout(() => {
       setHoveredCategory(null);
-    }, 300); // Delay of 300ms before hiding
+    }, 300);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${searchQuery.trim()}`);
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -98,8 +106,8 @@ const Navbar = () => {
                 <div className="dropdown-menu">
                   <div
                     className="category-grid"
-                    onMouseEnter={() => clearTimeout(dropdownTimeout.current)} // Prevent hiding
-                    onMouseLeave={handleCategoryLeave} // Hide on leave
+                    onMouseEnter={() => clearTimeout(dropdownTimeout.current)}
+                    onMouseLeave={handleCategoryLeave}
                   >
                     {category.items.map((item) => (
                       <div
@@ -107,7 +115,11 @@ const Navbar = () => {
                         className="category-item"
                         onClick={() => navigate(item.link)}
                       >
-                        <img src={item.img} alt={item.name} onError={(e) => console.error('Error loading image:', e)} />
+                        <img
+                          src={item.img}
+                          alt={item.name}
+                          onError={(e) => (e.target.src = '/images/default-image.jpg')}
+                        />
                         <p>{item.name}</p>
                       </div>
                     ))}
@@ -120,10 +132,17 @@ const Navbar = () => {
 
         <div className="navbar-icons">
           <div className="navbar-search">
-            <input type="text" placeholder="Search bags..." />
-            <button>
-              <FiSearch />
-            </button>
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                placeholder="Search bags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit">
+                <FiSearch />
+              </button>
+            </form>
           </div>
           <Link to="/wishlist">
             <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />

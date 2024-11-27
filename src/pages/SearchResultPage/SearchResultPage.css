@@ -1,0 +1,24 @@
+.search-result-page {
+    padding: 20px;
+  }
+  
+  .search-result-page h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .loading-message,
+  .error-message,
+  .no-results-message {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+  }
+  
