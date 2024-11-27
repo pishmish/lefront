@@ -46,12 +46,10 @@ const ProductListingPage = () => {
           {products.length > 0 ? (
             products.map((product) => (
               <ProductCard
-                key={product.id}
-                id={product.id}
+                key={product.productID}
+                id={product.productID}
                 name={product.name}
                 price={product.unitPrice}
-                imageUrl={product.imageUrl}
-                category={product.category}
               />
             ))
           ) : (

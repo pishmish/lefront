@@ -48,5 +48,8 @@ export const sortProductsByCapacity = (order) => sortProductsBy('capacity', orde
 export const sortProductsByWarranty = (order) => sortProductsBy('warranty', order);
 export const sortProductsByPopularity = (order) => sortProductsBy('popularity', order);
 
+// API call to get product image
+export const getProductImage = (id) => API.get(`/store/product/${id}/image`, { responseType: 'blob' });
+
 // Export default API instance
 export default API;
