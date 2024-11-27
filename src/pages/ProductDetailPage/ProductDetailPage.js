@@ -27,16 +27,16 @@ const ProductDetailPage = () => {
   return (
     <div className="product-detail-page">
       <div className="product-images">
-        {product.images.map((image, index) => (
+        {product.images?.map((image, index) => (
           <img key={index} src={image} alt={`${product.name} ${index + 1}`} className="product-image" />
         ))}
       </div>
       <div className="product-details">
         <h1 className="product-name">{product.name}</h1>
-        <p className="product-price">${product.price.toFixed(2)}</p>
+        <p className="product-price">${product.price?.toFixed(2)}</p>
         <p className="product-description">{product.description}</p>
         <ul className="product-features">
-          {product.features.map((feature, index) => (
+          {product.features?.map((feature, index) => (
             <li key={index}>{feature}</li>
           ))}
         </ul>

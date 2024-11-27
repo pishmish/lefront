@@ -31,50 +31,50 @@ const Navbar = () => {
     {
       name: 'Handbags',
       items: [
-        { name: 'Tote Bags', link: '/category/handbags/tote-bags', img: '/assets/images/tote-bags.jpg' },
-        { name: 'Crossbody Bags', link: '/category/handbags/crossbody-bags', img: '/assets/images/crossbody-bags.jpg' },
-        { name: 'Clutch Bags', link: '/category/handbags/clutch-bags', img: '/assets/images/clutch-bags.jpg' },
-        { name: 'Satchels', link: '/category/handbags/satchels', img: '/assets/images/satchels.jpg' },
-        { name: 'Shoulder Bags', link: '/category/handbags/shoulder-bags', img: '/assets/images/shoulder-bags.jpg' },
-        { name: 'Hobo Bags', link: '/category/handbags/hobo-bags', img: '/assets/images/hobo-bags.jpg' },
+        { name: 'Tote Bags', link: '/category/Tote Bags', img: '/assets/images/tote-bags.jpg' },
+        { name: 'Crossbody Bags', link: '/category/Crossbody Bags', img: '/assets/images/crossbody-bags.jpg' },
+        { name: 'Clutch Bags', link: '/category/Clutch Bags', img: '/assets/images/clutch-bags.jpg' },
+        { name: 'Satchels', link: '/category/Satchels', img: '/assets/images/satchels.jpg' },
+        { name: 'Shoulder Bags', link: '/category/Shoulder Bags', img: '/assets/images/shoulder-bags.jpg' },
+        { name: 'Hobo Bags', link: '/category/Hobo Bags', img: '/assets/images/hobo-bags.jpg' },
       ],
     },
     {
       name: 'Backpacks',
       items: [
-        { name: 'Casual Backpacks', link: '/category/backpacks/casual-backpacks', img: '/assets/images/casual-backpacks.jpg' },
-        { name: 'Laptop Backpacks', link: '/category/backpacks/laptop-backpacks', img: '/assets/images/laptop-backpacks.jpg' },
-        { name: 'Hiking Backpacks', link: '/category/backpacks/hiking-backpacks', img: '/assets/images/hiking-backpacks.jpg' },
-        { name: 'Travel Backpacks', link: '/category/backpacks/travel-backpacks', img: '/assets/images/travel-backpacks.jpg' },
-        { name: 'Mini Backpacks', link: '/category/backpacks/mini-backpacks', img: '/assets/images/mini-backpacks.jpg' },
+        { name: 'Casual Backpacks', link: '/category/Casual Backpacks', img: '/assets/images/casual-backpacks.jpg' },
+        { name: 'Laptop Backpacks', link: '/category/Laptop Backpacks', img: '/assets/images/laptop-backpacks.jpg' },
+        { name: 'Hiking Backpacks', link: '/category/Hiking Backpacks', img: '/assets/images/hiking-backpacks.jpg' },
+        { name: 'Travel Backpacks', link: '/category/Travel Backpacks', img: '/assets/images/travel-backpacks.jpg' },
+        { name: 'Mini Backpacks', link: '/category/Mini Backpacks', img: '/assets/images/mini-backpacks.jpg' },
       ],
     },
     {
       name: 'Luggage',
       items: [
-        { name: 'Carry-On Bags', link: '/category/luggage/carry-on-bags', img: '/assets/images/carry-on-bags.jpg' },
-        { name: 'Checked Luggage', link: '/category/luggage/checked-luggage', img: '/assets/images/checked-luggage.jpg' },
-        { name: 'Duffel Bags', link: '/category/luggage/duffel-bags', img: '/assets/images/duffel-bags.jpg' },
-        { name: 'Garment Bags', link: '/category/luggage/garment-bags', img: '/assets/images/garment-bags.jpg' },
-        { name: 'Luggage Sets', link: '/category/luggage/luggage-sets', img: '/assets/images/luggage-sets.jpg' },
+        { name: 'Carry-On Bags', link: '/category/Carry-On Bags', img: '/assets/images/carry-on-bags.jpg' },
+        { name: 'Checked Luggage', link: '/category/Checked Luggage', img: '/assets/images/checked-luggage.jpg' },
+        { name: 'Duffel Bags', link: '/category/Duffel Bags', img: '/assets/images/duffel-bags.jpg' },
+        { name: 'Garment Bags', link: '/category/Garment Bags', img: '/assets/images/garment-bags.jpg' },
+        { name: 'Luggage Sets', link: '/category/Luggage Sets', img: '/assets/images/luggage-sets.jpg' },
       ],
     },
     {
       name: 'Travel Bags',
       items: [
-        { name: 'Weekender Bags', link: '/category/travel-bags/weekender-bags', img: '/assets/images/weekender-bags.jpg' },
-        { name: 'Rolling Bags', link: '/category/travel-bags/rolling-bags', img: '/assets/images/rolling-bags.jpg' },
-        { name: 'Messenger Bags', link: '/category/travel-bags/messenger-bags', img: '/assets/images/messenger-bags.jpg' },
-        { name: 'Toiletry Bags', link: '/category/travel-bags/toiletry-bags', img: '/assets/images/toiletry-bags.jpg' },
+        { name: 'Weekender Bags', link: '/category/Weekender Bags', img: '/assets/images/weekender-bags.jpg' },
+        { name: 'Rolling Bags', link: '/category/Rolling Bags', img: '/assets/images/rolling-bags.jpg' },
+        { name: 'Messenger Bags', link: '/category/Messenger Bags', img: '/assets/images/messenger-bags.jpg' },
+        { name: 'Toiletry Bags', link: '/category/Toiletry Bags', img: '/assets/images/toiletry-bags.jpg' },
       ],
     },
     {
       name: 'Sports Bags',
       items: [
-        { name: 'Gym Bags', link: '/category/sports-bags/gym-bags', img: '/assets/images/gym-bags.jpg' },
-        { name: 'Yoga Bags', link: '/category/sports-bags/yoga-bags', img: '/assets/images/yoga-bags.jpg' },
-        { name: 'Sports Duffle Bags', link: '/category/sports-bags/sports-duffle-bags', img: '/assets/images/sports-duffle-bags.jpg' },
-        { name: 'Cooler Bags', link: '/category/sports-bags/cooler-bags', img: '/assets/images/cooler-bags.jpg' },
+        { name: 'Gym Bags', link: '/category/Gym Bags', img: '/assets/images/gym-bags.jpg' },
+        { name: 'Yoga Bags', link: '/category/Yoga Bags', img: '/assets/images/yoga-bags.jpg' },
+        { name: 'Sports Duffle Bags', link: '/category/Sports Duffle Bags', img: '/assets/images/sports-duffle-bags.jpg' },
+        { name: 'Cooler Bags', link: '/category/Cooler Bags', img: '/assets/images/cooler-bags.jpg' },
       ],
     },
   ];
@@ -93,7 +93,7 @@ const Navbar = () => {
               onMouseEnter={() => handleCategoryHover(category.name)}
               onMouseLeave={handleCategoryLeave}
             >
-              <Link to={`/category/${category.name.toLowerCase()}`}>{category.name}</Link>
+              <Link to={`/category/${category.name}`}>{category.name}</Link>
               {hoveredCategory === category.name && (
                 <div className="dropdown-menu">
                   <div

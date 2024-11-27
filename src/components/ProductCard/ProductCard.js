@@ -17,6 +17,10 @@ const ProductCard = ({ id, name, price, imageUrl, category }) => {
     // Add logic to add/remove product from wishlist
   };
 
+  // Convert price to a number if it's a string
+  const numericPrice = parseFloat(price);
+  const displayPrice = !isNaN(numericPrice) ? numericPrice.toFixed(2) : 'N/A';
+
   return (
     <div className="product-card">
       {/* Wishlist Icon */}
@@ -33,7 +37,7 @@ const ProductCard = ({ id, name, price, imageUrl, category }) => {
       <div className="product-card-info">
         <h3 className="product-card-name">{name}</h3>
         <p className="product-card-category">{category}</p>
-        <p className="product-card-price">${price.toFixed(2)}</p>
+        <p className="product-card-price">${displayPrice}</p>
       </div>
 
       {/* View Product Button */}

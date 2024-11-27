@@ -1,12 +1,12 @@
 // ProductListingPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductListingPage.css';
 
 import ProductCard from '../../components/ProductCard/ProductCard';
 import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
 import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
-import { fetchProducts } from '../../api/storeapi'; // Import the API function
+import { fetchCategoryProducts } from '../../api/storeapi'; // Adjust the import path as necessary
 
 const ProductListingPage = () => {
   const { categoryName } = useParams();
@@ -15,12 +15,15 @@ const ProductListingPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const response = await fetchProducts();
-        console.log('Products response:', response); // Add this line
-        const filteredProducts = response.data.filter(
-          (product) => product.category.toLowerCase() === categoryName.toLowerCase()
-        );
-        setProducts(filteredProducts);
+        console.log('Fetching products for category:', categoryName); // Log the category name
+        const response = await fetchCategoryProducts(categoryName);
+        console.log('Products response:', response); // Log the entire response
+        if (response && response.data) {
+          console.log('Products data:', response.data); // Log the products data
+          setProducts(response.data);
+        } else {
+          console.error('No data in response:', response);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -40,16 +43,20 @@ const ProductListingPage = () => {
           <SortingDropdown onSortChange={() => {}} />
         </div>
         <div className="product-grid">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              price={product.price}
-              imageUrl={product.imageUrl}
-              category={product.category}
-            />
-          ))}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                price={product.unitPrice}
+                imageUrl={product.imageUrl}
+                category={product.category}
+              />
+            ))
+          ) : (
+            <p>No products found for this category.</p>
+          )}
         </div>
       </div>
     </div>
