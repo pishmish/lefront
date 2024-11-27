@@ -9,7 +9,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import CustomerLoginPage from './pages/CustomerLoginPage/CustomerLoginPage';
-import WishListPage from './pages/WishListPage/WishListPage'; // Import WishListPage
+import WishListPage from './pages/WishListPage/WishListPage';
 import './App.css';
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/customer" element={<CustomerLoginPage />} />
-          <Route path="/wishlist" element={<WishListPage />} /> {/* Add route for WishListPage */}
+          <Route path="/wishlist" element={<WishListPage />} />
         </Routes>
       </div>
     </Router>
