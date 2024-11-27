@@ -5,6 +5,59 @@ import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
 import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
 
+const categories = [
+  {
+    name: 'Handbags',
+    items: [
+      { name: 'Tote Bags', link: '/category/Tote Bags', img: 'images/tote-bags.jpg' },
+      { name: 'Crossbody Bags', link: '/category/Crossbody Bags', img: 'images/crossbody-bags.jpg' },
+      { name: 'Clutch Bags', link: '/category/Clutch Bags', img: 'images/clutch-bags.jpg' },
+      { name: 'Satchels', link: '/category/Satchels', img: 'images/satchels.jpg' },
+      { name: 'Shoulder Bags', link: '/category/Shoulder Bags', img: 'images/shoulder-bags.jpg' },
+      { name: 'Hobo Bags', link: '/category/Hobo Bags', img: 'images/hobo-bags.jpg' },
+    ],
+  },
+  {
+    name: 'Backpacks',
+    items: [
+      { name: 'Casual Backpacks', link: '/category/Casual Backpacks', img: 'images/casual-backpacks.jpg' },
+      { name: 'Laptop Backpacks', link: '/category/Laptop Backpacks', img: 'images/laptop-backpacks.jpg' },
+      { name: 'Hiking Backpacks', link: '/category/Hiking Backpacks', img: 'images/hiking-backpacks.jpg' },
+      { name: 'Travel Backpacks', link: '/category/Travel Backpacks', img: 'images/travel-backpacks.jpg' },
+      { name: 'Mini Backpacks', link: '/category/Mini Backpacks', img: 'images/mini-backpacks.jpg' },
+    ],
+  },
+  {
+    name: 'Luggage',
+    items: [
+      { name: 'Carry-On Bags', link: '/category/Carry-On Bags', img: 'images/carry-on-bags.jpg' },
+      { name: 'Checked Luggage', link: '/category/Checked Luggage', img: 'images/checked-luggage.jpg' },
+      { name: 'Duffel Bags', link: '/category/Duffel Bags', img: 'images/duffel-bags.jpg' },
+      { name: 'Garment Bags', link: '/category/Garment Bags', img: 'images/garment-bags.jpg' },
+      { name: 'Luggage Sets', link: '/category/Luggage Sets', img: 'images/luggage-sets.jpg' },
+    ],
+  },
+  {
+    name: 'Travel Bags',
+    items: [
+      { name: 'Weekender Bags', link: '/category/Weekender Bags', img: 'images/weekender-bags.jpg' },
+      { name: 'Rolling Bags', link: '/category/Rolling Bags', img: 'images/rolling-bags.jpg' },
+      { name: 'Messenger Bags', link: '/category/Messenger Bags', img: 'images/messenger-bags.jpg' },
+      { name: 'Toiletry Bags', link: '/category/Toiletry Bags', img: 'images/toiletry-bags.jpg' },
+    ],
+  },
+  {
+    name: 'Sports Bags',
+    items: [
+      { name: 'Gym Bags', link: '/category/Gym Bags', img: 'images/gym-bags.jpg' },
+      { name: 'Yoga Bags', link: '/category/Yoga Bags', img: 'images/yoga-bags.jpg' },
+      { name: 'Sports Duffle Bags', link: '/category/Sports Duffle Bags', img: 'images/sports-duffle-bags.jpg' },
+      { name: 'Cooler Bags', link: '/category/Cooler Bags', img: 'images/cooler-bags.jpg' },
+    ],
+  },
+];
+
+
 const Navbar = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -26,58 +79,6 @@ const Navbar = () => {
       setHoveredCategory(null);
     }, 300); // Delay of 300ms before hiding
   };
-
-  const categories = [
-    {
-      name: 'Handbags',
-      items: [
-        { name: 'Tote Bags', link: '/category/Tote Bags', img: '/assets/images/tote-bags.jpg' },
-        { name: 'Crossbody Bags', link: '/category/Crossbody Bags', img: '/assets/images/crossbody-bags.jpg' },
-        { name: 'Clutch Bags', link: '/category/Clutch Bags', img: '/assets/images/clutch-bags.jpg' },
-        { name: 'Satchels', link: '/category/Satchels', img: '/assets/images/satchels.jpg' },
-        { name: 'Shoulder Bags', link: '/category/Shoulder Bags', img: '/assets/images/shoulder-bags.jpg' },
-        { name: 'Hobo Bags', link: '/category/Hobo Bags', img: '/assets/images/hobo-bags.jpg' },
-      ],
-    },
-    {
-      name: 'Backpacks',
-      items: [
-        { name: 'Casual Backpacks', link: '/category/Casual Backpacks', img: '/assets/images/casual-backpacks.jpg' },
-        { name: 'Laptop Backpacks', link: '/category/Laptop Backpacks', img: '/assets/images/laptop-backpacks.jpg' },
-        { name: 'Hiking Backpacks', link: '/category/Hiking Backpacks', img: '/assets/images/hiking-backpacks.jpg' },
-        { name: 'Travel Backpacks', link: '/category/Travel Backpacks', img: '/assets/images/travel-backpacks.jpg' },
-        { name: 'Mini Backpacks', link: '/category/Mini Backpacks', img: '/assets/images/mini-backpacks.jpg' },
-      ],
-    },
-    {
-      name: 'Luggage',
-      items: [
-        { name: 'Carry-On Bags', link: '/category/Carry-On Bags', img: '/assets/images/carry-on-bags.jpg' },
-        { name: 'Checked Luggage', link: '/category/Checked Luggage', img: '/assets/images/checked-luggage.jpg' },
-        { name: 'Duffel Bags', link: '/category/Duffel Bags', img: '/assets/images/duffel-bags.jpg' },
-        { name: 'Garment Bags', link: '/category/Garment Bags', img: '/assets/images/garment-bags.jpg' },
-        { name: 'Luggage Sets', link: '/category/Luggage Sets', img: '/assets/images/luggage-sets.jpg' },
-      ],
-    },
-    {
-      name: 'Travel Bags',
-      items: [
-        { name: 'Weekender Bags', link: '/category/Weekender Bags', img: '/assets/images/weekender-bags.jpg' },
-        { name: 'Rolling Bags', link: '/category/Rolling Bags', img: '/assets/images/rolling-bags.jpg' },
-        { name: 'Messenger Bags', link: '/category/Messenger Bags', img: '/assets/images/messenger-bags.jpg' },
-        { name: 'Toiletry Bags', link: '/category/Toiletry Bags', img: '/assets/images/toiletry-bags.jpg' },
-      ],
-    },
-    {
-      name: 'Sports Bags',
-      items: [
-        { name: 'Gym Bags', link: '/category/Gym Bags', img: '/assets/images/gym-bags.jpg' },
-        { name: 'Yoga Bags', link: '/category/Yoga Bags', img: '/assets/images/yoga-bags.jpg' },
-        { name: 'Sports Duffle Bags', link: '/category/Sports Duffle Bags', img: '/assets/images/sports-duffle-bags.jpg' },
-        { name: 'Cooler Bags', link: '/category/Cooler Bags', img: '/assets/images/cooler-bags.jpg' },
-      ],
-    },
-  ];
 
   return (
     <>

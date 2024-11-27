@@ -6,8 +6,11 @@
     justify-content: center;
     align-items: center;
     height: calc(100vh - 80px);
-    background-color: #f4f4f4; /* Neutral background for a clean look */
+    background-image: url('../../assets/images/signup.jpg');
     padding: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
   
   .sign-up-form-container {
