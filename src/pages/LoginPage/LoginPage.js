@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../../api/userapi'; // Import the login API function
 import './LoginPage.css';
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username === 'customer' && password === 'customer') {
-      navigate('/customer');
-    } else if (username === 'admin' && password === 'admin') {
-      navigate('/admin');
-    } else {
-      alert('Incorrect username or password');
+    setErrorMessage(''); // Clear previous errors
+
+    try {
+      // Send login request to the backend
+      const response = await loginUser({ username, password });
+      const { role } = response.data; // Extract role from the response
+
+      // Redirect based on the user's role
+      if (role === 'customer') {
+        navigate('/customer');
+      } else if (role === 'admin') {
+        navigate('/admin');
+      } else if (role === 'productManager') {
+        navigate('/product-manager');
+      } else if (role === 'salesManager') {
+        navigate('/sales-manager');
+      } else {
+        setErrorMessage('Unknown role. Please contact support.');
+      }
+    } catch (error) {
+      // Handle login errors
+      console.error('Login error:', error);
+      setErrorMessage(
+        error.response?.data?.msg || 'Invalid username or password. Please try again.'
+      );
     }
   };
 
@@ -45,6 +66,7 @@ const LoginPage = () => {
               required
             />
           </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="login-button">
             Login
           </button>

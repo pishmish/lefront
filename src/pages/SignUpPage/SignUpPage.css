@@ -1,100 +1,137 @@
-/* SignUpPage.css */
-
 /* General Styles for the Sign-Up Page */
 .sign-up-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 80px);
-    background-image: url('../../assets/images/signup.jpg');
-    padding: 20px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-image: url('../../assets/images/signup.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  overflow-y: auto; /* For small screen scrolling */
+}
+
+.sign-up-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Welcome Message Styling */
+.sign-up-welcome {
+  margin-bottom: 1.5rem;
+}
+
+.sign-up-welcome h1 {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 0.5rem;
+}
+
+.sign-up-welcome p {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Form Styling */
+.sign-up-form h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  text-align: left;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+  outline: none;
+}
+
+/* Button Styling */
+.sign-up-button {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.sign-up-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+/* Error and Success Message Styling */
+.error-message {
+  color: #e63946;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.success-message {
+  color: #2a9d8f;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .sign-up-form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
+    padding: 1.5rem;
   }
-  
-  /* Welcome Message Styling */
-  .sign-up-welcome {
-    margin-bottom: 1.5rem;
-  }
-  
+
   .sign-up-welcome h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .sign-up-welcome p {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.5;
-  }
-  
-  /* Form Styling */
-  .sign-up-form h2 {
     font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 1.5rem;
   }
-  
-  .form-group {
-    margin-bottom: 1.25rem;
-    text-align: left;
-    width: 100%;
+
+  .sign-up-form h2 {
+    font-size: 1.6rem;
   }
-  
-  .form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.4rem;
-    color: #555;
-  }
-  
+
   .form-group input {
-    width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #fafafa;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 0.9rem;
   }
-  
-  .form-group input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-    outline: none;
-  }
-  
-  /* Button Styling */
+
   .sign-up-button {
-    width: 100%;
-    padding: 0.9rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    padding: 0.8rem;
+    font-size: 1rem;
   }
-  
-  .sign-up-button:hover {
-    background-color: #0056b3;
-  }
-  
+}

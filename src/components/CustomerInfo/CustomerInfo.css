@@ -1,93 +1,150 @@
 .customer-info {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 25px;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    text-align: left;
-  }
-  
-  .customer-info h2 {
-    font-size: 2rem;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  .customer-info p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
-    line-height: 1.6;
-  }
-  
-  .past-orders {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-  }
-  
-  .past-orders h3 {
-    font-size: 1.5rem;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  .order-item {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .order-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
-  
-  .order-header {
-    padding: 15px 20px;
-    cursor: pointer;
-    border: 1px solid #e0e0e0;
-    background-color: #ffffff;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-  }
-  
-  .order-header.active {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-  }
-  
-  .order-id {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .order-header.active .order-id {
-    color: #fff;
-  }
-  
-  .order-details {
-    padding: 15px 20px;
-    background-color: #ffffff;
-    border-top: 1px solid #e0e0e0;
-    font-size: 1rem;
-    color: #555;
-  }
-  
-  .order-details ul {
-    list-style-type: disc;
-    padding-left: 20px;
-  }
-  
-  .order-details ul li {
-    margin-bottom: 5px;
-  }
-  
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  font-family: 'Arial', sans-serif;
+}
+
+.customer-info h2 {
+  font-size: 2rem;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+}
+
+.customer-info p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px;
+  line-height: 1.8;
+}
+
+.past-orders {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.past-orders h3 {
+  font-size: 1.5rem;
+  color: #007bff;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.order-item {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.order-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.order-header {
+  padding: 15px 20px;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.order-header.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.order-id {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.order-header.active .order-id {
+  color: #fff;
+}
+
+.order-details {
+  padding: 15px 20px;
+  background-color: #ffffff;
+  border-top: 1px solid #e0e0e0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.order-details p {
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.order-details ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.order-details ul li {
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.order-tracking {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.edit-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-buttons button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.edit-buttons button:first-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-buttons button:first-child:hover {
+  background-color: #0056b3;
+}
+
+.edit-buttons button:last-child {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.edit-buttons button:last-child:hover {
+  background-color: #d6d6d6;
+  color: #111;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
