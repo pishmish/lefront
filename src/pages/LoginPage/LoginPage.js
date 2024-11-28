@@ -21,14 +21,12 @@ const LoginPage = () => {
       // Redirect based on the user's role
       if (role === 'customer') {
         navigate('/profile');
-      } //else if (role === 'admin') {
-        //navigate('/admin');
-      //} 
+      }
       else if (role === 'productManager') {
-        navigate('/product-manager');
+        navigate('/admin'); // for now it takes to the admin page
       } else if (role === 'salesManager') {
-        navigate('/sales-manager');
-      } else {
+        navigate('/admin');
+      } else { // for now it takes to the admin page
         setErrorMessage('Unknown role. Please contact support.');
       }
     } catch (error) {
