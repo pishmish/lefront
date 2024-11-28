@@ -100,7 +100,10 @@ const ProductDetailPage = () => {
         {cartMessage && <p className="cart-message">{cartMessage}</p>}
       </div>
       <div className="product-reviews">
-        <ReviewComponent />
+        <ReviewComponent
+          id={product.productID}
+          overallRating={product.overallRating}
+        />
       </div>
     </div>
   );

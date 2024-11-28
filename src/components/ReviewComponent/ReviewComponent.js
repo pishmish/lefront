@@ -1,40 +1,67 @@
-import React, { useState } from "react";
-import { FaStar } from "react-icons/fa";
-import "./ReviewComponent.css";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaStar } from 'react-icons/fa';
+import { jwtDecode } from 'jwt-decode'; // Use named import
+import { fetchReviews, createReview } from '../../api/storeapi'; // Adjust the import path as necessary
+import './ReviewComponent.css'; // Adjust the import path as necessary
 
-const ReviewComponent = () => {
+const ReviewComponent = ({ id, overallRating }) => {
   const [reviews, setReviews] = useState([]);
-  const [currentReview, setCurrentReview] = useState("");
   const [currentRating, setCurrentRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [currentReview, setCurrentReview] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (currentRating === 0 || currentReview === "") {
-      alert("Please select a star rating and write a review.");
-      return;
-    }
-
-    const newReview = {
-      id: Date.now(),
-      review: currentReview,
-      rating: currentRating,
-      date: new Date().toLocaleString(),
+  useEffect(() => {
+    const getReviews = async () => {
+      try {
+        const response = await fetchReviews(id);
+        console.log('Reviews response:', response); // Log the response
+        if (response && response.data) {
+          console.log('Reviews data:', response.data); // Log the reviews data
+          setReviews(response.data);
+        } else {
+          console.error('No data in response:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
     };
 
-    setReviews([...reviews, newReview]);
-    setCurrentReview("");
-    setCurrentRating(0);
-  };
+    getReviews();
+  }, [id]);
 
-  const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0;
-    const total = reviews.reduce((sum, r) => sum + r.rating, 0);
-    return (total / reviews.length).toFixed(1);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Extract customer ID from JWT token
+      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      if (!token) {
+        throw new Error('No auth token found');
+      }
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      const customerID = decodedToken.customerID;
 
-  const averageRating = calculateAverageRating();
+      const reviewData = {
+        reviewContent: currentReview,
+        reviewStars: currentRating,
+        productID: id,
+        customerID: customerID, // Include customer ID
+        approvalStatus: 'pending', // Set the initial approval status
+      };
+      const response = await createReview(id, reviewData);
+      console.log('Review submitted:', response.data);
+      setCurrentReview('');
+      setCurrentRating(0);
+      setHoverRating(0);
+      // Optionally, fetch the reviews again to update the list
+      const updatedReviews = await fetchReviews(id);
+      setReviews(updatedReviews.data);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+    }
+  };
 
   const handleNext = () => {
     if (currentIndex < reviews.length - 1) {
@@ -51,21 +78,20 @@ const ReviewComponent = () => {
   return (
     <div className="review-container">
       <h2>Average Rating</h2>
-      <div className="average-rating">
+      <div className="overall-rating">
         <div className="average-stars">
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
               key={star}
               size={25}
-              color={averageRating >= star ? "#FFD700" : "#ccc"}
+              color={overallRating >= star ? "#FFD700" : "#ccc"}
             />
           ))}
         </div>
-        <p>{reviews.length > 0 ? `(${averageRating} out of 5)` : "No reviews yet."}</p>
+        <p>{reviews.length > 0 ? `(${overallRating} out of 5)` : "No reviews yet."}</p>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="star-container">
-          
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
               key={star}
@@ -101,12 +127,11 @@ const ReviewComponent = () => {
                 <FaStar
                   key={i}
                   size={20}
-                  color={i < reviews[currentIndex].rating ? "#FFD700" : "#ccc"}
+                  color={reviews[currentIndex].reviewStars >= i + 1 ? "#FFD700" : "#ccc"}
                 />
               ))}
             </div>
-            <p className="review-text">{reviews[currentIndex].review}</p>
-            <p className="review-date">{reviews[currentIndex].date}</p>
+            <p>{reviews[currentIndex].reviewContent}</p>
           </div>
           <button className="nav-button next" onClick={handleNext}>
             &gt;

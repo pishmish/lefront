@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Use named import
 import { loginUser } from '../../api/userapi'; // Import the login API function
 import './LoginPage.css';
 
@@ -16,13 +17,19 @@ const LoginPage = () => {
     try {
       // Send login request to the backend
       const response = await loginUser({ username, password });
-      const { role } = response.data; // Extract role from the response
+      const { token, role } = response.data; // Extract token and role from the response
+
+      // Store the token in cookies
+      document.cookie = `authToken=${token}; path=/`;
+
+      // Decode the token to get user information
+      const decodedToken = jwtDecode(token);
+      console.log('User logged in:', decodedToken);
 
       // Redirect based on the user's role
       if (role === 'customer') {
         navigate('/profile');
-      }
-      else if (role === 'productManager') {
+      } else if (role === 'productManager') {
         navigate('/admin'); // for now it takes to the admin page
       } else if (role === 'salesManager') {
         navigate('/admin');
