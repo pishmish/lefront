@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
 import AdminPage from './pages/AdminPage/AdminPage';
-import CustomerLoginPage from './pages/CustomerLoginPage/CustomerLoginPage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 import WishListPage from './pages/WishListPage/WishListPage';
 import SearchResultPage from './pages/SearchResultPage/SearchResultPage';
 import './App.css';
@@ -27,7 +27,7 @@ const App = () => {
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/customer" element={<CustomerLoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/wishlist" element={<WishListPage />} />
           <Route path="/search" element={<SearchResultPage />} />
         </Routes>

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProductCard.css';
-import { getProductImage } from '../../api/storeapi'; // Adjust the import path as necessary
+import { getProductImage } from '../../api/storeapi';
 
 const ProductCard = ({ id, name, price, stock }) => {
   const navigate = useNavigate();

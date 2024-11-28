@@ -20,10 +20,11 @@ const LoginPage = () => {
 
       // Redirect based on the user's role
       if (role === 'customer') {
-        navigate('/customer');
-      } else if (role === 'admin') {
-        navigate('/admin');
-      } else if (role === 'productManager') {
+        navigate('/profile');
+      } //else if (role === 'admin') {
+        //navigate('/admin');
+      //} 
+      else if (role === 'productManager') {
         navigate('/product-manager');
       } else if (role === 'salesManager') {
         navigate('/sales-manager');

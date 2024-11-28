@@ -1,14 +1,14 @@
 import React from 'react';
-import './CustomerLoginPage.css';
+import './ProfilePage.css';
 import CustomerInfo from '../../components/CustomerInfo/CustomerInfo';
 
-const CustomerLoginPage = () => {
+const ProfilePage = () => {
   return (
-    <div className="customer-login-page">
+    <div className="profile-page">
       <h1>Welcome, Customer!</h1>
       <CustomerInfo />
     </div>
   );
 };
 
-export default CustomerLoginPage;
+export default ProfilePage;
