@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './ProductCard.css';
 import { getProductImage } from '../../api/storeapi'; // Adjust the import path as necessary
 
-const ProductCard = ({ id, name, price }) => {
+const ProductCard = ({ id, name, price, stock }) => {
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [image, setImage] = useState(null); // Initialize with null
@@ -58,6 +58,7 @@ const ProductCard = ({ id, name, price }) => {
       <div className="product-card-info">
         <h3 className="product-card-name">{name}</h3>
         <p className="product-card-price">${displayPrice}</p>
+        <p className="product-card-stock">Stock: {stock}</p>
       </div>
 
       {/* View Product Button */}

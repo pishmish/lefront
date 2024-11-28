@@ -50,6 +50,7 @@ const ProductListingPage = () => {
                 id={product.productID}
                 name={product.name}
                 price={product.unitPrice}
+                stock={product.stock}
               />
             ))
           ) : (
