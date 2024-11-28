@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
 import { fetchProductById, getProductImage } from '../../api/storeapi';
+import ReviewComponent from '../../components/ReviewComponent/ReviewComponent'; // Import ReviewComponent
 
 const ProductDetailPage = () => {
   const { productId } = useParams();
@@ -82,6 +83,10 @@ const ProductDetailPage = () => {
         </ul>
         <p className="product-stock">Stock: {product.stock}</p>
         <button className="add-to-cart-button">Add to Cart</button>
+      </div>
+      {/* Review Component Integration */}
+      <div className="product-reviews">
+        <ReviewComponent />
       </div>
     </div>
   );

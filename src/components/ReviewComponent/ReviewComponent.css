@@ -19,7 +19,7 @@
   h2, h3 {
     font-weight: bold;
     color: #333;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     font-size: 2rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -36,15 +36,16 @@
   .star-container svg {
     cursor: pointer;
     transition: transform 0.3s ease, color 0.3s ease;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .star-container svg:hover {
-    transform: scale(1.3);
+    width: 25px; /* Yıldızların genişliği küçültüldü */
+    height: 25px; /* Yıldızların yüksekliği küçültüldü */
+}
+
+.star-container svg:hover {
+    transform: scale(1.2); /* Hover sırasında büyüme oranı ayarlandı */
     color: #FFB400;
     filter: drop-shadow(0 4px 6px rgba(255, 180, 0, 0.4));
-  }
+}
+
   
   textarea.review-input {
     width: 100%;

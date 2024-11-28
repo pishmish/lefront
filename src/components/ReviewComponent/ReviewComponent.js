@@ -65,7 +65,7 @@ const ReviewComponent = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="star-container">
-          <h3>Star Rating</h3>
+          
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
               key={star}
