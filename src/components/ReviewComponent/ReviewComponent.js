@@ -43,28 +43,23 @@ const ReviewComponent = ({ id, overallRating }) => {
       if (!token) {
         throw new Error('No auth token found');
       }
+      console.log('Token found:', token); // Log the token
       const decodedToken = jwtDecode(token.split('=')[1]);
+      console.log('Decoded token:', decodedToken); // Log the decoded token
       const customerID = decodedToken.customerID;
 
       if (!customerID) {
         throw new Error('Customer ID not found in token');
       }
 
-      const reviewData = {
-        reviewContent: currentReview,
-        reviewStars: currentRating,
-        productID: id,
-        customerID: customerID, // Include customer ID
-        approvalStatus: 'pending', // Set the initial approval status
-      };
-      const response = await createReview(id, reviewData);
+      console.log('Product ID:', id); // Log the product ID
+      console.log('Review content:', currentReview); // Log the review content
+
+      const response = await createReview({ productID: id, reviewContent: currentReview, reviewStars: currentRating, customerID: customerID });
       console.log('Review submitted:', response.data);
       setCurrentReview('');
       setCurrentRating(0);
       setHoverRating(0);
-      // Optionally, fetch the reviews again to update the list
-      const updatedReviews = await fetchReviews(id);
-      setReviews(updatedReviews.data);
     } catch (error) {
       console.error('Error submitting review:', error);
       setErrorMessage('Failed to submit review. Please ensure you are logged in.');

@@ -25,7 +25,7 @@ export const searchProducts = (query) => API.get(`/store/search?q=${query}`); //
 export const fetchReviews = (productId) => API.get(`/store/product/${productId}/reviews`); // Fetch all reviews for a product
 export const fetchReviewById = (productId, reviewId) =>
     API.get(`/store/product/${productId}/reviews/${reviewId}`); // Fetch single review
-export const createReview = (productId, data) => API.post(`/store/product/${productId}/reviews`, data); // Add review
+export const createReview = (productId, reviewContent, reviewStars, customerID) => API.post(`/store/product/${productId}/reviews`, productId, reviewContent, reviewStars, customerID); // Add review
 export const updateReview = (productId, reviewId, data) =>
     API.put(`/store/product/${productId}/reviews/${reviewId}`, data); // Update review
 export const deleteReview = (reviewId) => API.delete(`/store/reviews/${reviewId}`); // Delete review
