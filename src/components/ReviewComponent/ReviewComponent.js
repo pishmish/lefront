@@ -11,6 +11,7 @@ const ReviewComponent = ({ id, overallRating }) => {
   const [hoverRating, setHoverRating] = useState(0);
   const [currentReview, setCurrentReview] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,8 @@ const ReviewComponent = ({ id, overallRating }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear previous errors
+
     try {
       // Extract customer ID from JWT token
       const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
@@ -42,6 +45,10 @@ const ReviewComponent = ({ id, overallRating }) => {
       }
       const decodedToken = jwtDecode(token.split('=')[1]);
       const customerID = decodedToken.customerID;
+
+      if (!customerID) {
+        throw new Error('Customer ID not found in token');
+      }
 
       const reviewData = {
         reviewContent: currentReview,
@@ -60,6 +67,7 @@ const ReviewComponent = ({ id, overallRating }) => {
       setReviews(updatedReviews.data);
     } catch (error) {
       console.error('Error submitting review:', error);
+      setErrorMessage('Failed to submit review. Please ensure you are logged in.');
     }
   };
 
@@ -113,6 +121,7 @@ const ReviewComponent = ({ id, overallRating }) => {
         <button type="submit" className="submit-button">
           Submit Review
         </button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </form>
 
       <h3>Reviews</h3>
