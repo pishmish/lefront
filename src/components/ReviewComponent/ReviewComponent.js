@@ -52,10 +52,14 @@ const ReviewComponent = ({ id, overallRating }) => {
         throw new Error('Customer ID not found in token');
       }
 
-      console.log('Product ID:', id); // Log the product ID
-      console.log('Review content:', currentReview); // Log the review content
+      console.log('Review Content:', currentReview); // Log the review content
 
-      const response = await createReview({ productID: id, reviewContent: currentReview, reviewStars: currentRating, customerID: customerID });
+      const reviewData = {
+        reviewContent: currentReview,
+        reviewStars: currentRating,
+        customerID: customerID,
+      };
+      const response = await createReview({ productID: id, reviewData });
       console.log('Review submitted:', response.data);
       setCurrentReview('');
       setCurrentRating(0);
@@ -126,7 +130,7 @@ const ReviewComponent = ({ id, overallRating }) => {
             &lt;
           </button>
           <div className="review-item">
-            <div className="review-rating">
+            <div className="review-stars">
               {[...Array(5)].map((_, i) => (
                 <FaStar
                   key={i}
@@ -135,7 +139,7 @@ const ReviewComponent = ({ id, overallRating }) => {
                 />
               ))}
             </div>
-            <p>{reviews[currentIndex].reviewContent}</p>
+            <p className="review-text">{reviews[currentIndex].reviewContent}</p>
           </div>
           <button className="nav-button next" onClick={handleNext}>
             &gt;
