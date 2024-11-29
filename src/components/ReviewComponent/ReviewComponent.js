@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode'; // Use named import
-import { fetchReviews, createReview } from '../../api/storeapi'; // Adjust the import path as necessary
+import { fetchApprovedReviews, createReview } from '../../api/storeapi'; // Adjust the import path as necessary
 import './ReviewComponent.css'; // Adjust the import path as necessary
 
 const ReviewComponent = ({ id, overallRating }) => {
@@ -17,7 +17,7 @@ const ReviewComponent = ({ id, overallRating }) => {
   useEffect(() => {
     const getReviews = async () => {
       try {
-        const response = await fetchReviews(id);
+        const response = await fetchApprovedReviews(id);
         console.log('Reviews response:', response); // Log the response
         if (response && response.data) {
           console.log('Reviews data:', response.data); // Log the reviews data
