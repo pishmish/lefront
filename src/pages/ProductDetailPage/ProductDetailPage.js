@@ -77,27 +77,29 @@ const ProductDetailPage = () => {
 
   return (
     <div className="product-detail-page">
-      <div className="product-images">
-        {image ? (
-          <img src={image} alt={product.name} className="product-image" />
-        ) : (
-          <p>Loading image...</p>
-        )}
-      </div>
-      <div className="product-details">
-        <h1 className="product-name">{product.name}</h1>
-        <p className="product-price">${displayPrice}</p>
-        <p className="product-description">{product.description}</p>
-        <ul className="product-features">
-          {product.features?.map((feature, index) => (
-            <li key={index}>{feature}</li>
-          ))}
-        </ul>
-        <p className="product-stock">Stock: {product.stock}</p>
-        <button className="add-to-cart-button" onClick={handleAddToCart}>
-          Add to Cart
-        </button>
-        {cartMessage && <p className="cart-message">{cartMessage}</p>}
+      <div className="product-top-section">
+        <div className="product-images">
+          {image ? (
+            <img src={image} alt={product.name} className="product-image" />
+          ) : (
+            <p>Loading image...</p>
+          )}
+        </div>
+        <div className="product-details">
+          <h1 className="product-name">{product.name}</h1>
+          <p className="product-price">${displayPrice}</p>
+          <p className="product-description">{product.description}</p>
+          <ul className="product-features">
+            {product.features?.map((feature, index) => (
+              <li key={index}>{feature}</li>
+            ))}
+          </ul>
+          <p className="product-stock">Stock: {product.stock}</p>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>
+            Add to Cart
+          </button>
+          {cartMessage && <p className="cart-message">{cartMessage}</p>}
+        </div>
       </div>
       <div className="product-reviews">
         <ReviewComponent
