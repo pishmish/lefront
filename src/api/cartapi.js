@@ -11,5 +11,8 @@ export const addProductToCart = (productID, data) => API.post(`/cart/product/${p
 export const updateProductInCart = (productID, data) => API.put(`/cart/product/${productID}`, data); // Update product quantity
 export const deleteProductFromCart = (productID) => API.delete(`/cart/product/${productID}`); // Delete product from cart
 
+// Fetch products in the cart
+export const fetchCartProducts = () => API.get('/cart/products'); // Get all products in the cart
+
 // Export default API instance
 export default API;

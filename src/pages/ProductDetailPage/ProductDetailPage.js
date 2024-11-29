@@ -2,82 +2,88 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
 import { fetchProductById, getProductImage } from '../../api/storeapi';
-import { addProductToCart } from '../../api/cartapi'; // Import addProductToCart API
+import { addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 
 const ProductDetailPage = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [image, setImage] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [cartMessage, setCartMessage] = useState(''); // State for showing feedback messages
+  const { productId } = useParams(); // Retrieve product ID from URL params
+  const [product, setProduct] = useState(null); // State for product details
+  const [image, setImage] = useState(null); // State for product image
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
 
+  // Fetch product details and image when component mounts or productId changes
   useEffect(() => {
-    const getProduct = async () => {
+    const getProductDetails = async () => {
       try {
         const response = await fetchProductById(productId);
-        if (response && response.data && response.data.length > 0) {
-          setProduct(response.data[0]);
+        if (response?.data?.length > 0) {
+          setProduct(response.data[0]); // Set the product details
         } else {
-          console.error('No data in response:', response);
+          throw new Error('No product data found');
         }
-        setLoading(false);
       } catch (error) {
-        console.error('Error fetching product details:', error);
-        setError('Error fetching product details');
-        setLoading(false);
+        setError('Error fetching product details'); // Set error message
+        console.error(error);
+      } finally {
+        setLoading(false); // Stop loading indicator
       }
     };
 
-    const fetchImage = async () => {
+    const getImage = async () => {
       try {
         const response = await getProductImage(productId);
         if (response.status === 200) {
           const imageUrl = URL.createObjectURL(response.data);
-          setImage(imageUrl);
+          setImage(imageUrl); // Set the product image
         } else {
-          console.error('Error fetching product image:', response.statusText);
+          throw new Error('Error fetching product image');
         }
       } catch (error) {
-        console.error('Error fetching product image:', error);
+        console.error(error);
       }
     };
 
-    fetchImage();
-    getProduct();
+    getProductDetails();
+    getImage();
   }, [productId]);
 
- const handleAddToCart = async () => {
+  // Handle adding product to the cart
+  const handleAddToCart = async () => {
     try {
-      // Call the API to add the product to the cart
-      const response = await addProductToCart(productId, { quantity: 1 }); // Adjust quantity as needed
-      setCartMessage('Product added to cart successfully!');
+      const response = await addProductToCart(productId, { quantity: 1 }); // Add product with quantity 1
+      setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
     } catch (error) {
-      setCartMessage('Failed to add product to cart.');
+      setCartMessage('Failed to add product to cart.'); // Error message
       console.error('Error adding product to cart:', error);
+    } finally {
+      // Clear the message after 3 seconds
+      setTimeout(() => setCartMessage(''), 3000);
     }
-
-    // Clear the message after a delay
-    setTimeout(() => setCartMessage(''), 3000);
   };
 
-
+  // Loading indicator
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Error message display
   if (error) {
     return <div>{error}</div>;
   }
 
+  // Format price for display
   const numericPrice = parseFloat(product.unitPrice);
   const displayPrice = !isNaN(numericPrice) ? numericPrice.toFixed(2) : 'N/A';
 
+  // Component rendering
   return (
     <div className="product-detail-page">
+      {/* Product Top Section */}
       <div className="product-top-section">
+        {/* Product Images */}
         <div className="product-images">
           {image ? (
             <img src={image} alt={product.name} className="product-image" />
@@ -85,6 +91,7 @@ const ProductDetailPage = () => {
             <p>Loading image...</p>
           )}
         </div>
+        {/* Product Details */}
         <div className="product-details">
           <h1 className="product-name">{product.name}</h1>
           <p className="product-price">${displayPrice}</p>
@@ -101,6 +108,7 @@ const ProductDetailPage = () => {
           {cartMessage && <p className="cart-message">{cartMessage}</p>}
         </div>
       </div>
+      {/* Product Reviews */}
       <div className="product-reviews">
         <ReviewComponent
           id={product.productID}
