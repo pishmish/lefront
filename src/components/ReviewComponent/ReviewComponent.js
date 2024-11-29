@@ -38,6 +38,7 @@ const ReviewComponent = ({ id, overallRating }) => {
     setErrorMessage(''); // Clear previous errors
 
     try {
+      console.log('token: ', document.cookie); // Log the token
       // Extract customer ID from JWT token
       const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
       if (!token) {
@@ -54,12 +55,7 @@ const ReviewComponent = ({ id, overallRating }) => {
 
       console.log('Review Content:', currentReview); // Log the review content
 
-      const reviewData = {
-        reviewContent: currentReview,
-        reviewStars: currentRating,
-        customerID: customerID,
-      };
-      const response = await createReview({ productID: id, reviewData });
+      const response = await createReview({ productID: id, reviewContent: currentReview, reviewStars: currentRating, customerID: customerID });
       console.log('Review submitted:', response.data);
       setCurrentReview('');
       setCurrentRating(0);
