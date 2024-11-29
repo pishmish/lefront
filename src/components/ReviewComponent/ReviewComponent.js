@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
-import { jwtDecode } from 'jwt-decode'; // Use named import
+import {jwtDecode} from 'jwt-decode';
 import { fetchApprovedReviews, createReview } from '../../api/storeapi'; // Adjust the import path as necessary
 import './ReviewComponent.css'; // Adjust the import path as necessary
 
@@ -38,7 +38,7 @@ const ReviewComponent = ({ id, overallRating }) => {
     setErrorMessage(''); // Clear previous errors
 
     try {
-      console.log('token: ', document.cookie); // Log the token
+      console.log('Cookies: ', document.cookie); // Log all cookies
       // Extract customer ID from JWT token
       const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
       if (!token) {
@@ -135,7 +135,7 @@ const ReviewComponent = ({ id, overallRating }) => {
                 />
               ))}
             </div>
-            <p className="review-text">{reviews[currentIndex].reviewContent}</p>
+            <p>{reviews[currentIndex].reviewContent}</p>
           </div>
           <button className="nav-button next" onClick={handleNext}>
             &gt;
