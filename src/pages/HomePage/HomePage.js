@@ -1,22 +1,13 @@
 import React from 'react';
+import HeroBanner from '../../components/HeroBanner/HeroBanner';
+import CategorySection from '../../components/CategorySection/CategorySection';
 import './HomePage.css';
 
-// Components
-import HeroBanner from '../../components/HeroBanner/HeroBanner';  // A HeroBanner component for the main banner
-import CategorySection from '../../components/CategorySection/CategorySection';  // Category section with links to different types of bags
-
-const HomePage = () => {
-  return (
-    <div className="home-page">
-      {/* Hero Banner */}
-      <HeroBanner />
-
-      {/* Category Section */}
-      <section className="category-section">
-        <CategorySection />
-      </section>
-    </div>
-  );
-};
+const HomePage = () => (
+  <div className="home-page">
+    <HeroBanner />
+    <CategorySection />
+  </div>
+);
 
 export default HomePage;
