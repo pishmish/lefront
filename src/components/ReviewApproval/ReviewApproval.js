@@ -1,73 +1,93 @@
 // components/ReviewApproval/ReviewApproval.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchPendingReviews, updateReviewApprovalStatus } from '../../api/storeapi';
 import './ReviewApproval.css';
 
-const ReviewApproval = () => {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      productName: 'Product A',
-      rating: 4,
-      comment: 'Great product!',
-      approved: false,
-    },
-    {
-      id: 2,
-      productName: 'Product B',
-      rating: 5,
-      comment: 'Excellent quality!',
-      approved: false,
-    },
-  ]);
+const ReviewApproval = ({ username }) => {
+  const [reviews, setReviews] = useState([]);
+  const [error, setError] = useState(null);
 
-  const handleApprove = (id) => {
-    setReviews((prevReviews) =>
-      prevReviews.map((review) =>
-        review.id === id ? { ...review, approved: true } : review
-      )
-    );
+  useEffect(() => {
+    const getReviews = async () => {
+      try {
+        const response = await fetchPendingReviews(username);
+        console.log('username:', username);
+        if (response && response.data) {
+          console.log('Pending reviews:', response.data);
+          setReviews(response.data);
+        } else {
+          console.error('No data in response:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        setError('Failed to fetch pending reviews');
+      }
+    };
+
+    if (username) {
+      getReviews();
+    }
+  }, [username]);
+
+  const handleApprove = async (reviewId) => {
+    try {
+      await updateReviewApprovalStatus(reviewId, { approvalStatus: 1 });
+      setReviews(prevReviews => 
+        prevReviews.filter(review => review.reviewID !== reviewId)
+      );
+    } catch (error) {
+      console.error('Error approving review:', error);
+    }
   };
 
-  const handleReject = (id) => {
-    setReviews((prevReviews) => prevReviews.filter((review) => review.id !== id));
+  const handleReject = async (reviewId) => {
+    try {
+      await updateReviewApprovalStatus(reviewId, { approvalStatus: 2 });
+      setReviews(prevReviews => 
+        prevReviews.filter(review => review.reviewID !== reviewId)
+      );
+    } catch (error) {
+      console.error('Error rejecting review:', error);
+    }
   };
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
     <div className="review-approval">
       <h2>Pending Reviews</h2>
-      <ul className="review-list">
-        {reviews.map((review) => (
-          <li
-            key={review.id}
-            className={`review-item ${review.approved ? 'approved' : ''}`}
-          >
-            <div className="review-details">
-              <p><strong>Product:</strong> {review.productName}</p>
-              <p><strong>Rating:</strong> {review.rating} / 5</p>
-              <p><strong>Comment:</strong> {review.comment}</p>
-            </div>
-            <div className="review-actions">
-              {!review.approved && (
-                <>
-                  <button
-                    className="approve-button"
-                    onClick={() => handleApprove(review.id)}
-                  >
-                    Approve
-                  </button>
-                  <button
-                    className="reject-button"
-                    onClick={() => handleReject(review.id)}
-                  >
-                    Reject
-                  </button>
-                </>
-              )}
-              {review.approved && <span className="approved-label">Approved</span>}
-            </div>
-          </li>
-        ))}
-      </ul>
+      {reviews.length === 0 ? (
+        <p>No pending reviews</p>
+      ) : (
+        <ul className="review-list">
+          {reviews.map((review) => (
+            <li key={review.reviewID} className="review-item">
+              <div className="review-details">
+                <p><strong>Product ID:</strong> {review.productID}</p>
+                <p><strong>Customer ID:</strong> {review.customerID}</p>
+                <p><strong>Rating:</strong> {review.reviewStars} / 5</p>
+                <p><strong>Review:</strong> {review.reviewContent}</p>
+              </div>
+              <div className="review-actions">
+                <button
+                  className="approve-button"
+                  onClick={() => handleApprove(review.reviewID)}
+                >
+                  Approve
+                </button>
+                <button
+                  className="reject-button"
+                  onClick={() => handleReject(review.reviewID)}
+                >
+                  Reject
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

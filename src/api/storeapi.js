@@ -24,12 +24,15 @@ export const searchProducts = (query) => API.get(`/store/search?q=${query}`); //
 // Reviews API calls
 export const fetchReviews = (productId) => API.get(`/store/product/${productId}/reviews`); // Fetch all reviews for a product
 export const fetchApprovedReviews = (productId) => API.get(`/store/product/${productId}/reviews/approved`); // Fetch all reviews for a product
-
 export const fetchReviewById = (productId, reviewId) =>
     API.get(`/store/product/${productId}/reviews/${reviewId}`); // Fetch single review
+export const fetchPendingReviews = (username) => 
+  API.get(`/store/reviews/pending/${username}`); // Fetch all reviews for a product
 export const createReview = (productId, reviewContent, reviewStars, customerID) => API.post(`/store/product/${productId}/reviews`, productId, reviewContent, reviewStars, customerID); // Add review
 export const updateReview = (productId, reviewId, data) =>
     API.put(`/store/product/${productId}/reviews/${reviewId}`, data); // Update review
+export const updateReviewApprovalStatus = (reviewId, approvalStatus) =>
+    API.put(`/store/reviews/${reviewId}`, approvalStatus); // Update review approval status
 export const deleteReview = (reviewId) => API.delete(`/store/reviews/${reviewId}`); // Delete review
 
 // Sorting API calls

@@ -31,9 +31,9 @@ const LoginPage = () => {
       if (role === 'customer') {
         navigate('/profile');
       } else if (role === 'productManager') {
-        navigate('/admin'); // for now it takes to the admin page
+        navigate('/admin/products'); // for now it takes to the admin page
       } else if (role === 'salesManager') {
-        navigate('/admin');
+        navigate('/admin/sales');
       } else { // for now it takes to the admin page
         setErrorMessage('Unknown role. Please contact support.');
       }

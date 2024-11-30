@@ -1,11 +1,29 @@
 // pages/ProductManagerPage/ProductManagerPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import ProductManagement from '../../components/ProductManagement/ProductManagement';
 import ReviewApproval from '../../components/ReviewApproval/ReviewApproval';
 import './ProductManagerPage.css';
 
 const ProductManagerPage = () => {
   const [activeTab, setActiveTab] = useState('product');
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    try {
+      const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('authToken='));
+      
+      if (token) {
+        const decodedToken = jwtDecode(token.split('=')[1]);
+        setUsername(decodedToken.id); // Assuming username is stored as 'id' in token
+        console.log('Decoded token:', decodedToken);
+      }
+    } catch (error) {
+      console.error('Error decoding token:', error);
+    }
+  }, []);
 
   const renderContent = () => {
     if (activeTab === 'product') {
@@ -19,7 +37,7 @@ const ProductManagerPage = () => {
       return (
         <section className="product-section">
           <h2>Review Approval</h2>
-          <ReviewApproval />
+          <ReviewApproval username={username} />
         </section>
       );
     }
