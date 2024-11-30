@@ -11,6 +11,9 @@ export const fetchProductById = (id) => API.get(`/store/product/${id}`); // Fetc
 export const createProduct = (data) => API.post('/store/product', data); // Create new product
 export const updateProduct = (id, data) => API.put(`/store/product/${id}`, data); // Update product
 export const deleteProduct = (id) => API.delete(`/store/product/${id}`); // Delete product
+//export const fetchProductsBySupplier = (supplierId) => API.get(`/store/product/supplier/${supplierId}`);
+export const fetchProductsForManager= (username) => API.get(`/store/product/admin/${username}`);
+
 
 export const fetchCategories = () => API.get('/store/category'); // Fetch categories
 export const fetchCategoryByName = (name) => API.get(`/store/category/${name}`); // Fetch category by name

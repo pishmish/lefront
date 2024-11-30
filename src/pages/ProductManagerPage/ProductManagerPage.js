@@ -30,7 +30,7 @@ const ProductManagerPage = () => {
       return (
         <section className="product-section">
           <h2>Product Management</h2>
-          <ProductManagement />
+          <ProductManagement username={username} />
         </section>
       );
     } else if (activeTab === 'reviews') {
