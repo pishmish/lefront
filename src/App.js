@@ -8,7 +8,8 @@ import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
-import AdminPage from './pages/AdminPage/AdminPage';
+import SalesManagerPage from './pages/SalesManagerPage/SalesManagerPage';
+import ProductManagerPage from './pages/ProductManagerPage/ProductManagerPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import WishListPage from './pages/WishListPage/WishListPage';
 import SearchResultPage from './pages/SearchResultPage/SearchResultPage';
@@ -26,7 +27,8 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin/sales" element={<SalesManagerPage />} />
+          <Route path="/admin/products" element={<ProductManagerPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/wishlist" element={<WishListPage />} />
           <Route path="/search" element={<SearchResultPage />} />

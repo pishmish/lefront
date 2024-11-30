@@ -1,13 +1,12 @@
-/* AdminPage.css */
-
-.admin-page {
+/* ProductManagerPage.css */
+.product-manager-page {
     padding: 2rem;
     background-color: #f9fafb;
     min-height: 100vh;
     font-family: Arial, sans-serif;
   }
   
-  .admin-page h1 {
+  .product-manager-page h1 {
     text-align: center;
     font-size: 2rem;
     color: #333;
@@ -15,8 +14,7 @@
     font-weight: bold;
   }
   
-  /* Tab Menü */
-  .admin-tabs {
+  .product-tabs {
     display: flex;
     justify-content: center;
     margin-bottom: 1.5rem;
@@ -44,8 +42,7 @@
     background-color: #d0d0d0;
   }
   
-  /* Her bölüm için şık bir kart görünümü */
-  .admin-section {
+  .product-section {
     margin: 1.5rem 0;
     padding: 1.5rem;
     background-color: #ffffff;
@@ -53,8 +50,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
-  /* Bölüm başlıkları */
-  .admin-section h2 {
+  .product-section h2 {
     font-size: 1.5rem;
     color: #333;
     margin-bottom: 1rem;
@@ -63,39 +59,6 @@
     padding-bottom: 0.5rem;
   }
   
-  /* Grafik boyutlandırması */
-  .sales-chart-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1rem 0;
-  }
-  
-  /* Sipariş tablosu */
-  .order-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  
-  .order-table th,
-  .order-table td {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 0.95rem;
-  }
-  
-  .order-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .order-table tr:nth-child(even) {
-    background-color: #fafafa;
-  }
-  
-  /* Ürün yönetimindeki liste ve düğmeler */
   .product-management-list {
     list-style: none;
     padding: 0;
