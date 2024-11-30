@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import './ProductListingPage.css';
 
 import ProductCard from '../../components/ProductCard/ProductCard';
-import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
 import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
 import { fetchCategoryProducts } from '../../api/storeapi';
 
@@ -34,9 +33,6 @@ const ProductListingPage = () => {
 
   return (
     <div className="product-listing-page">
-      <aside className="filter-sidebar">
-        <FilterSidebar onFilterChange={() => {}} />
-      </aside>
 
       <div className="product-listing-content">
         <div className="sorting-bar">

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchProducts } from '../../api/storeapi';
 import ProductCard from '../../components/ProductCard/ProductCard';
-import FilterSidebar from '../../components/FilterSidebar/FilterSidebar';
 import SortingDropdown from '../../components/SortingDropdown/SortingDropdown';
 import './SearchResultPage.css';
 
@@ -47,9 +46,6 @@ const SearchResultPage = () => {
 
   return (
     <div className="search-result-page">
-      <aside className="filter-sidebar">
-        <FilterSidebar onFilterChange={() => {}} /> {/* FilterSidebar bileşeni */}
-      </aside>
       <div className="search-result-content">
         <div className="sorting-bar">
           <SortingDropdown onSortChange={() => {}} /> {/* SortingDropdown bileşeni */}
