@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
+import { AUTH_STATE_CHANGED } from '../../utils/authEvents';
 
 const categories = [
   {
@@ -57,30 +58,57 @@ const categories = [
 ];
 
 const Navbar = () => {
-  const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [userRole, setUserRole] = useState(null); // Kullanıcı rolü kontrolü
+  const [userRole, setUserRole] = useState(null);
+  const navigate = useNavigate();
   const dropdownTimeout = useRef(null);
 
-  useEffect(() => {
-    // Retrieve authToken from cookies and decode it
-    const cookies = document.cookie.split('; ');
-    const tokenCookie = cookies.find((cookie) => cookie.startsWith('authToken='));
-
-    if (tokenCookie) {
-      const token = tokenCookie.split('=')[1];
-      try {
-        const decodedToken = jwtDecode(token);
-        console.log('Decoded Token:', decodedToken);
-        setUserRole(decodedToken.role); // Extract and store user role
-      } catch (error) {
-        console.error('Error decoding token:', error);
-        setUserRole(null); // Reset role if token is invalid
-      }
+  const checkAuth = () => {
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('authToken='));
+    
+    if (token) {
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      setUserRole(decodedToken.role);
+      console.log('Auth check - userRole:', decodedToken.role);
+    } else {
+      setUserRole(null);
+      console.log('Auth check - no token found');
     }
+  };
+
+  // Check auth on mount and cookie changes
+  useEffect(() => {
+    checkAuth();
+
+    // Create observer for cookie changes
+    const cookieObserver = new MutationObserver(() => {
+      checkAuth();
+    });
+
+    // Observe document.cookie for changes
+    cookieObserver.observe(document, {
+      attributes: true,
+      attributeFilter: ['cookie']
+    });
+
+    return () => cookieObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // Initial auth check
+    checkAuth();
+
+    // Listen for auth state changes
+    window.addEventListener(AUTH_STATE_CHANGED, checkAuth);
+
+    return () => {
+      window.removeEventListener(AUTH_STATE_CHANGED, checkAuth);
+    };
   }, []);
 
   const toggleCartSidebar = () => {
@@ -105,18 +133,24 @@ const Navbar = () => {
       setSearchQuery('');
     }
   };
-  const handleProfileRedirect = () => {
-    // Redirect based on the user's role
-    if (userRole === 'customer') {
-      navigate('/profile');
-    } else if (userRole === 'productManager') {
-      navigate('/admin/products');
-      console.log("Role:",userRole)
-    } else if (userRole === 'salesManager') {
-      navigate('/admin/sales');
-    } else {
-      console.error('Unknown role.');
-    }
+
+
+  const handleLogout = () => {
+    // Log current cookies
+    console.log('Current cookies before logout:', document.cookie);
+    
+    // Clear the auth token cookie
+    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Log cookies after clearing
+    console.log('Cookies after logout:', document.cookie);
+    
+    // Reset userRole state
+    setUserRole(null);
+    console.log('UserRole after reset:', null);
+    
+    // Navigate to home page
+    navigate('/');
   };
 
   return (
@@ -184,13 +218,54 @@ const Navbar = () => {
             onMouseEnter={() => setShowUserDropdown(true)}
             onMouseLeave={() => setShowUserDropdown(false)}
           >
-            <FiUser size={20} />
+            <FiUser 
+              size={20} 
+              style={{ 
+                cursor: 'pointer',
+                color: userRole ? '#007bff' : '#555' // Highlight icon when logged in
+              }} 
+            />
             {showUserDropdown && (
               <div className="user-dropdown">
-                <button onClick={() => navigate('/login')}>Login</button>
-                <button onClick={() => navigate('/signup')}>Sign Up</button>
-                {userRole && (
-                  <button onClick={handleProfileRedirect}>Profile</button>
+                {userRole ? (
+                  // Logged in dropdown
+                  <>
+                    <button onClick={() => {
+                      switch(userRole) {
+                        case 'customer':
+                          navigate('/profile');
+                          break;
+                        case 'productManager':
+                          navigate('/admin/products');
+                          break;
+                        case 'salesManager':
+                          navigate('/admin/sales');
+                          break;
+                      }
+                      setShowUserDropdown(false);
+                    }}>
+                      Profile
+                    </button>
+                    <button onClick={handleLogout}>
+                      Log Out
+                    </button>
+                  </>
+                ) : (
+                  // Not logged in dropdown
+                  <>
+                    <button onClick={() => {
+                      navigate('/login');
+                      setShowUserDropdown(false);
+                    }}>
+                      Login
+                    </button>
+                    <button onClick={() => {
+                      navigate('/signup'); 
+                      setShowUserDropdown(false);
+                    }}>
+                      Sign Up
+                    </button>
+                  </>
                 )}
               </div>
             )}

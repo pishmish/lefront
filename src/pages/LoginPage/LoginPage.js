@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Use named import
 import { loginUser } from '../../api/userapi'; // Import the login API function
+import { notifyAuthStateChanged } from '../../utils/authEvents';
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -21,6 +22,9 @@ const LoginPage = () => {
 
       // Store the token in cookies
       document.cookie = `authToken=${token}; path=/`;
+
+      // Notify auth state changed
+      notifyAuthStateChanged();
 
       // Decode the token to get user information
       const decodedToken = jwtDecode(token);

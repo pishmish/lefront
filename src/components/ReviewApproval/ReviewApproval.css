@@ -1,103 +1,84 @@
 /* components/ReviewApproval/ReviewApproval.css */
 
 .review-approval {
-    padding: 1.5rem;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .review-approval h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    color: #333;
-    font-weight: 600;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-  }
-  
-  .review-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .review-item {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s;
-  }
-  
-  .review-item:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .review-details p {
-    margin: 0.2rem 0;
-  }
-  
-  .approve-button {
-    padding: 0.5rem 1rem;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .approve-button:hover {
-    background-color: #45A049;
-  }
-  
-  .approved-label {
-    color: #4CAF50;
-    font-weight: bold;
-  }
-  /* components/ReviewApproval/ReviewApproval.css */
+  padding: 0.3rem;
+}
+
+.review-approval h2 {
+  font-size: 1.8rem;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.review-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.review-details {
+  flex: 1;
+}
+
+.review-details p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.review-details p strong {
+  color: #333;
+  margin-right: 0.5rem;
+}
 
 .review-actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .approve-button,
-  .reject-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-  }
-  
-  .approve-button {
-    background-color: #4CAF50;
-    color: #fff;
-  }
-  
-  .approve-button:hover {
-    background-color: #45A049;
-  }
-  
-  .reject-button {
-    background-color: #f44336;
-    color: #fff;
-  }
-  
-  .reject-button:hover {
-    background-color: #e53935;
-  }
-  
-  .approved-label {
-    color: #4CAF50;
-    font-weight: bold;
-  }
-  
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.approve-button,
+.reject-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.approve-button {
+  background-color: #48bb78;
+  color: white;
+}
+
+.approve-button:hover {
+  background-color: #38a169;
+}
+
+.reject-button {
+  background-color: #f56565;
+  color: white;
+}
+
+.reject-button:hover {
+  background-color: #e53e3e;
+}
