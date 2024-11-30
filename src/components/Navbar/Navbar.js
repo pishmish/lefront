@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
+import {jwtDecode} from 'jwt-decode';
 import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
 
@@ -59,9 +60,28 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [showUserDropdown, setShowUserDropdown] = useState(false); // For Login/Sign-Up hover
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const dropdownTimeout = useRef(null); // Ref to handle hover delay
+  const [userRole, setUserRole] = useState(null); // Kullanıcı rolü kontrolü
+  const dropdownTimeout = useRef(null);
+
+  useEffect(() => {
+    // Retrieve authToken from cookies and decode it
+    const cookies = document.cookie.split('; ');
+    const tokenCookie = cookies.find((cookie) => cookie.startsWith('authToken='));
+
+    if (tokenCookie) {
+      const token = tokenCookie.split('=')[1];
+      try {
+        const decodedToken = jwtDecode(token);
+        console.log('Decoded Token:', decodedToken);
+        setUserRole(decodedToken.role); // Extract and store user role
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        setUserRole(null); // Reset role if token is invalid
+      }
+    }
+  }, []);
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
@@ -83,6 +103,19 @@ const Navbar = () => {
     if (searchQuery.trim()) {
       navigate(`/search?q=${searchQuery.trim()}`);
       setSearchQuery('');
+    }
+  };
+  const handleProfileRedirect = () => {
+    // Redirect based on the user's role
+    if (userRole === 'customer') {
+      navigate('/profile');
+    } else if (userRole === 'productManager') {
+      navigate('/admin/products');
+      console.log("Role:",userRole)
+    } else if (userRole === 'salesManager') {
+      navigate('/admin/sales');
+    } else {
+      console.error('Unknown role.');
     }
   };
 
@@ -156,6 +189,9 @@ const Navbar = () => {
               <div className="user-dropdown">
                 <button onClick={() => navigate('/login')}>Login</button>
                 <button onClick={() => navigate('/signup')}>Sign Up</button>
+                {userRole && (
+                  <button onClick={handleProfileRedirect}>Profile</button>
+                )}
               </div>
             )}
           </div>
