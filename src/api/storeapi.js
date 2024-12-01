@@ -39,22 +39,22 @@ export const updateReviewApprovalStatus = (reviewId, approvalStatus) =>
 export const deleteReview = (reviewId) => API.delete(`/store/reviews/${reviewId}`); // Delete review
 
 // Sorting API calls
-export const sortProductsBy = (field, order) => API.get(`/store/product/sort/${field}/${order}`);
+export const sortProductsBy = (sortBy, sortOrder, data) => API.post(`/store/sort?sortBy=${sortBy}&sortOrder=${sortOrder}`, data);
 
 // Predefined sorting functions
-export const sortProductsByStock = (order) => sortProductsBy('stock', order);
-export const sortProductsByName = (order) => sortProductsBy('name', order);
-export const sortProductsByPrice = (order) => sortProductsBy('price', order);
-export const sortProductsByRating = (order) => sortProductsBy('rating', order);
-export const sortProductsByDiscount = (order) => sortProductsBy('discount', order);
-export const sortProductsByTimeListed = (order) => sortProductsBy('newProducts', order);
-export const sortProductsByBrand = (order) => sortProductsBy('brand', order);
-export const sortProductsByColor = (order) => sortProductsBy('color', order);
-export const sortProductsBySupplier = (order) => sortProductsBy('supplier', order);
-export const sortProductsByMaterial = (order) => sortProductsBy('material', order);
-export const sortProductsByCapacity = (order) => sortProductsBy('capacity', order);
-export const sortProductsByWarranty = (order) => sortProductsBy('warranty', order);
-export const sortProductsByPopularity = (order) => sortProductsBy('popularity', order);
+export const sortProductsByStock = (order, data) => sortProductsBy('stock', order, data);
+export const sortProductsByName = (order, data) => sortProductsBy('name', order, data);
+export const sortProductsByPrice = (order, data) => sortProductsBy('unitPrice', order, data);
+export const sortProductsByRating = (order, data) => sortProductsBy('rating', order, data);
+export const sortProductsByDiscount = (order, data) => sortProductsBy('discount', order, data);
+export const sortProductsByTimeListed = (order, data) => sortProductsBy('newProducts', order, data);
+export const sortProductsByBrand = (order, data) => sortProductsBy('brand', order, data);
+export const sortProductsByColor = (order, data) => sortProductsBy('color', order, data);
+export const sortProductsBySupplier = (order, data) => sortProductsBy('supplier', order, data);
+export const sortProductsByMaterial = (order, data) => sortProductsBy('material', order, data);
+export const sortProductsByCapacity = (order, data) => sortProductsBy('capacity', order, data);
+export const sortProductsByWarranty = (order, data) => sortProductsBy('warranty', order, data);
+export const sortProductsByPopularity = (order, data) => sortProductsBy('popularity', order, data);
 
 // API call to get product image
 export const getProductImage = (id) => API.get(`/store/product/${id}/image`, { responseType: 'blob' });
