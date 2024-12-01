@@ -38,6 +38,12 @@ const ReviewComponent = ({ id, overallRating }) => {
     setErrorMessage(''); // Clear previous errors
 
     try {
+      // Check if a star rating is selected
+      if (currentRating === 0) {
+        setErrorMessage('Please select a star rating.');
+        return;
+      }
+
       console.log('Cookies: ', document.cookie); // Log all cookies
       // Extract customer ID from JWT token
       const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
@@ -62,7 +68,11 @@ const ReviewComponent = ({ id, overallRating }) => {
       setHoverRating(0);
     } catch (error) {
       console.error('Error submitting review:', error);
-      setErrorMessage('Failed to submit review. Please ensure you are logged in.');
+      if (error.message === 'No auth token found' || error.message === 'Customer ID not found in token') {
+        setErrorMessage('Failed to submit review. Please ensure you are logged in.');
+      } else {
+        setErrorMessage('Failed to submit review. Please try again.');
+      }
     }
   };
 
