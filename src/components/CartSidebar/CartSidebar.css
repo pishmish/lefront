@@ -4,7 +4,7 @@
   position: fixed;
   top: 0;
   right: 0;
-  width: 400px; /* Boyutunu büyüttük */
+  width: 400px;
   height: 100%;
   background-color: #fdfdfd;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
@@ -87,6 +87,7 @@
   padding: 1rem;
   border-top: 1px solid #eee;
 }
+
 .pay-now-button {
   width: 100%;
   padding: 0.8rem;
@@ -104,6 +105,7 @@
 .pay-now-button:hover {
   background-color: #45A049;
 }
+
 .cart-item-controls {
   display: flex;
   gap: 10px;

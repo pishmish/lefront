@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
 import { AUTH_STATE_CHANGED } from '../../utils/authEvents';
+import { deleteCartIfEmpty } from '../../api/cartapi'; // Import the deleteCartIfEmpty function
 
 const categories = [
   {
@@ -63,22 +64,27 @@ const Navbar = () => {
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRole, setUserRole] = useState(null);
+  const [customerID, setCustomerID] = useState(null);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownTimeout = useRef(null);
 
   const checkAuth = () => {
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('authToken='));
-    
-    if (token) {
-      const decodedToken = jwtDecode(token.split('=')[1]);
-      setUserRole(decodedToken.role);
-      console.log('Auth check - userRole:', decodedToken.role);
-    } else {
+    console.log('Cookies: ', document.cookie); // Log all cookies
+    // Extract customer ID from JWT token
+    const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+    if (!token) {
+      console.log('No auth token found');
+      setCustomerID(null);
       setUserRole(null);
-      console.log('Auth check - no token found');
+      return;
     }
+    console.log('Token found:', token); // Log the token
+    const decodedToken = jwtDecode(token.split('=')[1]);
+    console.log('Decoded token:', decodedToken); // Log the decoded token
+    const customerID = decodedToken.customerID;
+    setCustomerID(customerID); // Set the customerID state
+    setUserRole(decodedToken.role); // Set the userRole state
   };
 
   // Check auth on mount and cookie changes
@@ -134,19 +140,35 @@ const Navbar = () => {
     }
   };
 
+  const toggleProfileDropdown = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
+  };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     // Log current cookies
     console.log('Current cookies before logout:', document.cookie);
     
     // Clear the auth token cookie
     document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Clear the fingerprint cookie
+    document.cookie = "fingerprint=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
     // Log cookies after clearing
     console.log('Cookies after logout:', document.cookie);
     
+    // Delete cart if empty
+    if (customerID) {
+      try {
+        await deleteCartIfEmpty(customerID);
+        console.log('Cart deleted if empty');
+      } catch (err) {
+        console.error('Error deleting cart:', err);
+      }
+    }
+
     // Reset userRole state
     setUserRole(null);
+    setCustomerID(null);
     console.log('UserRole after reset:', null);
     
     // Navigate to home page
@@ -276,7 +298,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} />
+      <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} customerID={customerID} />
     </>
   );
 };

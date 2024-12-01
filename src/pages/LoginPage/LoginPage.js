@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Use named import
 import { loginUser } from '../../api/userapi'; // Import the login API function
 import { notifyAuthStateChanged } from '../../utils/authEvents';
+import { mergeCartsOnLogin } from '../../api/cartapi'; // Import the merge carts API function
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -26,10 +27,12 @@ const LoginPage = () => {
       // Notify auth state changed
       notifyAuthStateChanged();
 
+
       // Decode the token to get user information
       const decodedToken = jwtDecode(token);
       console.log('token:', token);
-      console.log('User logged in:', decodedToken);
+      console.log('User logged in:', decodedToken.customerID);
+
 
       // Redirect based on the user's role
       if (role === 'customer') {
@@ -41,6 +44,8 @@ const LoginPage = () => {
       } else { // for now it takes to the admin page
         setErrorMessage('Unknown role. Please contact support.');
       }
+      // Merge carts on login
+      await mergeCartsOnLogin(decodedToken.customerID);
     } catch (error) {
       // Handle login errors
       console.error('Login error:', error);

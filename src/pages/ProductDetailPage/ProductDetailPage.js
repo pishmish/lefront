@@ -52,7 +52,7 @@ const ProductDetailPage = () => {
   // Handle adding product to the cart
   const handleAddToCart = async () => {
     try {
-      const response = await addProductToCart(productId, { quantity: 1 }); // Add product with quantity 1
+      const response = await addProductToCart(productId); // Add product with quantity 1
       setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
     } catch (error) {
