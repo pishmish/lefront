@@ -17,55 +17,46 @@
   flex-direction: column;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
-  padding: 2rem;
-  border-radius: 16px;
+  padding: 1rem 1rem; /* Increased horizontal padding */
+  border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  max-width: 450px;
+  max-width: 500px; 
   width: 100%;
   text-align: center;
 }
 
-/* Welcome Message Styling */
-.sign-up-welcome {
-  margin-bottom: 1.5rem;
-}
-
-.sign-up-welcome h1 {
-  font-size: 2.2rem;
-  font-weight: bold;
-  color: #222;
-  margin-bottom: 0.5rem;
-}
-
-.sign-up-welcome p {
-  font-size: 1rem;
-  color: #444;
-  line-height: 1.6;
-}
-
 /* Form Styling */
-.sign-up-form h2 {
-  font-size: 1.8rem;
+.sign-up-form h1 {
+  font-size: 2rem;
   color: #333;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  margin-top: 1.7rem;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 0.8rem;
   text-align: left;
   width: 100%;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.next-button:hover {
+  background-color: #444;
+  transform: translateY(-2px);
 }
 
 .form-group label {
   display: block;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
   color: #444;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.9rem;
+  padding: 0.9rem 1.2rem;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1rem;
@@ -79,36 +70,120 @@
   outline: none;
 }
 
-/* Button Styling */
-.sign-up-button {
+.sign-up-form .form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
   width: 100%;
-  padding: 0.9rem;
-  background-color: #007bff;
+  max-width: 400px !important; /* Force wider max-width */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+/* Ensure parent containers don't restrict width */
+.sign-up-form {
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Button Container */
+.form-buttons {
+  text-align: center; /* Center the buttons horizontally */
+  margin-top: 2rem;
+}
+
+/* Common Button Styles */
+.next-button {
+  background-color: #333;
   color: white;
+  padding: 1rem;
+  margin: 0; /* Remove any default margins */
   border: none;
   border-radius: 8px;
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  width: 45%;
 }
 
-.sign-up-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
+.form-buttons .submit-button {
+  display: inline-block;      /* Place buttons side by side */
+  width: 45%;                 /* Set equal width for buttons */
+  max-height: 3.5rem;
+  padding: 1rem;
+  margin: 5px;               /* Space between buttons */
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+
 }
 
-/* Error and Success Message Styling */
+/* Individual Button Colors */
+.previous-button {
+  background-color: #333;
+  color: white;
+}
+
+.submit-button {
+  background-color: #333;
+  color: white;
+  
+}
+
+/* Hover Effects */
+.previous-button:hover,
+.submit-button:hover {
+  background-color: #444;
+  transform: translateY(-2px);
+}
+
+/* Common Button Styles */
+.form-buttons .previous-button {
+  display: inline-block;      /* Place buttons side by side */
+  width: 45%;                 /* Set equal width for buttons */
+  max-height: 3.5rem;
+  padding: 1rem;
+  margin: 5px;               /* Space between buttons */
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Hover Effects */
+.previous-button:hover,
+.submit-button:hover {
+  background-color: #444;
+  transform: translateY(-2px);
+}
+
+/* Message Styling */
+.error-message,
+.success-message {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
 .error-message {
-  color: #e63946;
-  font-size: 0.9rem;
-  margin-top: 10px;
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
 .success-message {
-  color: #2a9d8f;
-  font-size: 0.9rem;
-  margin-top: 10px;
+  background-color: #dcfce7;
+  color: #16a34a;
 }
 
 /* Responsive Design */
@@ -134,4 +209,30 @@
     padding: 0.8rem;
     font-size: 1rem;
   }
+}
+
+/* Container for the Next button */
+.next-button-container {
+  text-align: right; /* Aligns the button to the right */
+  margin-top: 1.5rem; /* Adjusts spacing above the button */
+}
+
+/* Common Button Styles */
+.next-button {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  margin: 20px; /* Remove any default margins */
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  width: 45%;
+}
+
+.next-button:hover {
+  background-color: #444;
+  transform: translateY(-2px);
 }
