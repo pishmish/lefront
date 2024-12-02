@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import ProductManagement from '../../components/ProductManagement/ProductManagement';
 import ReviewApproval from '../../components/ReviewApproval/ReviewApproval';
+import OrderTracking from '../../components/OrderTracking/OrderTracking'; // OrderTracking bileşenini import ettik
 import './ProductManagerPage.css';
 
 const ProductManagerPage = () => {
@@ -38,6 +39,12 @@ const ProductManagerPage = () => {
           <ReviewApproval username={username} />
         </section>
       );
+    } else if (activeTab === 'orders') { // Yeni Orders sekmesi için içerik
+      return (
+        <section className="product-section">
+          <OrderTracking />
+        </section>
+      );
     }
   };
 
@@ -56,6 +63,12 @@ const ProductManagerPage = () => {
           onClick={() => setActiveTab('reviews')}
         >
           Reviews
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`} // Yeni Orders sekme butonu
+          onClick={() => setActiveTab('orders')}
+        >
+          Orders
         </button>
       </div>
       {renderContent()}

@@ -1,0 +1,45 @@
+.order-tracking-cust-container {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+  
+  .accordion-header {
+    background-color: #f7f9fc;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+  }
+  
+  .accordion-header:hover {
+    background-color: #e3e7ee;
+  }
+  
+  .accordion-content {
+    padding: 20px;
+    background-color: #ffffff;
+  }
+  
+  .order-content {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .order-content p {
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  
+  .order-content strong {
+    color: #333;
+  }
+  
