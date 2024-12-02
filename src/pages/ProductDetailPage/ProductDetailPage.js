@@ -116,7 +116,7 @@ const ProductDetailPage = () => {
         {/* Product Details */}
         <div className="product-details">
           <h1 className="product-name">{product.name}</h1>
-          <p className="product-price">${displayPrice}</p>
+          
           <p className="product-description">{product.description}</p>
           <ul className="product-features">
             {product.features?.map((feature, index) => (
@@ -124,6 +124,7 @@ const ProductDetailPage = () => {
             ))}
           </ul>
           <p className="product-stock">Stock: {product.stock}</p>
+          <p className="product-price">${displayPrice}</p>
           <button className="add-to-cart-button" onClick={handleAddToCart}>
             Add to Cart
           </button>

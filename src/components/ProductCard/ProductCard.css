@@ -70,16 +70,17 @@
   .view-product-button {
     padding: 0.8rem 1rem;
     font-size: 1rem;
-    background-color: #333;
+    background-color: #000000;
     color: white;
     border: none;
-    border-radius: 0 0 8px 8px;
+    border-radius: 0;
     cursor: pointer;
     transition: background-color 0.3s;
   }
   
   .view-product-button:hover {
-    background-color: #555;
+    background-color: #000000;
+    transform: translateY(-2px);
   }
 
   .wishlist-icon {

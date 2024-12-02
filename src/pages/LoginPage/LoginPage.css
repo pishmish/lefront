@@ -54,27 +54,27 @@
 }
 
 .form-group input:focus {
-  border-color: #007bff;
+  border-color: #000000;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
   outline: none;
 }
 
 /* Login Button */
 .login-button {
-  width: 100%;
+  width: 40%;
   padding: 0.9rem;
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 0px;
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
+  margin-bottom: 18px;
   transition: background-color 0.3s, transform 0.2s;
 }
 
 .login-button:hover {
-  background-color: #0056b3;
   transform: scale(1.02);
 }
 
@@ -82,14 +82,14 @@
 .forgot-password-link {
   display: block;
   margin-top: 1.5rem;
-  color: #007bff;
+  color: #000000;
   font-size: 0.9rem;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .forgot-password-link:hover {
-  color: #0056b3;
+  color: #000000;
 }
 
 /* Error Message Styling */
@@ -125,15 +125,21 @@
   text-align: center;
 }
 
+.sign-up-redirect p {
+  font-size: 1rem; /* Larger font for better visibility */
+  color: #333;
+  margin-bottom: 10px;
+}
+
 .sign-up-button {
-  background-color: #007bff;
+  background-color: #000000;
   color: #fff;
   border: none;
   padding: 10px 15px;
-  border-radius: 5px;
   cursor: pointer;
+  margin-bottom: 0px;
 }
 
 .sign-up-button:hover {
-  background-color: #0056b3;
+  background-color: #000000;
 }

@@ -92,78 +92,60 @@
   margin-top: 2rem;
 }
 
-/* Common Button Styles */
+
 .next-button {
-  background-color: #333;
+  width: 40%;
+  padding: 0.9rem;
+  background-color: #000000;
   color: white;
-  padding: 1rem;
-  margin: 0; /* Remove any default margins */
   border: none;
-  border-radius: 8px;
+  border-radius: 0px;
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
+  margin-top: 18px;
+  margin-bottom: 18px;
   transition: background-color 0.3s, transform 0.2s;
-  width: 45%;
 }
 
 .form-buttons .submit-button {
   display: inline-block;      /* Place buttons side by side */
-  width: 45%;                 /* Set equal width for buttons */
-  max-height: 3.5rem;
+  width: 40%;                 /* Set equal width for buttons */
+  max-height: 3.3rem;
   padding: 1rem;
   margin: 5px;               /* Space between buttons */
   border: none;
-  border-radius: 8px;
+  border-radius: 0px;
+  background-color: #000000;
+  color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  color: white;
-  background-color: #333;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-
-}
-
-/* Individual Button Colors */
-.previous-button {
-  background-color: #333;
-  color: white;
-}
-
-.submit-button {
-  background-color: #333;
-  color: white;
-  
-}
-
-/* Hover Effects */
-.previous-button:hover,
-.submit-button:hover {
-  background-color: #444;
-  transform: translateY(-2px);
 }
 
 /* Common Button Styles */
 .form-buttons .previous-button {
   display: inline-block;      /* Place buttons side by side */
-  width: 45%;                 /* Set equal width for buttons */
-  max-height: 3.5rem;
+  width: 40%;                 /* Set equal width for buttons */
+  max-height: 3.3rem;
   padding: 1rem;
   margin: 5px;               /* Space between buttons */
   border: none;
-  border-radius: 8px;
+  border-radius: 0px;
+  background-color: #000000;
+  color: white;
   font-size: 1.1rem;
   font-weight: bold;
-  color: white;
-  background-color: #333;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  margin-bottom: 25px;
 }
 
 /* Hover Effects */
 .previous-button:hover,
 .submit-button:hover {
-  background-color: #444;
+  background-color: #000000;
   transform: translateY(-2px);
 }
 
@@ -217,22 +199,3 @@
   margin-top: 1.5rem; /* Adjusts spacing above the button */
 }
 
-/* Common Button Styles */
-.next-button {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-  margin: 20px; /* Remove any default margins */
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-  width: 45%;
-}
-
-.next-button:hover {
-  background-color: #444;
-  transform: translateY(-2px);
-}

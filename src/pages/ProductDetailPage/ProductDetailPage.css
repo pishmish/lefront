@@ -50,20 +50,24 @@
 }
 
 .product-name {
-  font-size: 2rem; /* Başlık boyutunu biraz küçülttük */
+  font-size: 2rem;
   font-weight: bold;
   color: #333;
 }
 
 .product-price {
-  font-size: 1.6rem; /* Fiyat boyutunu küçülttük */
-  color: #555;
+  font-size: 1.5rem !important;
+  font-weight: bold;
+  align-self: center;
+  color: #000000 !important;
+  margin-bottom: 3px;
 }
 
 .product-description {
-  font-size: 1rem; /* Açıklamayı küçülttük */
-  color: #777;
-  line-height: 1.6; /* Satır aralığını ayarladık */
+  font-size: 1rem;
+  color: #444343;
+  line-height: 1.6;
+  margin-bottom: 0px;
 }
 
 .product-features {
@@ -72,12 +76,13 @@
 }
 
 .product-features li {
-  font-size: 1rem; /* Özellik boyutunu küçülttük */
-  color: #555;
+  font-size: 1rem;
+  color: #444343;
 }
 
 .product-stock {
-  font-size: 1rem; /* Stok bilgisi boyutunu küçülttük */
+  font-size: 1rem !important;
+  color: #000000 !important;
   color: #777;
 }
 
@@ -85,16 +90,16 @@
 .add-to-cart-button {
   padding: 0.8rem 1.2rem; /* Butonu küçülttük */
   font-size: 1rem; /* Buton metni boyutunu küçülttük */
-  background-color: #333;
+  background-color: #000000;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 0px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .add-to-cart-button:hover {
-  background-color: #555;
+  background-color: #000000;
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
