@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { fetchCart } from '../../api/cartapi';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
 import { AUTH_STATE_CHANGED } from '../../utils/authEvents';
@@ -88,29 +88,30 @@ const Navbar = () => {
     setCustomerID(customerID); // Set the customerID state
     setUserRole(decodedToken.role); // Set the userRole state
   };
-  const fetchCartItemCount = async () => {
-    
 
+  const updateCartItemCount = async () => {
     try {
-      console.log('Fetching cart item count...');
       const response = await fetchCart(customerID);
-      console.log('Cart response:', response);
-      // if (!response.ok) throw new Error('Failed to fetch cart item count');
-      const count = response.data.numProducts;
-
-      console.log('count:', count);
-      setCartItemCount(count);
-      
-    } catch (error) {
-      console.error('Error fetching cart item count:', error);
-      setCartItemCount(0); // Default to 0 if there's an error
+      const cartData = response.data;
+      if (cartData && cartData.products && cartData.products.length > 0) {
+        const totalItems = cartData.products.reduce(
+          (sum, item) => sum + item.quantity,
+          0
+        );
+        setCartItemCount(totalItems);
+      } else {
+        setCartItemCount(0);
+      }
+    } catch (err) {
+      console.error('Error fetching cart item count:', err);
+      setCartItemCount(0);
     }
   };
 
   // Check auth on mount and cookie changes
   useEffect(() => {
     checkAuth();
-    fetchCartItemCount();
+    updateCartItemCount();
     // Create observer for cookie changes
     const cookieObserver = new MutationObserver(() => {
       checkAuth();
@@ -136,6 +137,21 @@ const Navbar = () => {
       window.removeEventListener(AUTH_STATE_CHANGED, checkAuth);
     };
   }, []);
+
+  useEffect(() => {
+    updateCartItemCount();
+
+    // Listen for cart updates
+    const handleCartUpdate = () => {
+      updateCartItemCount();
+    };
+
+    window.addEventListener('CART_UPDATED', handleCartUpdate);
+
+    return () => {
+      window.removeEventListener('CART_UPDATED', handleCartUpdate);
+    };
+  }, [customerID]);
 
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
@@ -321,7 +337,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} customerID={customerID} />
+      <CartSidebar isOpen={isCartOpen} onClose={toggleCartSidebar} customerID={customerID} onCartUpdate={updateCartItemCount} />
     </>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
-import useCartStore from '../hooks/useCart'; // Import the custom hook
 import { fetchProductById, getProductImage } from '../../api/storeapi';
 import { addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
+import {jwtDecode} from 'jwt-decode';
 
 const ProductDetailPage = () => {
   const { productId } = useParams(); // Retrieve product ID from URL params
@@ -12,8 +12,8 @@ const ProductDetailPage = () => {
   const [image, setImage] = useState(null); // State for product image
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-  const { updateCartCount } = useCartStore(); // Get cart count update function
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
+  const [customerID, setCustomerID] = useState(null);
 
   // Fetch product details and image when component mounts or productId changes
   useEffect(() => {
@@ -51,13 +51,32 @@ const ProductDetailPage = () => {
     getImage();
   }, [productId]);
 
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      if (!token) {
+        setCustomerID(null);
+        return;
+      }
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      const customerID = decodedToken.customerID;
+      setCustomerID(customerID);
+    };
+
+    checkAuth();
+  }, []);
+
   // Handle adding product to the cart
   const handleAddToCart = async () => {
     try {
-      const response = await addProductToCart(productId); // Add product with quantity
-      updateCartCount(response.data.numProducts); // Update cart count
+      const response = await addProductToCart(productId, customerID); // Add product with quantity
       setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
+
+      // Dispatch a custom event to notify the Navbar to update the cart count
+      const event = new Event('CART_UPDATED');
+      window.dispatchEvent(event);
+
     } catch (error) {
       setCartMessage('Failed to add product to cart.'); // Error message
       console.error('Error adding product to cart:', error);

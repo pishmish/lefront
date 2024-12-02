@@ -4,7 +4,7 @@ import './CartSidebar.css';
 import { fetchCart, addProductToCart, removeProductFromCart } from '../../api/cartapi';
 import { getProductImage } from '../../api/storeapi';
 
-const CartSidebar = ({ isOpen, onClose, customerID }) => {
+const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
@@ -60,7 +60,7 @@ const CartSidebar = ({ isOpen, onClose, customerID }) => {
 
   const handleAddProduct = async (productID) => {
     try {
-      await addProductToCart(productID);
+      await addProductToCart(productID, customerID);
       // Update cart items and total directly
       setCartItems((prevItems) =>
         prevItems.map((item) =>
@@ -70,6 +70,7 @@ const CartSidebar = ({ isOpen, onClose, customerID }) => {
       setTotal((prevTotal) =>
         prevTotal + parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
       );
+      onCartUpdate(); // Notify Navbar to update the cart item count
     } catch (err) {
       console.error('Error adding product to cart:', err);
     }
@@ -80,13 +81,16 @@ const CartSidebar = ({ isOpen, onClose, customerID }) => {
       await removeProductFromCart(productID, customerID);
       // Update cart items and total directly
       setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.productID === productID ? { ...item, quantity: item.quantity - 1 } : item
-        ).filter((item) => item.quantity > 0)
+        prevItems
+          .map((item) =>
+            item.productID === productID ? { ...item, quantity: item.quantity - 1 } : item
+          )
+          .filter((item) => item.quantity > 0)
       );
       setTotal((prevTotal) =>
         prevTotal - parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
       );
+      onCartUpdate(); // Notify Navbar to update the cart item count
     } catch (err) {
       console.error('Error removing product from cart:', err);
     }
