@@ -38,6 +38,7 @@ export const updateReview = (productId, reviewId, data) =>
 export const updateReviewApprovalStatus = (reviewId, approvalStatus) =>
     API.put(`/store/reviews/${reviewId}`, approvalStatus); // Update review approval status
 export const deleteReview = (reviewId) => API.delete(`/store/reviews/${reviewId}`); // Delete review
+export const fetchOverAllRating = (productID) => API.get(`/store/reviews/overallRating/${productID}`); // Fetch overall rating for a product
 
 // Sorting API calls
 export const sortProductsBy = (sortBy, sortOrder, data) => API.post(`/store/sort?sortBy=${sortBy}&sortOrder=${sortOrder}`, data);

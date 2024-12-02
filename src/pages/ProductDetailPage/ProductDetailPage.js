@@ -299,8 +299,7 @@ const ProductDetailPage = () => {
       {/* Product Reviews */}
       <div className="product-reviews">
         <ReviewComponent
-          id={product.productID}
-          overallRating={product.overallRating}
+          productID={product.productID}
         />
       </div>
     </div>

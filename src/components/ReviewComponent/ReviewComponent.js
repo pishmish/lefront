@@ -2,79 +2,93 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import {jwtDecode} from 'jwt-decode';
-import { fetchApprovedReviews, createReview } from '../../api/storeapi'; // Adjust the import path as necessary
+import { fetchApprovedReviews, createReview, fetchOverAllRating } from '../../api/storeapi'; // Adjust the import path as necessary
 import './ReviewComponent.css'; // Adjust the import path as necessary
 
-const ReviewComponent = ({ id, overallRating }) => {
+const ReviewComponent = ({ productID }) => {
   const [reviews, setReviews] = useState([]);
   const [currentRating, setCurrentRating] = useState(0);
+  const [overallRating, setOverallRating] = useState();
   const [hoverRating, setHoverRating] = useState(0);
   const [currentReview, setCurrentReview] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const getReviews = async () => {
-      try {
-        const response = await fetchApprovedReviews(id);
-        console.log('Reviews response:', response); // Log the response
-        if (response && response.data) {
-          console.log('Reviews data:', response.data); // Log the reviews data
-          setReviews(response.data);
-        } else {
-          console.error('No data in response:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
+  const getOverallRating = async () => {
+    try {
+      const response = await fetchOverAllRating(productID);
+      if (response && response.data) {
+        setOverallRating(response.data[0].overallRating);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching overall rating:', error);
+    }
+  };
 
+  const getReviews = async () => {
+    try {
+      const response = await fetchApprovedReviews(productID);
+      console.log('Reviews response:', response); // Log the response
+      if (response && response.data) {
+        console.log('Reviews data:', response.data); // Log the reviews data
+        setReviews(response.data);
+        // Fetch overall rating separately
+        await getOverallRating();
+      } else {
+        console.error('No data in response:', response);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    }
+  };
+
+  useEffect(() => {
     getReviews();
-  }, [id]);
+  }, [productID]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(''); // Clear previous errors
+    setErrorMessage('');
 
     try {
-      // Check if a star rating is selected
-      if (currentRating === 0) {
-        setErrorMessage('Please select a star rating.');
-        return;
-      }
+        if (currentRating === 0) {
+            setErrorMessage('Please select a star rating.');
+            return;
+        }
 
-      console.log('Cookies: ', document.cookie); // Log all cookies
-      // Extract customer ID from JWT token
-      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
-      if (!token) {
-        throw new Error('No auth token found');
-      }
-      console.log('Token found:', token); // Log the token
-      const decodedToken = jwtDecode(token.split('=')[1]);
-      console.log('Decoded token:', decodedToken); // Log the decoded token
-      const customerID = decodedToken.customerID;
+        const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+        if (!token) {
+            throw new Error('No auth token found');
+        }
 
-      if (!customerID) {
-        throw new Error('Customer ID not found in token');
-      }
+        const decodedToken = jwtDecode(token.split('=')[1]);
+        const customerID = decodedToken.customerID;
 
-      console.log('Review Content:', currentReview); // Log the review content
+        if (!customerID) {
+            throw new Error('Customer ID not found in token');
+        }
 
-      const response = await createReview({ productID: id, reviewContent: currentReview, reviewStars: currentRating, customerID: customerID });
-      console.log('Review submitted:', response.data);
-      setCurrentReview('');
-      setCurrentRating(0);
-      setHoverRating(0);
+        const response = await createReview({ 
+            productID: productID, 
+            reviewContent: currentReview, 
+            reviewStars: currentRating, 
+            customerID: customerID 
+        });
+
+        // Reset form
+        setCurrentReview('');
+        setCurrentRating(0);
+        
+        // Refresh reviews and overall rating
+        await getReviews();
+        await getOverallRating();
+        
     } catch (error) {
-      console.error('Error submitting review:', error);
-      if (error.message === 'No auth token found' || error.message === 'Customer ID not found in token') {
-        setErrorMessage('Failed to submit review. Please ensure you are logged in.');
-      } else {
+        console.error('Error submitting review:', error);
         setErrorMessage('Failed to submit review. Please try again.');
-      }
     }
-  };
+};
 
   const handleNext = () => {
     if (currentIndex < reviews.length - 1) {
@@ -87,6 +101,7 @@ const ReviewComponent = ({ id, overallRating }) => {
       setCurrentIndex(currentIndex - 1);
     }
   };
+  
 
   return (
     <div className="review-container">
