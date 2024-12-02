@@ -87,6 +87,12 @@ const LoginPage = () => {
             Login
           </button>
         </form>
+        <div className="sign-up-redirect">
+          <p>Don't have an account?</p>
+          <button type="button" onClick={() => navigate('/signup')} className="sign-up-button">
+            Sign Up
+          </button>
+        </div>
       </div>
     </div>
   );

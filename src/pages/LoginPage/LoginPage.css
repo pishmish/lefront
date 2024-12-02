@@ -120,3 +120,20 @@
     font-size: 1rem;
   }
 }
+.sign-up-redirect {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.sign-up-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sign-up-button:hover {
+  background-color: #0056b3;
+}
