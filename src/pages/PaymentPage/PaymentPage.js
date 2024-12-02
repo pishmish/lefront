@@ -1,13 +1,76 @@
 // PaymentPage.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './PaymentPage.css';
+import { fetchCart } from '../../api/cartapi';
+import { useNavigate } from 'react-router-dom';
+import { getProductImage } from '../../api/storeapi';
+import { jwtDecode } from 'jwt-decode';
 
 const PaymentPage = () => {
-  // Mock cart items
-  const cartItems = [
-    { id: 1, name: 'Elegant Tote Bag', price: 75, quantity: 1, imageUrl: '/assets/images/tote-bag.jpg' },
-    { id: 2, name: 'Casual Backpack', price: 120, quantity: 2, imageUrl: '/assets/images/backpack.jpg' },
-  ];
+  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [customerID, setCustomerID] = useState(null);
+
+  const loadCartProducts = async () => {
+    setLoading(true);
+    setError(null);
+
+    const checkAuth = () => {
+      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      if (!token) {
+        setCustomerID(null);
+        return;
+      }
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      const customerID = decodedToken.customerID;
+      setCustomerID(customerID);
+    };
+
+    checkAuth();
+
+    try {
+      const response = await fetchCart(customerID);
+      console.log("response: ", response.data);
+      const cartData = response.data;
+
+      if (cartData && cartData.products && cartData.products.length > 0) {
+        const productsWithImages = await Promise.all(
+          cartData.products.map(async (product) => {
+            try {
+              const imageResponse = await getProductImage(product.productID);
+              const imageUrl = URL.createObjectURL(imageResponse.data);
+              return { ...product, imageUrl };
+            } catch (err) {
+              console.error(`Error fetching image for product ${product.productID}:`, err);
+              return { ...product, imageUrl: '/assets/images/default.jpg' };
+            }
+          })
+        );
+
+        setCartItems(productsWithImages);
+        const calculatedTotal = productsWithImages.reduce(
+          (sum, item) => sum + parseFloat(item.unitPrice) * item.quantity,
+          0
+        );
+        setTotal(calculatedTotal);
+      } else {
+        setCartItems([]);
+        setTotal(0);
+      }
+    } catch (err) {
+      console.error('Error fetching cart data:', err);
+      setError('Failed to load cart data.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadCartProducts();
+  }, []);
 
   return (
     <div className="payment-page">
@@ -60,19 +123,27 @@ const PaymentPage = () => {
         <div className="cart-summary-section">
           <h2>Your Order</h2>
           <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <img src={item.imageUrl} alt={item.name} />
-                <div className="cart-item-info">
-                  <h3>{item.name}</h3>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: ${item.price.toFixed(2)}</p>
+            {loading ? (
+              <p>Loading...</p>
+            ) : error ? (
+              <p>{error}</p>
+            ) : cartItems.length === 0 ? (
+              <p>Your cart is empty.</p>
+            ) : (
+              cartItems.map((item) => (
+                <div key={item.productID} className="cart-item">
+                  <img src={item.imageUrl} alt={item.name} />
+                  <div className="cart-item-info">
+                    <h3>{item.name}</h3>
+                    <p>Quantity: {item.quantity}</p>
+                    <p>Price: ${parseFloat(item.unitPrice).toFixed(2)}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
           <div className="cart-total">
-            <h3>Total: ${cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</h3>
+            <h3>Total: ${total.toFixed(2)}</h3>
           </div>
         </div>
       </div>

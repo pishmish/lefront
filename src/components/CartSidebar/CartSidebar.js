@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
 import './CartSidebar.css';
 import { fetchCart, addProductToCart, removeProductFromCart } from '../../api/cartapi';
 import { getProductImage } from '../../api/storeapi';
+import emptyCartImage from '../../assets/images/empty-cart.jpg'; // Import the image
 
 const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
   const navigate = useNavigate();
@@ -58,6 +59,22 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
     }
   }, [isOpen]);
 
+  // Listen for the 'CART_UPDATED' event to refresh cart data
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      if (isOpen) {
+        loadCartProducts();
+      }
+    };
+
+    window.addEventListener('CART_UPDATED', handleCartUpdate);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('CART_UPDATED', handleCartUpdate);
+    };
+  }, [isOpen]); // Re-run the effect if 'isOpen' changes
+
   const handleAddProduct = async (productID) => {
     try {
       await addProductToCart(productID, customerID);
@@ -71,6 +88,10 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         prevTotal + parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
       );
       onCartUpdate(); // Notify Navbar to update the cart item count
+
+      // Optionally, dispatch 'CART_UPDATED' to notify other components
+      const event = new Event('CART_UPDATED');
+      window.dispatchEvent(event);
     } catch (err) {
       console.error('Error adding product to cart:', err);
     }
@@ -91,27 +112,58 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         prevTotal - parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
       );
       onCartUpdate(); // Notify Navbar to update the cart item count
+
+      // Optionally, dispatch 'CART_UPDATED' to notify other components
+      const event = new Event('CART_UPDATED');
+      window.dispatchEvent(event);
     } catch (err) {
       console.error('Error removing product from cart:', err);
     }
   };
 
   const handlePayment = () => {
-    onClose();
-    navigate('/payment');
+    if (customerID) {
+      onClose();
+      navigate('/payment');
+    } else {
+      onClose();
+      navigate('/login');
+    }
   };
 
   return (
     <div className={`cart-sidebar ${isOpen ? 'open' : ''}`}>
       <button className="close-button" onClick={onClose}>×</button>
-      <h2>Your Cart</h2>
+
+      {cartItems.length > 0 && <h2>Your Cart</h2>}
 
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>{error}</p>
       ) : cartItems.length === 0 ? (
-        <p>Your cart is empty. Start shopping now!</p>
+        <div className="empty-cart-message">
+          <p1>Your cart is empty.</p1>
+          <p2>Not sure where to start?</p2>
+          <div className="category-buttons">
+            <Link to="/category/Handbags">
+              <button className="start-shopping-button">Shop Handbags</button>
+            </Link>
+            <Link to="/category/Backpacks">
+              <button className="start-shopping-button">Shop Backpacks</button>
+            </Link>
+            <Link to="/category/Luggage">
+              <button className="start-shopping-button">Shop Luggage</button>
+            </Link>
+            <Link to="/category/Travel%20Bags">
+              <button className="start-shopping-button">Shop Travel Bags</button>
+            </Link>
+            <Link to="/category/Sports%20Bags">
+              <button className="start-shopping-button">Shop Sports Bags</button>
+            </Link>
+          </div>
+          <img src={emptyCartImage} alt="Empty Cart" className="empty-cart-image" />
+        </div>
       ) : (
         <div className="cart-items">
           {cartItems.map((item) => (
@@ -131,10 +183,14 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         </div>
       )}
 
-      <div className="cart-total">
-        Total: ${total.toFixed(2)}
-      </div>
-      <button className="pay-now-button" onClick={handlePayment}>Pay Now</button>
+      {cartItems.length > 0 && (
+        <>
+          <div className="cart-total">
+            Total: ${total.toFixed(2)}
+          </div>
+          <button className="pay-now-button" onClick={handlePayment}>CONTINUE TO CHECKOUT</button>
+        </>
+      )}
     </div>
   );
 };

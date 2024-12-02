@@ -12,7 +12,9 @@
   transition: transform 0.4s ease;
   padding: 2rem;
   z-index: 1000;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevents internal scrolling */
 }
 
 .cart-sidebar.open {
@@ -42,7 +44,8 @@
 
 .cart-items {
   margin-top: 2rem;
-  max-height: calc(100% - 200px);
+  flex-grow: 1; /* Allows cart items to take available space */
+  overflow-y: auto; /* Enables scrolling within cart items if necessary */
 }
 
 .cart-item {
@@ -92,7 +95,7 @@
   width: 100%;
   padding: 0.8rem;
   margin-top: 1rem;
-  background-color: #4CAF50;
+  background-color: #000000;
   color: white;
   border: none;
   border-radius: 5px;
@@ -112,15 +115,85 @@
   margin-top: 5px;
 }
 
+
 .quantity-button {
-  padding: 5px 10px;
-  background-color: #007bff;
+  width: 25px; /* Fixed width */
+  height: 25px; /* Fixed height to make it a circle */
+  display: flex; /* Use Flexbox for centering */
+  align-items: center; /* Vertical centering */
+  justify-content: center; /* Horizontal centering */
+  font-size: 15px; /* Adjust font size for better fit */
+  font-weight: bold;
+  background-color: #000000;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 2%; /* Perfect circle */
   cursor: pointer;
+  padding: 0; /* Remove padding to maintain circle shape */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
 }
 
 .quantity-button:hover {
   background-color: #0056b3;
+}
+
+/* Updated Styles for Empty Cart Message */
+
+.empty-cart-message {
+  flex: 1; /* Takes up available space */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the top */
+  text-align: center;
+  padding: 20px 0;
+  margin-left: -2rem; /* Remove left padding from .cart-sidebar */
+  margin-right: -2rem; /* Remove right padding from .cart-sidebar */
+}
+
+.empty-cart-message p1 {
+  font-size: 1.8rem; /* Larger font for better visibility */
+  color: #333;
+  margin-bottom: 14px;
+}
+
+.empty-cart-message p2 {
+  font-size: 1.4rem; /* Larger font for better visibility */
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.category-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.start-shopping-button {
+  margin: 9px 0;
+  padding: 10px 30px;
+  font-size: 13px;
+  cursor: pointer;
+  background-color: #614907;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-shopping-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.start-shopping-button:active {
+  transform: translateY(0);
+}
+
+.empty-cart-image {
+  width: calc(100% + 4rem); /* Full width minus parent padding */
+  height: calc(100% - 200px); /* Adjust based on content height */
+  object-fit: cover; /* Ensures the image covers the area, cropping if necessary */
+  margin-top: 20px;
 }
