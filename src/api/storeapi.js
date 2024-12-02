@@ -8,6 +8,7 @@ const API = axios.create({
 // Store API calls
 export const fetchProducts = () => API.get('/store/product'); // Fetch all products
 export const fetchProductById = (id) => API.get(`/store/product/${id}`); // Fetch single product
+export const fetchSupplierByProductId = (id) => API.get(`/store/supplier/${id}`); // Fetch supplier by product ID
 export const createProduct = (data) => API.post('/store/product', data); // Create new product
 export const updateProduct = (id, data) => API.put(`/store/product/${id}`, data); // Update product
 export const deleteProduct = (id) => API.delete(`/store/product/${id}`); // Delete product

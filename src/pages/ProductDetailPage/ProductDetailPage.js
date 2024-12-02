@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
-import { fetchProductById, getProductImage } from '../../api/storeapi';
+import { fetchProductById, getProductImage, fetchSupplierByProductId } from '../../api/storeapi';
 import { fetchCart, addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 import { jwtDecode } from 'jwt-decode';
@@ -11,6 +11,7 @@ import { colornames } from 'color-name-list';
 const ProductDetailPage = () => {
   const { productId } = useParams(); // Retrieve product ID from URL params
   const [product, setProduct] = useState(null); // State for product details
+  const [supplier, setSupplier] = useState(null); // State for supplier details
   const [image, setImage] = useState(null); // State for product image
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
@@ -64,6 +65,7 @@ const ProductDetailPage = () => {
     const getProductDetails = async () => {
       try {
         const response = await fetchProductById(productId);
+        console.log('Product Details:', response.data);
         if (response?.data?.length > 0) {
           setProduct(response.data[0]); // Set the product details
         } else {
@@ -74,6 +76,19 @@ const ProductDetailPage = () => {
         console.error(error);
       } finally {
         setLoading(false); // Stop loading indicator
+      }
+    };
+
+    const getSupplierInfo = async () => {
+      try {
+        const response = await fetchSupplierByProductId(productId);
+        if (response?.data?.length > 0) {
+          setSupplier(response.data[0]); // Set the supplier info
+        } else {
+          throw new Error('No supplier info found');
+        }
+      } catch (error) {
+        console.error(error);
       }
     };
 
@@ -91,6 +106,7 @@ const ProductDetailPage = () => {
       }
     };
 
+    getSupplierInfo();
     getProductDetails();
     getImage();
   }, [productId]);
@@ -234,9 +250,23 @@ const ProductDetailPage = () => {
             </div>
             <div className="detail-item">
               <span className="detail-title">Capacity: </span>
-              <span className="detail-value">
-                {product.capacityLitres} Litres
-              </span>
+              <span className="detail-value">{product.capacityLitres} Litres </span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Product ID: </span>
+              <span className="detail-value">{product.productID}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Serial Number: </span>
+              <span className="detail-value">{product.serialNumber}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Warranty Duration: </span>
+              <span className="detail-value">{product.warrantyMonths} Month(s)</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Supplier: </span>
+              <span className="detail-value">{supplier.name}</span>
             </div>
           </div>
 
