@@ -34,7 +34,7 @@ const ProductDetailPage = () => {
     return ctx.fillStyle;
   };
 
-  // Function to get the closest color hex code
+  // Function to get the closest color
   const getClosestColor = (colorName) => {
     if (!colorName) return '#000000'; // Default to black if no color name provided
 
@@ -82,6 +82,7 @@ const ProductDetailPage = () => {
     const getSupplierInfo = async () => {
       try {
         const response = await fetchSupplierByProductId(productId);
+        console.log("response:", response.data);
         if (response?.data?.length > 0) {
           setSupplier(response.data[0]); // Set the supplier info
         } else {
@@ -106,9 +107,10 @@ const ProductDetailPage = () => {
       }
     };
 
-    getSupplierInfo();
+    
     getProductDetails();
     getImage();
+    getSupplierInfo();
   }, [productId]);
 
   useEffect(() => {
@@ -209,6 +211,14 @@ const ProductDetailPage = () => {
   console.log('Current Cart Quantity:', currentCartQuantity);
   const isAddToCartDisabled = product.stock === 0 || currentCartQuantity >= product.stock;
 
+  const renderSupplierInfo = () => {
+    if (supplier) {
+      return <div>{supplier.name}</div>;
+    } else {
+      return <div>No supplier information available</div>;
+    }
+  };
+
   // Component rendering
   return (
     <div className="product-detail-page">
@@ -266,7 +276,7 @@ const ProductDetailPage = () => {
             </div>
             <div className="detail-item">
               <span className="detail-title">Supplier: </span>
-              <span className="detail-value">{supplier.name}</span>
+              <span className="detail-value">{renderSupplierInfo()}</span>
             </div>
           </div>
 
