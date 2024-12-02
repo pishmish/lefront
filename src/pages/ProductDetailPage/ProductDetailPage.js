@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
+import useCartStore from '../hooks/useCart'; // Import the custom hook
 import { fetchProductById, getProductImage } from '../../api/storeapi';
 import { addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
@@ -11,6 +12,7 @@ const ProductDetailPage = () => {
   const [image, setImage] = useState(null); // State for product image
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const { updateCartCount } = useCartStore(); // Get cart count update function
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
 
   // Fetch product details and image when component mounts or productId changes
@@ -52,7 +54,8 @@ const ProductDetailPage = () => {
   // Handle adding product to the cart
   const handleAddToCart = async () => {
     try {
-      const response = await addProductToCart(productId); // Add product with quantity 1
+      const response = await addProductToCart(productId); // Add product with quantity
+      updateCartCount(response.data.numProducts); // Update cart count
       setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
     } catch (error) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { fetchCart } from '../../api/cartapi';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiUser, FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { jwtDecode } from 'jwt-decode';
@@ -59,6 +60,7 @@ const categories = [
 ];
 
 const Navbar = () => {
+  const [cartItemCount, setCartItemCount] = useState(0);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -86,11 +88,29 @@ const Navbar = () => {
     setCustomerID(customerID); // Set the customerID state
     setUserRole(decodedToken.role); // Set the userRole state
   };
+  const fetchCartItemCount = async () => {
+    
+
+    try {
+      console.log('Fetching cart item count...');
+      const response = await fetchCart(customerID);
+      console.log('Cart response:', response);
+      // if (!response.ok) throw new Error('Failed to fetch cart item count');
+      const count = response.data.numProducts;
+
+      console.log('count:', count);
+      setCartItemCount(count);
+      
+    } catch (error) {
+      console.error('Error fetching cart item count:', error);
+      setCartItemCount(0); // Default to 0 if there's an error
+    }
+  };
 
   // Check auth on mount and cookie changes
   useEffect(() => {
     checkAuth();
-
+    fetchCartItemCount();
     // Create observer for cookie changes
     const cookieObserver = new MutationObserver(() => {
       checkAuth();
@@ -103,7 +123,7 @@ const Navbar = () => {
     });
 
     return () => cookieObserver.disconnect();
-  }, []);
+  }, [customerID]);
 
   useEffect(() => {
     // Initial auth check
@@ -294,6 +314,9 @@ const Navbar = () => {
           </div>
           <div className="navbar-cart" onClick={toggleCartSidebar}>
             <FiShoppingCart size={20} />
+              {cartItemCount > 0 && (
+                <span className="cart-badge">{cartItemCount}</span>
+              )}
           </div>
         </div>
       </nav>

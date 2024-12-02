@@ -144,6 +144,13 @@
   cursor: pointer;
 }
 
+.navbar-cart {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
 .navbar-user:hover,
 .navbar-cart:hover,
 .navbar-wishlist:hover {
@@ -195,4 +202,21 @@
 
 .user-dropdown button:not(:last-child) {
   border-bottom: 1px solid #eee;
+}
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #ff4d4d;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
