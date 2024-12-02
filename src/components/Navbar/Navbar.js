@@ -268,7 +268,7 @@ const Navbar = () => {
               </button>
             </form>
           </div>
-          <Link to="/wishlist">
+          <Link to="/wishlist" className="navbar-wishlist">
             <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />
           </Link>
           <div

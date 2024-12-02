@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import './ProductDetailPage.css';
 import { fetchProductById, getProductImage } from '../../api/storeapi';
-import { addProductToCart } from '../../api/cartapi'; // Add product to cart API
+import { fetchCart, addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 import { jwtDecode } from 'jwt-decode';
 import nearestColor from 'nearest-color';
@@ -16,6 +16,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null); // Error state
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
   const [customerID, setCustomerID] = useState(null);
+  const [cartQuantity, setCartQuantity] = useState(0); // State for product quantity in cart
 
   // Initialize color matcher
   const colors = colornames.reduce((accumulator, { name, hex }) => {
@@ -25,12 +26,12 @@ const ProductDetailPage = () => {
 
   const colorMatcher = nearestColor.from(colors);
 
-    // Function to convert color name to hex code
-    const colorNameToHex = (colorName) => {
-      const ctx = document.createElement('canvas').getContext('2d');
-      ctx.fillStyle = colorName;
-      return ctx.fillStyle;
-    };
+  // Function to convert color name to hex code
+  const colorNameToHex = (colorName) => {
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.fillStyle = colorName;
+    return ctx.fillStyle;
+  };
 
   // Function to get the closest color hex code
   const getClosestColor = (colorName) => {
@@ -57,7 +58,6 @@ const ProductDetailPage = () => {
     const match = colorMatcher(colorHex);
     return match ? match.value : '#000000';
   };
-
 
   // Fetch product details and image when component mounts or productId changes
   useEffect(() => {
@@ -112,6 +112,25 @@ const ProductDetailPage = () => {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const fetchCartQuantity = async () => {
+      if (customerID) {
+        try {
+          const response = await fetchCart(customerID);
+          const cartData = response.data;
+          const productInCart = cartData.products.find(
+            (item) => item.productID === productId
+          );
+          setCartQuantity(productInCart ? productInCart.quantity : 0);
+        } catch (error) {
+          console.error('Error fetching cart quantity:', error);
+        }
+      }
+    };
+
+    fetchCartQuantity();
+  }, [customerID, productId]);
+
   // Handle adding product to the cart
   const handleAddToCart = async () => {
     try {
@@ -119,9 +138,15 @@ const ProductDetailPage = () => {
       setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
 
-      // Dispatch a custom event to notify the Navbar to update the cart count
+      // Update cart quantity
+      setCartQuantity((prevQuantity) => prevQuantity + 1);
+
+      // Dispatch a custom event to notify the Navbar to update the cart count and open the cart sidebar
       const event = new Event('CART_UPDATED');
       window.dispatchEvent(event);
+
+      const openCartEvent = new Event('OPEN_CART_SIDEBAR');
+      window.dispatchEvent(openCartEvent);
     } catch (error) {
       setCartMessage('Failed to add product to cart.'); // Error message
       console.error('Error adding product to cart:', error);
@@ -147,6 +172,9 @@ const ProductDetailPage = () => {
 
   // Get closest color hex code
   const closestColorHex = getClosestColor(product.color);
+
+  // Determine if the "Add to Cart" button should be disabled
+  const isAddToCartDisabled = product.stock === 0 || cartQuantity >= product.stock;
 
   // Component rendering
   return (
@@ -201,7 +229,11 @@ const ProductDetailPage = () => {
             <p className="product-stock">Stock: {product.stock}</p>
           </div>
 
-          <button className="add-to-cart-button" onClick={handleAddToCart}>
+          <button
+            className={`add-to-cart-button ${isAddToCartDisabled ? 'disabled' : ''}`}
+            onClick={handleAddToCart}
+            disabled={isAddToCartDisabled}
+          >
             Add to Cart
           </button>
           {cartMessage && <p className="cart-message">{cartMessage}</p>}

@@ -99,6 +99,7 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
   const handleRemoveProduct = async (productID) => {
     try {
+      console.log("customerID: ", customerID);
       await removeProductFromCart(productID, customerID);
       // Update cart items and total directly
       setCartItems((prevItems) =>
@@ -165,19 +166,19 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
           <p2>Not sure where to start?</p2>
           <div className="category-buttons">
             <Link to="/category/Handbags">
-              <button className="start-shopping-button">Shop Handbags</button>
+              <button className="start-shopping-button" onClick={onClose}>Shop Handbags</button>
             </Link>
             <Link to="/category/Backpacks">
-              <button className="start-shopping-button">Shop Backpacks</button>
+              <button className="start-shopping-button" onClick={onClose}>Shop Backpacks</button>
             </Link>
             <Link to="/category/Luggage">
-              <button className="start-shopping-button">Shop Luggage</button>
+              <button className="start-shopping-button" onClick={onClose}>Shop Luggage</button>
             </Link>
             <Link to="/category/Travel%20Bags">
-              <button className="start-shopping-button">Shop Travel Bags</button>
+              <button className="start-shopping-button" onClick={onClose}>Shop Travel Bags</button>
             </Link>
             <Link to="/category/Sports%20Bags">
-              <button className="start-shopping-button">Shop Sports Bags</button>
+              <button className="start-shopping-button" onClick={onClose}>Shop Sports Bags</button>
             </Link>
           </div>
           <img src={emptyCartImage} alt="Empty Cart" className="empty-cart-image" />

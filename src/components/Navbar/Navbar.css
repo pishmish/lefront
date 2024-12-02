@@ -113,6 +113,12 @@
   gap: 1.5rem;
 }
 
+.navbar-icons > a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 .navbar-search {
   display: flex;
   align-items: center;
@@ -137,18 +143,20 @@
 .navbar-cart,
 .navbar-wishlist {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-wishlist {
+  position: relative;
 }
 
 .navbar-user {
   position: relative;
-  cursor: pointer;
 }
 
 .navbar-cart {
   position: relative;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
 }
 
 .navbar-user:hover,
@@ -203,6 +211,7 @@
 .user-dropdown button:not(:last-child) {
   border-bottom: 1px solid #eee;
 }
+
 .cart-badge {
   position: absolute;
   top: -8px;
