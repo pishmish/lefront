@@ -133,8 +133,16 @@ const Navbar = () => {
     // Listen for auth state changes
     window.addEventListener(AUTH_STATE_CHANGED, checkAuth);
 
+    // Listen for the custom event to open the cart sidebar
+    const handleOpenCartSidebar = () => {
+      setIsCartOpen(true);
+    };
+
+    window.addEventListener('OPEN_CART_SIDEBAR', handleOpenCartSidebar);
+
     return () => {
       window.removeEventListener(AUTH_STATE_CHANGED, checkAuth);
+      window.removeEventListener('OPEN_CART_SIDEBAR', handleOpenCartSidebar);
     };
   }, []);
 

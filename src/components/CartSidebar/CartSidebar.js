@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom'; // Import Link
 import './CartSidebar.css';
 import { fetchCart, addProductToCart, removeProductFromCart, deleteProductFromCart } from '../../api/cartapi';
-import { getProductImage } from '../../api/storeapi';
+import { getProductImage, fetchProductById } from '../../api/storeapi'; // Import fetchProductById
 import emptyCartImage from '../../assets/images/empty-cart.jpg'; // Import the image
 
 const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
@@ -27,10 +27,13 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
             try {
               const imageResponse = await getProductImage(product.productID);
               const imageUrl = URL.createObjectURL(imageResponse.data);
-              return { ...product, imageUrl };
+              // Fetch product stock information
+              const productResponse = await fetchProductById(product.productID);
+              const stock = productResponse.data[0].stock;
+              return { ...product, imageUrl, stock };
             } catch (err) {
-              console.error(`Error fetching image for product ${product.productID}:`, err);
-              return { ...product, imageUrl: '/assets/images/default.jpg' };
+              console.error(`Error fetching data for product ${product.productID}:`, err);
+              return { ...product, imageUrl: '/assets/images/default.jpg', stock: 0 };
             }
           })
         );
@@ -193,9 +196,20 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
                 <p>${parseFloat(item.unitPrice).toFixed(2)}</p>
                 <div className="cart-item-controls">
                   <div className="quantity-controls">
-                    <button className="quantity-button" onClick={() => handleRemoveProduct(item.productID)}>-</button>
+                    <button 
+                      className="quantity-button" 
+                      onClick={() => handleRemoveProduct(item.productID)}
+                    >
+                      -
+                    </button>
                     <span>{item.quantity}</span>
-                    <button className="quantity-button" onClick={() => handleAddProduct(item.productID)}>+</button>
+                    <button 
+                      className={`quantity-button ${item.quantity >= item.stock ? 'disabled' : ''}`}
+                      onClick={() => handleAddProduct(item.productID)}
+                      disabled={item.quantity >= item.stock}
+                    >
+                      +
+                    </button>
                   </div>
                   <button className="delete-button" onClick={() => handleDeleteProduct(item.productID)}>
                     {/* Trash Icon SVG */}

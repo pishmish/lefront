@@ -176,6 +176,17 @@
   transform: translateY(-1px);
 }
 
+/* Add to CartSidebar.css */
+.quantity-button.disabled {
+  background-color: #cccccc !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.quantity-button.disabled:hover {
+  transform: none !important;
+  background-color: #cccccc !important;
+}
 
 /* Updated Styles for Empty Cart Message */
 

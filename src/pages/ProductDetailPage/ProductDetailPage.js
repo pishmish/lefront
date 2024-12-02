@@ -16,7 +16,7 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null); // Error state
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
   const [customerID, setCustomerID] = useState(null);
-  const [cartQuantity, setCartQuantity] = useState(0); // State for product quantity in cart
+  const [currentCartQuantity, setCurrentCartQuantity] = useState(0); // Add state for cart quantity
 
   // Initialize color matcher
   const colors = colornames.reduce((accumulator, { name, hex }) => {
@@ -114,22 +114,40 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     const fetchCartQuantity = async () => {
-      if (customerID) {
+      if (customerID && product) {
         try {
           const response = await fetchCart(customerID);
           const cartData = response.data;
           const productInCart = cartData.products.find(
-            (item) => item.productID === productId
+            (item) => item.productID === Number(productId)  // Convert string to number
           );
-          setCartQuantity(productInCart ? productInCart.quantity : 0);
+          console.log('productInCart:', productInCart);
+          setCurrentCartQuantity(productInCart ? productInCart.quantity : 0);
         } catch (error) {
-          console.error('Error fetching cart quantity:', error);
+          console.error('Error fetching cart:', error);
+          setCurrentCartQuantity(0);
         }
       }
     };
 
+    // Initial fetch
     fetchCartQuantity();
-  }, [customerID, productId]);
+
+    // Set up polling interval (every 5 seconds)
+    const intervalId = setInterval(fetchCartQuantity, 5000);
+
+    // Set up event listener for cart updates
+    const handleCartUpdate = () => {
+      fetchCartQuantity();
+    };
+    window.addEventListener('CART_UPDATED', handleCartUpdate);
+
+    // Cleanup function
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('CART_UPDATED', handleCartUpdate);
+    };
+  }, [customerID, productId, product]);
 
   // Handle adding product to the cart
   const handleAddToCart = async () => {
@@ -138,15 +156,13 @@ const ProductDetailPage = () => {
       setCartMessage('Product added to cart successfully!'); // Success message
       console.log('Add to Cart Response:', response.data);
 
-      // Update cart quantity
-      setCartQuantity((prevQuantity) => prevQuantity + 1);
-
       // Dispatch a custom event to notify the Navbar to update the cart count and open the cart sidebar
       const event = new Event('CART_UPDATED');
       window.dispatchEvent(event);
 
       const openCartEvent = new Event('OPEN_CART_SIDEBAR');
       window.dispatchEvent(openCartEvent);
+      
     } catch (error) {
       setCartMessage('Failed to add product to cart.'); // Error message
       console.error('Error adding product to cart:', error);
@@ -174,7 +190,8 @@ const ProductDetailPage = () => {
   const closestColorHex = getClosestColor(product.color);
 
   // Determine if the "Add to Cart" button should be disabled
-  const isAddToCartDisabled = product.stock === 0 || cartQuantity >= product.stock;
+  console.log('Current Cart Quantity:', currentCartQuantity);
+  const isAddToCartDisabled = product.stock === 0 || currentCartQuantity >= product.stock;
 
   // Component rendering
   return (
