@@ -4,7 +4,9 @@ import './ProductDetailPage.css';
 import { fetchProductById, getProductImage } from '../../api/storeapi';
 import { addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import nearestColor from 'nearest-color';
+import { colornames } from 'color-name-list';
 
 const ProductDetailPage = () => {
   const { productId } = useParams(); // Retrieve product ID from URL params
@@ -14,6 +16,48 @@ const ProductDetailPage = () => {
   const [error, setError] = useState(null); // Error state
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
   const [customerID, setCustomerID] = useState(null);
+
+  // Initialize color matcher
+  const colors = colornames.reduce((accumulator, { name, hex }) => {
+    accumulator[name.toLowerCase()] = hex;
+    return accumulator;
+  }, {});
+
+  const colorMatcher = nearestColor.from(colors);
+
+    // Function to convert color name to hex code
+    const colorNameToHex = (colorName) => {
+      const ctx = document.createElement('canvas').getContext('2d');
+      ctx.fillStyle = colorName;
+      return ctx.fillStyle;
+    };
+
+  // Function to get the closest color hex code
+  const getClosestColor = (colorName) => {
+    if (!colorName) return '#000000'; // Default to black if no color name provided
+
+    // Check if the exact color exists
+    let exactMatchHex = colors[colorName.toLowerCase()];
+    if (exactMatchHex) return exactMatchHex;
+
+    // Try to parse the color name to hex code
+    let colorHex;
+    try {
+      colorHex = colorNameToHex(colorName);
+    } catch (e) {
+      console.error(`Error parsing color name ${colorName}:`, e);
+      return '#000000';
+    }
+
+    if (!colorHex) {
+      return '#000000';
+    }
+
+    // Now find the nearest color using the hex code
+    const match = colorMatcher(colorHex);
+    return match ? match.value : '#000000';
+  };
+
 
   // Fetch product details and image when component mounts or productId changes
   useEffect(() => {
@@ -53,7 +97,9 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      const token = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('authToken='));
       if (!token) {
         setCustomerID(null);
         return;
@@ -76,7 +122,6 @@ const ProductDetailPage = () => {
       // Dispatch a custom event to notify the Navbar to update the cart count
       const event = new Event('CART_UPDATED');
       window.dispatchEvent(event);
-
     } catch (error) {
       setCartMessage('Failed to add product to cart.'); // Error message
       console.error('Error adding product to cart:', error);
@@ -100,6 +145,9 @@ const ProductDetailPage = () => {
   const numericPrice = parseFloat(product.unitPrice);
   const displayPrice = !isNaN(numericPrice) ? numericPrice.toFixed(2) : 'N/A';
 
+  // Get closest color hex code
+  const closestColorHex = getClosestColor(product.color);
+
   // Component rendering
   return (
     <div className="product-detail-page">
@@ -116,15 +164,43 @@ const ProductDetailPage = () => {
         {/* Product Details */}
         <div className="product-details">
           <h1 className="product-name">{product.name}</h1>
-          
+
           <p className="product-description">{product.description}</p>
-          <ul className="product-features">
-            {product.features?.map((feature, index) => (
-              <li key={index}>{feature}</li>
-            ))}
-          </ul>
-          <p className="product-stock">Stock: {product.stock}</p>
-          <p className="product-price">${displayPrice}</p>
+
+          {/* Additional Product Details */}
+          <div className="additional-product-details">
+            <div className="detail-item">
+              <span className="detail-title">Brand: </span>
+              <span className="detail-value">{product.brand}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Color: </span>
+              <span
+                className="color-circle"
+                style={{ backgroundColor: closestColorHex }}
+                aria-label={`Color: ${product.color}`}
+                title={`Color: ${product.color}`}
+              ></span>
+              <span className="detail-value">{product.color}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Material: </span>
+              <span className="detail-value">{product.material}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-title">Capacity: </span>
+              <span className="detail-value">
+                {product.capacityLitres} Litres
+              </span>
+            </div>
+          </div>
+
+          {/* Price and Stock */}
+          <div className="price-stock-container">
+            <p className="product-price">${displayPrice}</p>
+            <p className="product-stock">Stock: {product.stock}</p>
+          </div>
+
           <button className="add-to-cart-button" onClick={handleAddToCart}>
             Add to Cart
           </button>

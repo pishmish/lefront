@@ -33,7 +33,7 @@
 }
 
 .product-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.005);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
@@ -49,18 +49,16 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Parent Container (Ensure it's a Flex Container) */
+.product-details {
+  display: flex;
+  flex-direction: column; /* or row, depending on your design */
+}
+
 .product-name {
   font-size: 2rem;
   font-weight: bold;
   color: #333;
-}
-
-.product-price {
-  font-size: 1.5rem !important;
-  font-weight: bold;
-  align-self: center;
-  color: #000000 !important;
-  margin-bottom: 3px;
 }
 
 .product-description {
@@ -70,20 +68,20 @@
   margin-bottom: 0px;
 }
 
-.product-features {
-  list-style: none;
-  padding: 0;
-}
-
-.product-features li {
-  font-size: 1rem;
-  color: #444343;
-}
-
+/* .product-stock aligned to the right in Flex Container */
 .product-stock {
   font-size: 1rem !important;
+  color: #212020 !important;
+  margin-left: auto; /* Pushes it to the right */
+  margin-bottom: 0px;
+}
+
+.product-price {
+  font-size: 1.5rem !important;
+  font-weight: bold;
+
   color: #000000 !important;
-  color: #777;
+  margin-bottom: 3px;
 }
 
 /* Add to Cart Button */
@@ -117,64 +115,36 @@
   margin-top: 2rem;
 }
 
-.review-container {
-  max-width: 100%;
-  margin: 20px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 10px;
-  border: 2px solid #e0e0e0;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  font-family: 'Arial', sans-serif;
-  transition: transform 0.3s ease;
-}
-
-.review-container:hover {
-  transform: scale(1.02);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
-}
-
-.review-carousel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
-}
-
-.review-item {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  border: 2px solid #ccc;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+/* Additional Product Details */
+.additional-product-details {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
-.review-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.review-stars {
+.detail-item {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 0.5rem;
 }
 
-.review-text {
-  margin: 15px 0;
-  font-size: 1.2rem;
+.detail-title {
+  font-weight: bold;
   color: #333;
-  line-height: 1.6;
+}
+
+.detail-value {
+  color: #555;
+}
+
+/* Color Circle */
+.color-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  display: inline-block;
 }
 
 /* Responsive adjustments */
@@ -197,6 +167,15 @@
     width: 85%; /* Mobil görünümde de biraz büyütüldü */
     margin: 0 auto;
   }
+
+  .additional-product-details {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .detail-item {
+    width: 45%;
+  }
 }
 
 /* Responsive Design */
@@ -212,5 +191,59 @@
 
   .product-image {
     max-width: 100%;
+  }
+
+  .additional-product-details {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .detail-item {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .color-circle {
+    margin-right: 0.3rem;
+  }
+}
+
+/* ProductDetailPage.css */
+
+/* Container for Price and Stock */
+.price-stock-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns items to the right */
+  align-items: center;
+  gap: 1rem; /* Adds space between price and stock */
+  margin-top: 1rem; /* Adds spacing above the container */
+}
+
+/* Product Price */
+.product-price {
+  font-size: 1.7rem !important;
+  font-weight: bold;;
+  color: #000;
+}
+
+/* Product Stock */
+.product-stock {
+  font-size: 1rem;
+  color: #444343;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .price-stock-container {
+    flex-direction: column; /* Stacks items vertically on smaller screens */
+    align-items: flex-start; /* Aligns items to the start */
+    gap: 0.5rem;
+  }
+
+  .product-price,
+  .product-stock {
+    text-align: left; /* Ensures text is aligned to the left */
   }
 }

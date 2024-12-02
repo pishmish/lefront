@@ -3,7 +3,6 @@
     margin: 20px auto;
     padding: 30px;
     background-color: #ffffff;
-    border-radius: 10px;
     border: 2px solid #e0e0e0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     text-align: center;
@@ -12,14 +11,27 @@
   }
   
   .review-container:hover {
-    transform: scale(1.02);
+
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
   }
   
-  h2, h3 {
+  h2 {
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #e0e0e0;
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+
+  h3 {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    margin-top: 25px;
     font-size: 2rem;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -65,11 +77,11 @@
   
   button.submit-button {
     padding: 12px 40px;
-    background-color: #333;
+    background-color: #000000;
     color: white;
     border: 2px solid #333;
-    border-radius: 8px;
     cursor: pointer;
+    border-radius: 0px;
     font-size: 16px;
     font-family: 'Arial', sans-serif;
     font-weight: bold;
@@ -77,9 +89,9 @@
   }
   
   button.submit-button:hover {
-    background-color: #555;
-    border-color: #555;
-    transform: translateY(-5px);
+    background-color: #000000;
+    border-color: #000000;
+    transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(85, 85, 85, 0.4);
   }
   
@@ -94,7 +106,6 @@
   .review-item {
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 8px;
     border: 2px solid #ccc;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     text-align: center; /* Ensure content inside is centered */
@@ -123,4 +134,5 @@
     font-size: 1.2rem;
     color: #333;
     line-height: 1.6;
+
   }
