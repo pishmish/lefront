@@ -1,8 +1,9 @@
 // InvoicePage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchOrder } from '../../api/orderapi';
+import { fetchOrder, mailInvoiceByIdtoEmail, downloadInvoiceById } from '../../api/orderapi';
 import { fetchAddressById } from '../../api/addressapi';
+import { fetchUserProfile } from '../../api/userapi';
 import './InvoicePage.css';
 
 const InvoicePage = () => {
@@ -18,12 +19,22 @@ const InvoicePage = () => {
         const response = await fetchOrder(orderId);
         console.log("response: ", response.data);
         setOrderDetails(response.data);
+
         const addressResponse = await fetchAddressById(response.data.deliveryAddressID);
         console.log("addressResponse: ", addressResponse.data);
         setOrderAddress(addressResponse.data);
+
+        const userProfile = await fetchUserProfile();
+        const email = userProfile.data.user.email;
+
+        if (!email) {
+          console.error('No email found for user');
+        }
+
+        await mailInvoiceByIdtoEmail(orderId, email);
       } catch (err) {
         setError('Failed to load order details');
-        console.error('Error fetching order:', err);
+        console.error('Error fetching order:', err.response ? err.response.data : err.message);
       } finally {
         setLoading(false);
       }
@@ -32,8 +43,22 @@ const InvoicePage = () => {
     loadOrderDetails();
   }, [orderId]);
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrint = async () => {
+    try {
+      const response = await downloadInvoiceById(orderId);
+      
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice_${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url); // Clean up the URL object
+    } catch (err) {
+      console.error('Error downloading invoice:', err.response ? err.response.data : err.message);
+    }
   };
 
   if (loading) return <div className="loading">Loading...</div>;
@@ -42,10 +67,13 @@ const InvoicePage = () => {
   return (
     <div className="invoice-page">
       <div className="invoice-container">
-        {/* <div className="invoice-header">
+        <div className="invoice-header">
           <h1>Invoice</h1>
-          <button className="print-button" onClick={handlePrint}>Print Invoice</button>
-        </div> */}
+          <div className="invoice-header-content">
+            <p>The invoice has been sent to your email!</p>
+            <button className="print-button" onClick={handlePrint}>Print Invoice</button>
+          </div>
+        </div>
 
         <div className="invoice-info">
           <div className="order-details">
@@ -83,10 +111,6 @@ const InvoicePage = () => {
               ))}
             </tbody>
           </table>
-        </div>
-
-        <div className="invoice-total">
-          <h2>Total: ${orderDetails?.totalPrice}</h2>
         </div>
       </div>
     </div>

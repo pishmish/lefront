@@ -21,4 +21,30 @@ export const deleteOrderItems = (id) => API.delete(`/order/orderitems/${id}`); /
 // Payment API calls
 export const processPayment = (data) => API.post('/payment/process', data); // Process a payment
 
+
+// Invoice API calls
+export const mailInvoiceByIdtoEmail = (id, email) => API.get(`/invoice/mail/${id}/${email}`); // Fetch a specific invoice by ID
+export const downloadInvoiceById = async (id) => {
+    try {
+        const response = await API.get(`/invoice/download/${id}`, {
+            responseType: 'blob', // Important to handle binary files
+        });
+
+        // Create a download link for the file
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `invoice_${id}.pdf`); // Set file name
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("Failed to download invoice:", error);
+        throw error;
+    }
+};
+
 export default API;
