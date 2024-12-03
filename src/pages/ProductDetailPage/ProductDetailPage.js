@@ -132,17 +132,19 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     const fetchCartQuantity = async () => {
-      if (customerID && product) {
-        try {
-          const response = await fetchCart(customerID);
-          const cartData = response.data;
-          const productInCart = cartData.products.find(
-            (item) => item.productID === Number(productId)  // Convert string to number
-          );
-          console.log('productInCart:', productInCart);
-          setCurrentCartQuantity(productInCart ? productInCart.quantity : 0);
-        } catch (error) {
-          console.error('Error fetching cart:', error);
+      if (product) {
+        const cartResponse = await fetchCart(customerID);
+        console.log('Cart Response:', cartResponse.data);
+        if (cartResponse && cartResponse.data && cartResponse.data.products) {
+          console.log('Cart Response:', cartResponse.data);
+          const quantityInCart = cartResponse.data.products.reduce((total, item) => {
+            if (item.productID === product.productID) {
+              return total + item.quantity;
+            }
+            return total;
+          }, 0);
+          setCurrentCartQuantity(quantityInCart);
+        } else {
           setCurrentCartQuantity(0);
         }
       }
@@ -151,21 +153,67 @@ const ProductDetailPage = () => {
     // Initial fetch
     fetchCartQuantity();
 
-    // Set up polling interval (every 5 seconds)
-    const intervalId = setInterval(fetchCartQuantity, 5000);
-
-    // Set up event listener for cart updates
+    // Listen for 'CART_UPDATED' event
     const handleCartUpdate = () => {
       fetchCartQuantity();
     };
     window.addEventListener('CART_UPDATED', handleCartUpdate);
 
-    // Cleanup function
+    // Cleanup
     return () => {
-      clearInterval(intervalId);
       window.removeEventListener('CART_UPDATED', handleCartUpdate);
     };
-  }, [customerID, productId, product]);
+  }, [customerID, product]);
+
+  useEffect(() => {
+    const fetchInitialCartQuantity = async () => {
+      if (customerID && product) {
+        const cartResponse = await fetchCart(customerID);
+        if (cartResponse && cartResponse.data && cartResponse.data.products) {
+          const quantityInCart = cartResponse.data.products
+            .filter((item) => item.productID === product.productID)
+            .reduce((total, item) => total + item.quantity, 0);
+          setCurrentCartQuantity(quantityInCart);
+        } else {
+          setCurrentCartQuantity(0);
+        }
+      }
+    };
+
+    // Fetch initial quantity
+    fetchInitialCartQuantity();
+
+    // Event handler for the custom event
+    const handleProductQuantityUpdate = (event) => {
+      const { productID, newQuantity } = event.detail;
+      if (productID === product.productID) {
+        setCurrentCartQuantity(newQuantity);
+      }
+    };
+
+    // Listen for the custom event
+    window.addEventListener('PRODUCT_CART_QUANTITY_UPDATED', handleProductQuantityUpdate);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('PRODUCT_CART_QUANTITY_UPDATED', handleProductQuantityUpdate);
+    };
+  }, [customerID, product]);
+
+  useEffect(() => {
+    const handleProductQuantityUpdate = (event) => {
+      const { productID, newQuantity } = event.detail;
+      if (productID === product.productID) {
+        setCurrentCartQuantity(newQuantity);
+      }
+    };
+
+    window.addEventListener('PRODUCT_CART_QUANTITY_UPDATED', handleProductQuantityUpdate);
+
+    return () => {
+      window.removeEventListener('PRODUCT_CART_QUANTITY_UPDATED', handleProductQuantityUpdate);
+    };
+  }, [product]);
 
   // Handle adding product to the cart
   const handleAddToCart = async () => {

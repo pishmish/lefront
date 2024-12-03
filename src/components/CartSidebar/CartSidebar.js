@@ -78,23 +78,55 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
     };
   }, [isOpen]); // Re-run the effect if 'isOpen' changes
 
+  // Utility function to dispatch the custom event
+  const dispatchProductQuantityUpdate = (productID, newQuantity) => {
+    const event = new CustomEvent('PRODUCT_CART_QUANTITY_UPDATED', {
+      detail: { productID, newQuantity },
+    });
+    window.dispatchEvent(event);
+  };
+
   const handleAddProduct = async (productID) => {
     try {
+      // Add the product to the cart in the backend
       await addProductToCart(productID, customerID);
-      // Update cart items and total directly
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.productID === productID ? { ...item, quantity: item.quantity + 1 } : item
-        )
-      );
-      setTotal((prevTotal) =>
-        prevTotal + parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
-      );
-      onCartUpdate(); // Notify Navbar to update the cart item count
 
-      // Optionally, dispatch 'CART_UPDATED' to notify other components
-      //const event = new Event('CART_UPDATED');
-      //window.dispatchEvent(event);
+      // Update cartItems state locally
+      setCartItems((prevCartItems) => {
+        const productIndex = prevCartItems.findIndex((item) => item.productID === productID);
+
+        if (productIndex !== -1) {
+          // Product exists in cart, increment quantity
+          const updatedCartItems = [...prevCartItems];
+          const updatedProduct = { ...updatedCartItems[productIndex] };
+          updatedProduct.quantity += 1;
+          updatedCartItems[productIndex] = updatedProduct;
+
+          // Update the total
+          setTotal((prevTotal) => prevTotal + parseFloat(updatedProduct.unitPrice));
+
+          // Dispatch the custom event with new quantity
+          dispatchProductQuantityUpdate(productID, updatedProduct.quantity);
+
+          return updatedCartItems;
+        } else {
+          // Product not in cart, fetch its data
+          fetchProductById(productID).then((productResponse) => {
+            const productData = productResponse.data[0];
+            const newProduct = { ...productData, quantity: 1 };
+
+            // Update cartItems and total
+            setCartItems((currentCartItems) => [...currentCartItems, newProduct]);
+            setTotal((prevTotal) => prevTotal + parseFloat(productData.unitPrice));
+
+            // Dispatch the custom event with new quantity
+            dispatchProductQuantityUpdate(productID, 1);
+          });
+
+          // Return previous cart items until the new product is added
+          return prevCartItems;
+        }
+      });
     } catch (err) {
       console.error('Error adding product to cart:', err);
     }
@@ -102,24 +134,39 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
   const handleRemoveProduct = async (productID) => {
     try {
-      console.log("customerID: ", customerID);
+      // Remove the product from the cart in the backend
       await removeProductFromCart(productID, customerID);
-      // Update cart items and total directly
-      setCartItems((prevItems) =>
-        prevItems
-          .map((item) =>
-            item.productID === productID ? { ...item, quantity: item.quantity - 1 } : item
-          )
-          .filter((item) => item.quantity > 0)
-      );
-      setTotal((prevTotal) =>
-        prevTotal - parseFloat(cartItems.find((item) => item.productID === productID).unitPrice)
-      );
-      onCartUpdate(); // Notify Navbar to update the cart item count
 
-      // Optionally, dispatch 'CART_UPDATED' to notify other components
-      //const event = new Event('CART_UPDATED');
-      //window.dispatchEvent(event);
+      // Update cartItems state locally
+      setCartItems((prevCartItems) => {
+        const productIndex = prevCartItems.findIndex((item) => item.productID === productID);
+
+        if (productIndex !== -1) {
+          const updatedCartItems = [...prevCartItems];
+          const updatedProduct = { ...updatedCartItems[productIndex] };
+          updatedProduct.quantity -= 1;
+
+          if (updatedProduct.quantity > 0) {
+            // Update the product quantity
+            updatedCartItems[productIndex] = updatedProduct;
+          } else {
+            // Remove the product from cartItems
+            updatedCartItems.splice(productIndex, 1);
+          }
+
+          // Update the total
+          setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
+
+          // Dispatch the custom event with new quantity
+          const newQuantity = updatedProduct.quantity > 0 ? updatedProduct.quantity : 0;
+          dispatchProductQuantityUpdate(productID, newQuantity);
+
+          return updatedCartItems;
+        } else {
+          // Product not found in cartItems
+          return prevCartItems;
+        }
+      });
     } catch (err) {
       console.error('Error removing product from cart:', err);
     }
@@ -136,8 +183,9 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
       );
       onCartUpdate();
 
-      //const event = new Event('CART_UPDATED');
-      //window.dispatchEvent(event);
+      // Dispatch 'CART_UPDATED' event
+      const event = new Event('CART_UPDATED');
+      window.dispatchEvent(event);
     } catch (err) {
       console.error('Error deleting product from cart:', err);
     }
@@ -165,8 +213,8 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         <p>{error}</p>
       ) : cartItems.length === 0 ? (
         <div className="empty-cart-message">
-          <p1>Your cart is empty.</p1>
-          <p2>Not sure where to start?</p2>
+          <p className="empty-cart-title">Your cart is empty.</p>
+          <p className="empty-cart-subtitle">Not sure where to start?</p>
           <div className="category-buttons">
             <Link to="/category/Handbags">
               <button className="start-shopping-button" onClick={onClose}>Shop Handbags</button>

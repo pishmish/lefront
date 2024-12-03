@@ -202,13 +202,13 @@
   margin-right: -2rem; /* Remove right padding from .cart-sidebar */
 }
 
-.empty-cart-message p1 {
+.empty-cart-message .empty-cart-title {
   font-size: 1.8rem; /* Larger font for better visibility */
   color: #333;
   margin-bottom: 14px;
 }
 
-.empty-cart-message p2 {
+.empty-cart-message .empty-cart-subtitle {
   font-size: 1.4rem; /* Larger font for better visibility */
   color: #333;
   margin-bottom: 12px;

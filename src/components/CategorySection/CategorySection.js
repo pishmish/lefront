@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CategorySection.css';
-import { getProductImage } from '../../api/storeapi'; // API'den resim almak için import
+import { getProductImage } from '../../api/storeapi';
 
 const categories = [
   { name: 'Handbags', link: '/category/handbags', productID: 1 },
@@ -11,7 +11,7 @@ const categories = [
 ];
 
 const CategorySection = () => {
-  const [categoryImages, setCategoryImages] = useState({}); // Resimleri saklamak için state
+  const [categoryImages, setCategoryImages] = useState({});
 
   useEffect(() => {
     const fetchCategoryImages = async () => {
@@ -19,12 +19,12 @@ const CategorySection = () => {
       await Promise.all(
         categories.map(async (category) => {
           try {
-            const response = await getProductImage(category.productID); // Belirli productID için API çağrısı
-            const imageUrl = URL.createObjectURL(response.data); // Blob'dan URL oluştur
-            images[category.productID] = imageUrl; // Resmi productID'ye göre sakla
+            const response = await getProductImage(category.productID);
+            const imageUrl = URL.createObjectURL(response.data);
+            images[category.productID] = imageUrl; 
           } catch (error) {
             console.error(`Error fetching image for product ID ${category.productID}:`, error);
-            images[category.productID] = '/images/default-image.jpg'; // Hata durumunda varsayılan resim
+            images[category.productID] = '/images/default-image.jpg';
           }
         })
       );
@@ -41,7 +41,7 @@ const CategorySection = () => {
         {categories.map((category) => (
           <a key={category.productID} href={category.link} className="category-card">
             <img
-              src={categoryImages[category.productID] || '/images/loading-placeholder.jpg'} // Resmi yükle
+              src={categoryImages[category.productID] || '/images/loading-placeholder.jpg'}
               alt={category.name}
             />
             <div className="category-name">{category.name}</div>

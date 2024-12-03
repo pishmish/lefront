@@ -52,43 +52,47 @@ const ReviewComponent = ({ productID }) => {
     setErrorMessage('');
 
     try {
-        if (currentRating === 0) {
-            setErrorMessage('Please select a star rating.');
-            return;
-        }
+      if (currentRating === 0) {
+        setErrorMessage('Please select a star rating.');
+        return;
+      }
 
-        const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
-        if (!token) {
-            throw new Error('No auth token found');
-        }
+      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      if (!token) {
+        console.log('No auth token found');
+        navigate('/login'); // Redirect to login page
+        return;
+      }
 
-        const decodedToken = jwtDecode(token.split('=')[1]);
-        const customerID = decodedToken.customerID;
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      const customerID = decodedToken.customerID;
 
-        if (!customerID) {
-            throw new Error('Customer ID not found in token');
-        }
+      if (!customerID) {
+        console.log('Customer ID not found in token');
+        navigate('/login'); // Redirect to login page
+        return;
+      }
 
-        const response = await createReview({ 
-            productID: productID, 
-            reviewContent: currentReview, 
-            reviewStars: currentRating, 
-            customerID: customerID 
-        });
+      const response = await createReview({ 
+        productID: productID, 
+        reviewContent: currentReview, 
+        reviewStars: currentRating, 
+        customerID: customerID 
+      });
 
-        // Reset form
-        setCurrentReview('');
-        setCurrentRating(0);
-        
-        // Refresh reviews and overall rating
-        await getReviews();
-        await getOverallRating();
-        
+      // Reset form
+      setCurrentReview('');
+      setCurrentRating(0);
+      
+      // Refresh reviews and overall rating
+      await getReviews();
+      await getOverallRating();
+      
     } catch (error) {
-        console.error('Error submitting review:', error);
-        setErrorMessage('Failed to submit review. Please try again.');
+      console.error('Error submitting review:', error);
+      setErrorMessage('Failed to submit review. Please try again.');
     }
-};
+  };
 
   const handleNext = () => {
     if (currentIndex < reviews.length - 1) {
