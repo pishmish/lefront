@@ -1,65 +1,115 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./OrderTracking.css";
 
-const OrderTracking = ({ orderId, customerId }) => {
+const OrderTracking = () => {
   const steps = ["Processing", "In-transit", "Delivered"];
-  const [currentStep, setCurrentStep] = useState(0);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isSubAccordionExpanded, setIsSubAccordionExpanded] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleStepClick = (index) => {
-    if (index <= currentStep + 1) {
-      setCurrentStep(index);
+  const getAllOrders = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5001/order/getallorders",
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setOrders(response.data);
+      } else {
+        console.error("Error fetching orders");
+        setError("Failed to fetch orders");
+      }
+    } catch (err) {
+      console.error("Error:", err.message);
+      setError("Failed to fetch orders");
+    } finally {
+      setLoading(false);
     }
   };
 
+  const updateOrderStatus = async (orderID, newStatus) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5001/delivery/order/${orderID}/status`,
+        { deliveryStatus: newStatus },
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderID === orderID ? { ...order, deliveryStatus: newStatus } : order
+          )
+        );
+      } else {
+        console.error("Error updating order status");
+      }
+    } catch (err) {
+      console.error("Error:", err.message);
+    }
+  };
+
+  useEffect(() => {
+    getAllOrders();
+  }, []);
+
+  const getCurrentStep = (status) => {
+    switch (status) {
+      case "Processing":
+        return 0;
+      case "In-transit":
+        return 1;
+      case "Delivered":
+        return 2;
+      default:
+        return -1; // Undefined step
+    }
+  };
+
+  if (loading) return <div>Loading orders...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
     <div className="order-tracking-container">
-      {/* Ana Akordeon Başlığı */}
-      <div className="accordion-header" onClick={() => setIsExpanded(!isExpanded)}>
-        <h4>Order ID: {orderId}</h4>
-      </div>
-
-      {/* Ana Akordeon İçeriği */}
-      {isExpanded && (
-        <div className="accordion-content">
-          {/* Sipariş Detayları */}
-          <div className="order-details">
-            <p><strong>Customer ID:</strong> {customerId}</p>
-          </div>
-          {/* Adımlar */}
-          <div className="steps-container">
-            {steps.map((step, index) => (
-              <div key={index} className="step-wrapper">
-                <div
-                  className={`step ${index <= currentStep ? "active" : ""}`}
-                  onClick={() => handleStepClick(index)}
-                >
-                  <div className="circle">{index + 1}</div>
-                  <p className="step-label">{step}</p>
+      <h3>Order Tracking</h3>
+      <div className="order-grid">
+        {orders.length > 0 ? (
+          orders.map((order) => {
+            const currentStep = getCurrentStep(order.deliveryStatus);
+            return (
+              <div key={order.orderID} className="order-card">
+                <h4>Order ID: {order.orderID}</h4>
+                <p><strong>Order Number:</strong> {order.orderNumber}</p>
+                <p><strong>Total Price:</strong> ${order.totalPrice}</p>
+                <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
+                <p><strong>Estimated Arrival:</strong> {new Date(order.estimatedArrival).toLocaleDateString()}</p>
+                <div className="steps-container">
+                  {steps.map((step, index) => (
+                    <div key={index} className={`step ${index <= currentStep ? "active" : ""}`}>
+                      <div className="circle">{index + 1}</div>
+                      <p className="step-label">{step}</p>
+                    </div>
+                  ))}
                 </div>
-                {index < steps.length - 1 && <div className="step-line"></div>}
+                <div className="status-buttons">
+                  {steps.map((step) => (
+                    <button
+                      key={step}
+                      className={`status-button ${step === order.deliveryStatus ? "active" : ""}`}
+                      onClick={() => updateOrderStatus(order.orderID, step)}
+                      disabled={step === order.deliveryStatus}
+                    >
+                      {step}
+                    </button>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-          {/* Alt Akordeon */}
-          <div className="sub-accordion">
-            <div
-              className="accordion-header"
-              onClick={() => setIsSubAccordionExpanded(!isSubAccordionExpanded)}
-            >
-              <h5>Order Content</h5>
-            </div>
-            {isSubAccordionExpanded && (
-              <div className="accordion-content">
-                <p><strong>Ordered Products:</strong> Product 1, Product 2</p>
-                <p><strong>Address:</strong> 123 Main St, City, Country</p>
-                <p><strong>Total Price:</strong> $99.99</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+            );
+          })
+        ) : (
+          <p>No orders available.</p>
+        )}
+      </div>
     </div>
   );
 };

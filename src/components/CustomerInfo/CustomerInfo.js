@@ -1,44 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchUserProfile, updateUserProfile } from "../../api/userapi"; // Import API functions
 import "./CustomerInfo.css";
-import OrderTracking from "../OrderTracking/OrderTracking";
-
-const PastOrders = ({ orders }) => {
-  const [activeOrder, setActiveOrder] = useState(null);
-
-  const toggleOrder = (id) => {
-    setActiveOrder(activeOrder === id ? null : id);
-  };
-
-  return (
-    <div className="past-orders">
-      <h3>Past Orders</h3>
-      {orders.map((order) => (
-        <div key={order.id} className="order-item">
-          <div
-            className={`order-header ${activeOrder === order.id ? "active" : ""}`}
-            onClick={() => toggleOrder(order.id)}
-          >
-            <p className="order-id">Order #{order.id}</p>
-          </div>
-          {activeOrder === order.id && (
-            <div className="order-details">
-              <p><strong>Status:</strong> {order.details}</p>
-              <p><strong>Delivery Address:</strong> {order.address}</p>
-              <p><strong>Items:</strong></p>
-              <ul>
-                {order.items.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-              <OrderTracking currentStep={order.currentStep} />
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-};
 
 const CustomerInfo = () => {
   const [userData, setUserData] = useState(null);
@@ -154,8 +116,6 @@ const CustomerInfo = () => {
       )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      <PastOrders orders={userData.orders} />
     </div>
   );
 };
