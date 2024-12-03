@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './PaymentPage.css';
+import { processPayment, createOrder } from '../../api/orderapi'; // Import the API function
 import { fetchCart } from '../../api/cartapi';
 import { useNavigate } from 'react-router-dom';
 import { getProductImage } from '../../api/storeapi';
@@ -13,6 +14,13 @@ const PaymentPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [customerID, setCustomerID] = useState(null);
+  const [paymentError, setPaymentError] = useState(null);
+  const [addressInfo, setAddressInfo] = useState({
+    country: '',
+    city: '',
+    zipCode: '',
+    streetAddress: '',
+  });
 
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: '',
@@ -24,25 +32,15 @@ const PaymentPage = () => {
     setLoading(true);
     setError(null);
 
-    const checkAuth = () => {
-      const token = document.cookie.split('; ').find((row) => row.startsWith('authToken='));
-      if (!token) {
-        setCustomerID(null);
-        return;
-      }
-      const decodedToken = jwtDecode(token.split('=')[1]);
-      setCustomerID(decodedToken.customerID);
-    };
-
-    checkAuth();
-
     try {
       const response = await fetchCart(customerID);
       const cartData = response.data;
+      console.log("cartData: ", cartData);
 
       if (cartData && cartData.products && cartData.products.length > 0) {
         const productsWithImages = await Promise.all(
           cartData.products.map(async (product) => {
+            
             try {
               const imageResponse = await getProductImage(product.productID);
               const imageUrl = URL.createObjectURL(imageResponse.data);
@@ -74,58 +72,90 @@ const PaymentPage = () => {
 
   const handlePaymentChange = (e) => {
     const { name, value } = e.target;
-    setPaymentInfo((prev) => ({ ...prev, [name]: value }));
+    if (name in paymentInfo) {
+      setPaymentInfo((prev) => ({ ...prev, [name]: value }));
+    } else if (name in addressInfo) {
+      setAddressInfo((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axios.post('http://localhost:5001/payment/process', {
-        creditCard: paymentInfo,
-      },{withCredentials:true});
+      // Add billing info using billing api (TO DO)
 
-      if (response.status === 200) {
-        alert('Payment processed successfully!');
-        
+      // Do payment with payment api
+      const response = await processPayment({ creditCard: paymentInfo });
+      if (response.status !== 200) {
+        setPaymentError('The payment information you entered is incorrect. Please try again.');
+        return;
       }
+
+      // Create an order with order api
+      const orderResponse = await createOrder({ address: addressInfo });
+
+      if (orderResponse.status !== 200) {
+        setPaymentError('Failed to create order. Please try again.');
+        return;
+      }
+
+      const orderId = orderResponse.data.orderID;
+      navigate(`/invoice/${orderId}`);
+      setPaymentError(null); // Clear any previous error message if payment is successful
     } catch (err) {
       console.error('Error processing payment:', err);
-      alert('Failed to process payment. Please try again.');
+      setPaymentError('An error occurred while processing your payment. Please try again.');
     }
   };
 
   useEffect(() => {
-    loadCartProducts();
-  }, []);
+    // Check auth first
+    const checkAuth = () => {
+      const token = document.cookie.split('; ').find((row) => row.startsWith('authToken='));
+      if (!token) {
+        setCustomerID(null);
+        return;
+      }
+      const decodedToken = jwtDecode(token.split('=')[1]);
+      setCustomerID(decodedToken.customerID);
+    };
+
+    checkAuth();
+  }, []); // Run once when component mounts
+
+  // Separate useEffect to react to customerID changes
+  useEffect(() => {
+    if (customerID) {
+      loadCartProducts();
+    }
+  }, [customerID]);
 
   return (
     <div className="payment-page">
       <div className="payment-container">
+        {/* Sol Taraf: Adres ve Kart Bilgileri */}
         <div className="payment-form-section">
-          <h2>Billing Details</h2>
-          <form className="billing-form">
+          <h2>DELIVERY ADDRESS</h2>
+          <form className="billing-form" onSubmit={handlePaymentSubmit}>
+            {/* Adres Bilgileri */}
             <div className="form-group">
-              <label htmlFor="fullName">Full Name</label>
-              <input type="text" id="fullName" name="fullName" required />
-            </div>
-            <div className="form-group">
-              <label htmlFor="address">Address</label>
-              <input type="text" id="address" name="address" required />
+              <label htmlFor="country">Country</label>
+              <input type="text" id="country" name="country" value={addressInfo.country} onChange={handlePaymentChange} required />
             </div>
             <div className="form-group">
               <label htmlFor="city">City</label>
-              <input type="text" id="city" name="city" required />
+              <input type="text" id="city" name="city" value={addressInfo.city} onChange={handlePaymentChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="postalCode">Postal Code</label>
-              <input type="text" id="postalCode" name="postalCode" required />
+              <label htmlFor="zipCode">Zip Code</label>
+              <input type="text" id="zipCode" name="zipCode" value={addressInfo.zipCode} onChange={handlePaymentChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="phoneNumber">Phone Number</label>
-              <input type="text" id="phoneNumber" name="phoneNumber" required />
+              <label htmlFor="streetAddress">Street Address</label>
+              <input type="text" id="streetAddress" name="streetAddress" value={addressInfo.streetAddress} onChange={handlePaymentChange} required />
             </div>
 
+            {/* Kart Bilgileri */}
             <h2>Payment Information</h2>
             <div className="form-group">
               <label htmlFor="cardNumber">Card Number</label>
@@ -165,8 +195,10 @@ const PaymentPage = () => {
               Complete Payment
             </button>
           </form>
+          {paymentError && <div className="error-message">{paymentError}</div>}
         </div>
 
+        {/* Sağ Taraf: Sepet Ürünleri */}
         <div className="cart-summary-section">
           <h2>Your Order</h2>
           <div className="cart-items">

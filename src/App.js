@@ -13,6 +13,7 @@ import ProductManagerPage from './pages/ProductManagerPage/ProductManagerPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import WishListPage from './pages/WishListPage/WishListPage';
 import SearchResultPage from './pages/SearchResultPage/SearchResultPage';
+import InvoicePage from './pages/InvoicePage/InvoicePage';
 import './App.css';
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/wishlist" element={<WishListPage />} />
           <Route path="/search" element={<SearchResultPage />} />
+          <Route path="/invoice/:orderId" element={<InvoicePage />} />
         </Routes>
       </div>
     </Router>

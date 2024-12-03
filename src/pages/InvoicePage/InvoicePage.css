@@ -1,0 +1,85 @@
+/* InvoicePage.css */
+.invoice-page {
+  padding: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.invoice-container {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.print-button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.print-button:hover {
+  background-color: #0056b3;
+}
+
+.invoice-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.order-details {
+  padding-top: 1rem;
+  border-top: 2px solid #eee;
+}
+
+.order-address {
+  padding-top: 1rem;
+  border-top: 2px solid #eee;
+}
+
+.order-items table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.order-items th,
+.order-items td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-total {
+  text-align: right;
+  padding-top: 1rem;
+  border-top: 2px solid #eee;
+}
+
+@media print {
+  .print-button {
+    display: none;
+  }
+  
+  .invoice-page {
+    padding: 0;
+  }
+  
+  .invoice-container {
+    box-shadow: none;
+  }
+}

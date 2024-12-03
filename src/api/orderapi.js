@@ -16,4 +16,9 @@ export const cancelOrder = (id) => API.put(`/order/cancelorder/${id}`); // Cance
 export const updateOrderItems = (id, data) => API.put(`/order/orderitems/${id}`, data); // Update items in an order
 export const deleteOrderItems = (id) => API.delete(`/order/orderitems/${id}`); // Delete items from an order
 
+
+
+// Payment API calls
+export const processPayment = (data) => API.post('/payment/process', data); // Process a payment
+
 export default API;

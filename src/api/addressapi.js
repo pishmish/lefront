@@ -6,7 +6,7 @@ const API = axios.create({
 });
 
 // Address API calls
-export const fetchAddressById = (addressId) => API.get(`/address/${addressId}`); // Fetch specific address by ID
+export const fetchAddressById = (addressId) => API.get(`/address/id/${addressId}`); // Fetch specific address by ID
 export const fetchUserAddresses = (username) => API.get(`/address/${username}`); // Fetch all addresses for a user
 export const createAddress = (addressData) => API.post('/address/newaddress', addressData); // Create a new address
 export const updateAddress = (addressId, addressData) => API.put(`/address/${addressId}`, addressData); // Update an address
