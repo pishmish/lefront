@@ -1,10 +1,10 @@
-// PaymentPage.js
 import React, { useState, useEffect } from 'react';
 import './PaymentPage.css';
 import { fetchCart } from '../../api/cartapi';
 import { useNavigate } from 'react-router-dom';
 import { getProductImage } from '../../api/storeapi';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode'; // Doğru kütüphane import edildi
+import axios from 'axios';
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -14,26 +14,30 @@ const PaymentPage = () => {
   const [error, setError] = useState(null);
   const [customerID, setCustomerID] = useState(null);
 
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
+  });
+
   const loadCartProducts = async () => {
     setLoading(true);
     setError(null);
 
     const checkAuth = () => {
-      const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+      const token = document.cookie.split('; ').find((row) => row.startsWith('authToken='));
       if (!token) {
         setCustomerID(null);
         return;
       }
       const decodedToken = jwtDecode(token.split('=')[1]);
-      const customerID = decodedToken.customerID;
-      setCustomerID(customerID);
+      setCustomerID(decodedToken.customerID);
     };
 
     checkAuth();
 
     try {
       const response = await fetchCart(customerID);
-      console.log("response: ", response.data);
       const cartData = response.data;
 
       if (cartData && cartData.products && cartData.products.length > 0) {
@@ -68,6 +72,29 @@ const PaymentPage = () => {
     }
   };
 
+  const handlePaymentChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentInfo((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePaymentSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post('http://localhost:5001/payment/process', {
+        creditCard: paymentInfo,
+      },{withCredentials:true});
+
+      if (response.status === 200) {
+        alert('Payment processed successfully!');
+        
+      }
+    } catch (err) {
+      console.error('Error processing payment:', err);
+      alert('Failed to process payment. Please try again.');
+    }
+  };
+
   useEffect(() => {
     loadCartProducts();
   }, []);
@@ -78,7 +105,7 @@ const PaymentPage = () => {
         {/* Sol Taraf: Adres ve Kart Bilgileri */}
         <div className="payment-form-section">
           <h2>Billing Details</h2>
-          <form className="billing-form">
+          <form className="billing-form" onSubmit={handlePaymentSubmit}>
             {/* Adres Bilgileri */}
             <div className="form-group">
               <label htmlFor="fullName">Full Name</label>
@@ -105,17 +132,41 @@ const PaymentPage = () => {
             <h2>Payment Information</h2>
             <div className="form-group">
               <label htmlFor="cardNumber">Card Number</label>
-              <input type="text" id="cardNumber" name="cardNumber" required />
+              <input
+                type="text"
+                id="cardNumber"
+                name="cardNumber"
+                value={paymentInfo.cardNumber}
+                onChange={handlePaymentChange}
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="expiryDate">Expiry Date</label>
-              <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" required />
+              <input
+                type="text"
+                id="expiryDate"
+                name="expiryDate"
+                value={paymentInfo.expiryDate}
+                onChange={handlePaymentChange}
+                placeholder="MM/YY"
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="cvv">CVV</label>
-              <input type="text" id="cvv" name="cvv" required />
+              <input
+                type="text"
+                id="cvv"
+                name="cvv"
+                value={paymentInfo.cvv}
+                onChange={handlePaymentChange}
+                required
+              />
             </div>
-            <button type="submit" className="submit-button">Complete Payment</button>
+            <button type="submit" className="submit-button">
+              Complete Payment
+            </button>
           </form>
         </div>
 
