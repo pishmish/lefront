@@ -6,8 +6,8 @@ const categories = [
   { name: 'Handbags', link: '/category/handbags', productID: 1 },
   { name: 'Backpacks', link: '/category/backpacks', productID: 31 },
   { name: 'Luggage', link: '/category/luggage', productID: 34 },
-  { name: 'Travel Bags', link: '/category/travel-bags', productID: 49 },
-  { name: 'Sports Bags', link: '/category/sports-bags', productID: 67 },
+  { name: 'Travel Bags', link: '/category/Travel%20Bags', productID: 49 },
+  { name: 'Sports Bags', link: '/category/Sports%20Bags', productID: 67 },
 ];
 
 const CategorySection = () => {
