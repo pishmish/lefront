@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import {jwtDecode} from 'jwt-decode';
-import { fetchApprovedReviews, createReview, fetchOverAllRating } from '../../api/storeapi'; // Adjust the import path as necessary
+import { fetchApprovedReviews, createReview, fetchOverAllRating, fetchReviews } from '../../api/storeapi'; // Adjust the import path as necessary
 import './ReviewComponent.css'; // Adjust the import path as necessary
 
 const ReviewComponent = ({ productID }) => {
@@ -28,11 +28,26 @@ const ReviewComponent = ({ productID }) => {
 
   const getReviews = async () => {
     try {
-      const response = await fetchApprovedReviews(productID);
-      console.log('Reviews response:', response); // Log the response
+      const response = await fetchReviews(productID);
+
+      console.log('Reviews response now:', response); // Log the response
       if (response && response.data) {
         console.log('Reviews data:', response.data); // Log the reviews data
-        setReviews(response.data);
+
+        // Modify reviewContent based on approvalStatus
+        const modifiedReviews = response.data.map(review => {
+          if (review.approvalStatus === 0) {
+            review.reviewContent = "Review Approval Pending";
+          } else if (review.approvalStatus === 2) {
+            review.reviewContent = "Unapproved Review..";
+          }
+          // If approvalStatus is 1, keep the same review content
+          return review;
+        });
+
+        console.log('Modified reviews:', modifiedReviews); // Log the modified reviews
+
+        setReviews(modifiedReviews);
         // Fetch overall rating separately
         await getOverallRating();
       } else {
