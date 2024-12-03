@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './ProfilePage.css';
 import CustomerInfo from '../../components/CustomerInfo/CustomerInfo';
 import OrderTrackingCust from '../../components/OrderTrackingCust/OrderTrackingCust';
 
 const ProfilePage = () => {
+  // Add useEffect to trigger cart update when component mounts
+  useEffect(() => {
+    // Dispatch CART_UPDATED event to refresh cart badge
+    window.dispatchEvent(new Event('CART_UPDATED'));
+  }, []);
+
   return (
     <div className="profile-page">
       <h1>Welcome, Customer!</h1>

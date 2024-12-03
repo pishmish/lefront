@@ -17,6 +17,7 @@ const PaymentPage = () => {
   const [paymentError, setPaymentError] = useState(null);
   const [addressInfo, setAddressInfo] = useState({
     country: '',
+    province: '',
     city: '',
     zipCode: '',
     streetAddress: '',
@@ -143,16 +144,20 @@ const PaymentPage = () => {
               <input type="text" id="country" name="country" value={addressInfo.country} onChange={handlePaymentChange} required />
             </div>
             <div className="form-group">
+              <label htmlFor="province">Province</label>
+              <input type="text" id="province" name="province" value={addressInfo.province} onChange={handlePaymentChange} required />
+            </div>
+            <div className="form-group">
               <label htmlFor="city">City</label>
               <input type="text" id="city" name="city" value={addressInfo.city} onChange={handlePaymentChange} required />
             </div>
             <div className="form-group">
-              <label htmlFor="zipCode">Zip Code</label>
-              <input type="text" id="zipCode" name="zipCode" value={addressInfo.zipCode} onChange={handlePaymentChange} required />
-            </div>
-            <div className="form-group">
               <label htmlFor="streetAddress">Street Address</label>
               <input type="text" id="streetAddress" name="streetAddress" value={addressInfo.streetAddress} onChange={handlePaymentChange} required />
+            </div>
+            <div className="form-group">
+              <label htmlFor="zipCode">Zip Code</label>
+              <input type="text" id="zipCode" name="zipCode" value={addressInfo.zipCode} onChange={handlePaymentChange} required />
             </div>
 
             {/* Kart Bilgileri */}

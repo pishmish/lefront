@@ -13,6 +13,12 @@ const InvoicePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Add useEffect to trigger cart update when component mounts
+  useEffect(() => {
+    // Dispatch CART_UPDATED event to refresh cart badge
+    window.dispatchEvent(new Event('CART_UPDATED'));
+  }, []);
+
   useEffect(() => {
     const loadOrderDetails = async () => {
       try {
