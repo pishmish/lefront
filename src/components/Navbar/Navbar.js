@@ -72,7 +72,7 @@ const Navbar = () => {
   const dropdownTimeout = useRef(null);
 
   const checkAuth = () => {
-    console.log('Cookies: ', document.cookie); // Log all cookies
+    console.log('Cookies navbar: ', document.cookie); // Log all cookies
     // Extract customer ID from JWT token
     const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
     if (!token) {

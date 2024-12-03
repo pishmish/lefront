@@ -88,122 +88,101 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
   const handleAddProduct = async (productID) => {
     try {
-      // Add the product to the cart in the backend
-      await addProductToCart(productID, customerID);
-
-      // Update cartItems state locally
       setCartItems((prevCartItems) => {
         const productIndex = prevCartItems.findIndex((item) => item.productID === productID);
-
         if (productIndex !== -1) {
-          // Product exists in cart, increment quantity
           const updatedCartItems = [...prevCartItems];
           const updatedProduct = { ...updatedCartItems[productIndex] };
           updatedProduct.quantity += 1;
           updatedCartItems[productIndex] = updatedProduct;
 
-          // Update the total
           setTotal((prevTotal) => prevTotal + parseFloat(updatedProduct.unitPrice));
-
-          // Dispatch the custom event with new quantity
           dispatchProductQuantityUpdate(productID, updatedProduct.quantity);
-
+          
           return updatedCartItems;
-        } else {
-          // Product not in cart, fetch its data
-          fetchProductById(productID).then((productResponse) => {
-            const productData = productResponse.data[0];
-            const newProduct = { ...productData, quantity: 1 };
-
-            // Update cartItems and total
-            setCartItems((currentCartItems) => [...currentCartItems, newProduct]);
-            setTotal((prevTotal) => prevTotal + parseFloat(productData.unitPrice));
-
-            // Dispatch the custom event with new quantity
-            dispatchProductQuantityUpdate(productID, 1);
-          });
-
-          // Return previous cart items until the new product is added
-          return prevCartItems;
         }
+        return prevCartItems;
       });
+
+      await addProductToCart(productID, customerID);
+
     } catch (err) {
       console.error('Error adding product to cart:', err);
+      loadCartProducts();
     }
   };
 
   const handleRemoveProduct = async (productID) => {
     try {
-      // Remove the product from the cart in the backend
-      await removeProductFromCart(productID, customerID);
-
-      // Update cartItems state locally
       setCartItems((prevCartItems) => {
         const productIndex = prevCartItems.findIndex((item) => item.productID === productID);
-
         if (productIndex !== -1) {
           const updatedCartItems = [...prevCartItems];
           const updatedProduct = { ...updatedCartItems[productIndex] };
           updatedProduct.quantity -= 1;
 
           if (updatedProduct.quantity > 0) {
-            // Update the product quantity
             updatedCartItems[productIndex] = updatedProduct;
+            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
+            dispatchProductQuantityUpdate(productID, updatedProduct.quantity);
           } else {
-            // Remove the product from cartItems
             updatedCartItems.splice(productIndex, 1);
+            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
+            dispatchProductQuantityUpdate(productID, 0);
           }
 
-          // Update the total
-          setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
-
-          // Dispatch the custom event with new quantity
-          const newQuantity = updatedProduct.quantity > 0 ? updatedProduct.quantity : 0;
-          dispatchProductQuantityUpdate(productID, newQuantity);
-
           return updatedCartItems;
-        } else {
-          // Product not found in cartItems
-          return prevCartItems;
         }
+        return prevCartItems;
       });
+
+      await removeProductFromCart(productID, customerID);
+
     } catch (err) {
       console.error('Error removing product from cart:', err);
+      loadCartProducts();
     }
   };
 
   const handleDeleteProduct = async (productID) => {
     try {
-      await deleteProductFromCart(productID, customerID);
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.productID !== productID)
-      );
-      setTotal((prevTotal) =>
-        prevTotal - parseFloat(cartItems.find((item) => item.productID === productID).unitPrice) * parseFloat(cartItems.find((item) => item.productID === productID).quantity)
-      );
-      onCartUpdate();
+      setCartItems((prevItems) => {
+        const itemToDelete = prevItems.find((item) => item.productID === productID);
+        if (itemToDelete) {
+          setTotal((prevTotal) => 
+            prevTotal - parseFloat(itemToDelete.unitPrice) * itemToDelete.quantity
+          );
+          dispatchProductQuantityUpdate(productID, 0);
+        }
+        return prevItems.filter((item) => item.productID !== productID);
+      });
 
-      // Dispatch 'CART_UPDATED' event
-      const event = new Event('CART_UPDATED');
-      window.dispatchEvent(event);
+      await deleteProductFromCart(productID, customerID);
+
     } catch (err) {
       console.error('Error deleting product from cart:', err);
+      loadCartProducts();
     }
   };
 
   const handlePayment = () => {
     if (customerID) {
-      onClose();
+      handleClose();
       navigate('/payment');
     } else {
-      onClose();
+      handleClose();
       navigate('/login');
     }
   };
 
+  const handleClose = () => {
+    window.dispatchEvent(new Event('CART_UPDATED'));
+    onClose();
+  };
+
   return (
     <div className={`cart-sidebar ${isOpen ? 'open' : ''}`}>
-      <button className="close-button" onClick={onClose}>×</button>
+      <button className="close-button" onClick={handleClose}>×</button>
 
       {cartItems.length > 0 && <h2>Your Cart</h2>}
 
@@ -217,19 +196,19 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
           <p className="empty-cart-subtitle">Not sure where to start?</p>
           <div className="category-buttons">
             <Link to="/category/Handbags">
-              <button className="start-shopping-button" onClick={onClose}>Shop Handbags</button>
+              <button className="start-shopping-button" onClick={handleClose}>Shop Handbags</button>
             </Link>
             <Link to="/category/Backpacks">
-              <button className="start-shopping-button" onClick={onClose}>Shop Backpacks</button>
+              <button className="start-shopping-button" onClick={handleClose}>Shop Backpacks</button>
             </Link>
             <Link to="/category/Luggage">
-              <button className="start-shopping-button" onClick={onClose}>Shop Luggage</button>
+              <button className="start-shopping-button" onClick={handleClose}>Shop Luggage</button>
             </Link>
             <Link to="/category/Travel%20Bags">
-              <button className="start-shopping-button" onClick={onClose}>Shop Travel Bags</button>
+              <button className="start-shopping-button" onClick={handleClose}>Shop Travel Bags</button>
             </Link>
             <Link to="/category/Sports%20Bags">
-              <button className="start-shopping-button" onClick={onClose}>Shop Sports Bags</button>
+              <button className="start-shopping-button" onClick={handleClose}>Shop Sports Bags</button>
             </Link>
           </div>
           <img src={emptyCartImage} alt="Empty Cart" className="empty-cart-image" />

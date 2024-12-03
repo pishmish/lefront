@@ -18,6 +18,7 @@ const CustomerInfo = () => {
       try {
         setLoading(true);
         const response = await fetchUserProfile();
+        console.log("response profilepage:", response);
         setUserData(response.data);
         setUpdatedData({
           name: response.data.user.name,

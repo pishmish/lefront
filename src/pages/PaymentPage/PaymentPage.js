@@ -102,11 +102,9 @@ const PaymentPage = () => {
   return (
     <div className="payment-page">
       <div className="payment-container">
-        {/* Sol Taraf: Adres ve Kart Bilgileri */}
         <div className="payment-form-section">
           <h2>Billing Details</h2>
-          <form className="billing-form" onSubmit={handlePaymentSubmit}>
-            {/* Adres Bilgileri */}
+          <form className="billing-form">
             <div className="form-group">
               <label htmlFor="fullName">Full Name</label>
               <input type="text" id="fullName" name="fullName" required />
@@ -128,7 +126,6 @@ const PaymentPage = () => {
               <input type="text" id="phoneNumber" name="phoneNumber" required />
             </div>
 
-            {/* Kart Bilgileri */}
             <h2>Payment Information</h2>
             <div className="form-group">
               <label htmlFor="cardNumber">Card Number</label>
@@ -170,7 +167,6 @@ const PaymentPage = () => {
           </form>
         </div>
 
-        {/* Sağ Taraf: Sepet Ürünleri */}
         <div className="cart-summary-section">
           <h2>Your Order</h2>
           <div className="cart-items">
