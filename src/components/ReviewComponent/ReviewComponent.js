@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaStar } from 'react-icons/fa';
 import {jwtDecode} from 'jwt-decode';
-import { fetchApprovedReviews, createReview, fetchOverAllRating, fetchReviews } from '../../api/storeapi'; // Adjust the import path as necessary
+import { createReview, fetchOverAllRating, fetchReviews } from '../../api/storeapi'; // Adjust the import path as necessary
 import './ReviewComponent.css'; // Adjust the import path as necessary
 
 const ReviewComponent = ({ productID }) => {
@@ -13,6 +13,7 @@ const ReviewComponent = ({ productID }) => {
   const [currentReview, setCurrentReview] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const getOverallRating = async () => {
@@ -37,9 +38,9 @@ const ReviewComponent = ({ productID }) => {
         // Modify reviewContent based on approvalStatus
         const modifiedReviews = response.data.map(review => {
           if (review.approvalStatus === 0) {
-            review.reviewContent = "Review Approval Pending";
+            review.reviewContent = "";
           } else if (review.approvalStatus === 2) {
-            review.reviewContent = "Unapproved Review..";
+            review.reviewContent = "";
           }
           // If approvalStatus is 1, keep the same review content
           return review;
@@ -60,7 +61,7 @@ const ReviewComponent = ({ productID }) => {
 
   useEffect(() => {
     getReviews();
-  }, [productID]);
+  }, [productID, getReviews]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,9 +96,17 @@ const ReviewComponent = ({ productID }) => {
         customerID: customerID 
       });
 
-      // Reset form
+      if (response.status === 200){
+      setSuccessMessage('Review submitted successfully!');
+      // Clear form
       setCurrentReview('');
       setCurrentRating(0);
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+    }
       
       // Refresh reviews and overall rating
       await getReviews();
@@ -161,6 +170,17 @@ const ReviewComponent = ({ productID }) => {
           Submit Review
         </button>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && (
+          <div className="success-message" style={{
+            color: 'green',
+            padding: '10px',
+            marginTop: '10px',
+            backgroundColor: '#f0fff0',
+            borderRadius: '4px'
+          }}>
+            {successMessage}
+          </div>
+        )}
       </form>
 
       <h3>Reviews</h3>

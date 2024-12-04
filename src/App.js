@@ -1,6 +1,7 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 import Navbar from './components/Navbar/Navbar';
 import HomePage from './pages/HomePage/HomePage';
 import ProductListingPage from './pages/ProductListingPage/ProductListingPage';
@@ -20,6 +21,9 @@ const App = () => {
   return (
     <Router>
       <div className="app">
+        <Helmet>
+          <title>Zad à Dos</title>
+        </Helmet>
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
