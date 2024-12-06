@@ -23,11 +23,10 @@ const InvoicePage = () => {
     const loadOrderDetails = async () => {
       try {
         const response = await fetchOrder(orderId);
-        console.log("response: ", response.data);
         setOrderDetails(response.data);
 
         const addressResponse = await fetchAddressById(response.data.deliveryAddressID);
-        console.log("addressResponse: ", addressResponse.data);
+        //console.log("addressResponse: ", addressResponse.data);
         setOrderAddress(addressResponse.data);
 
         const userProfile = await fetchUserProfile();

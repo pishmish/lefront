@@ -15,11 +15,11 @@ const ProductListingPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        console.log('Fetching products for category:', categoryName); // Log the category name
+        // console.log('Fetching products for category:', categoryName); // Log the category name
         const response = await fetchCategoryProducts(categoryName);
-        console.log('Products response:', response); // Log the entire response
+        // console.log('Products response:', response); // Log the entire response
         if (response && response.data) {
-          console.log('Products data:', response.data); // Log the products data
+          // console.log('Products data:', response.data); // Log the products data
           setProducts(response.data);
         } else {
           console.error('No data in response:', response);

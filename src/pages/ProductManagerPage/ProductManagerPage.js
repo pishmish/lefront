@@ -19,7 +19,7 @@ const ProductManagerPage = () => {
       if (token) {
         const decodedToken = jwtDecode(token.split('=')[1]);
         setUsername(decodedToken.id); // Assuming username is stored as 'id' in token
-        console.log('Decoded token:', decodedToken);
+        // console.log('Decoded token:', decodedToken);
       }
     } catch (error) {
       console.error('Error decoding token:', error);

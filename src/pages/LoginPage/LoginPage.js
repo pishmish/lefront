@@ -30,8 +30,8 @@ const LoginPage = () => {
 
       // Decode the token to get user information
       const decodedToken = jwtDecode(token);
-      console.log('token:', token);
-      console.log('User logged in:', decodedToken.customerID);
+      // console.log('token:', token);
+      // console.log('User logged in:', decodedToken.customerID);
 
 
       // Redirect based on the user's role

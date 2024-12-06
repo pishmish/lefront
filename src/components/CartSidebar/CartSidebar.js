@@ -18,7 +18,6 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
     try {
       const response = await fetchCart(customerID);
-      console.log("response: ", response.data);
       const cartData = response.data;
 
       if (cartData && cartData.products && cartData.products.length > 0) {

@@ -15,7 +15,7 @@ const ProductCard = ({ id, name, price, stock }) => {
         const response = await getProductImage(id);
         if (response.status === 200) {
           const imageUrl = URL.createObjectURL(response.data); // Create a URL for the blob
-          console.log('Fetched image URL:', imageUrl); // Log the image URL
+          // console.log('Fetched image URL:', imageUrl); // Log the image URL
           setImage(imageUrl); // Set the image URL
         } else {
           console.error('Error fetching product image:', response.statusText);

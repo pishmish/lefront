@@ -65,7 +65,7 @@ const ProductDetailPage = () => {
     const getProductDetails = async () => {
       try {
         const response = await fetchProductById(productId);
-        console.log('Product Details:', response.data);
+        //console.log('Product Details:', response.data);
         if (response?.data?.length > 0) {
           setProduct(response.data[0]); // Set the product details
         } else {
@@ -82,7 +82,6 @@ const ProductDetailPage = () => {
     const getSupplierInfo = async () => {
       try {
         const response = await fetchSupplierByProductId(productId);
-        console.log("response:", response.data);
         if (response?.data?.length > 0) {
           setSupplier(response.data[0]); // Set the supplier info
         } else {
@@ -256,7 +255,7 @@ const ProductDetailPage = () => {
   const closestColorHex = getClosestColor(product.color);
 
   // Determine if the "Add to Cart" button should be disabled
-  console.log('Current Cart Quantity:', currentCartQuantity);
+  //console.log('Current Cart Quantity:', currentCartQuantity);
   const isAddToCartDisabled = product.stock === 0 || currentCartQuantity >= product.stock;
 
   const renderSupplierInfo = () => {

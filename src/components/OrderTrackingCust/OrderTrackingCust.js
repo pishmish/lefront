@@ -13,11 +13,8 @@ const OrderTrackingCust = ({ orderId, totalPrice, address, invoice, orderStatus 
             withCredentials: true
         })
 
-        console.log("Response: ", response);
-
         if (response.status == 200) {
             setOrders(response.data);
-            console.log("Response cust: ", response.data);
         }
     } catch (err) {
 

@@ -11,9 +11,9 @@ const ReviewApproval = ({ username }) => {
     const getReviews = async () => {
       try {
         const response = await fetchPendingReviews(username);
-        console.log('username:', username);
+        //console.log('username:', username);
         if (response && response.data) {
-          console.log('Pending reviews:', response.data);
+          // console.log('Pending reviews:', response.data);
           setReviews(response.data);
         } else {
           console.error('No data in response:', response);

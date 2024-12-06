@@ -36,7 +36,6 @@ const PaymentPage = () => {
     try {
       const response = await fetchCart(customerID);
       const cartData = response.data;
-      console.log("cartData: ", cartData);
 
       if (cartData && cartData.products && cartData.products.length > 0) {
         const productsWithImages = await Promise.all(

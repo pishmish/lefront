@@ -72,7 +72,6 @@ const Navbar = () => {
   const dropdownTimeout = useRef(null);
 
   const checkAuth = () => {
-    console.log('Cookies navbar: ', document.cookie); // Log all cookies
     // Extract customer ID from JWT token
     const token = document.cookie.split('; ').find(row => row.startsWith('authToken='));
     if (!token) {
@@ -81,9 +80,7 @@ const Navbar = () => {
       setUserRole(null);
       return;
     }
-    console.log('Token found:', token); // Log the token
     const decodedToken = jwtDecode(token.split('=')[1]);
-    console.log('Decoded token:', decodedToken); // Log the decoded token
     const customerID = decodedToken.customerID;
     setCustomerID(customerID); // Set the customerID state
     setUserRole(decodedToken.role); // Set the userRole state
@@ -190,7 +187,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     // Log current cookies
-    console.log('Current cookies before logout:', document.cookie);
+    //console.log('Current cookies before logout:', document.cookie);
     
     // Clear the auth token cookie
     document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -198,7 +195,7 @@ const Navbar = () => {
     document.cookie = "fingerprint=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
     // Log cookies after clearing
-    console.log('Cookies after logout:', document.cookie);
+    // console.log('Cookies after logout:', document.cookie);
     
     // Delete cart if empty
     if (customerID) {
@@ -213,7 +210,7 @@ const Navbar = () => {
     // Reset userRole state
     setUserRole(null);
     setCustomerID(null);
-    console.log('UserRole after reset:', null);
+    //console.log('UserRole after reset:', null);
     
     // Navigate to home page
     navigate('/');

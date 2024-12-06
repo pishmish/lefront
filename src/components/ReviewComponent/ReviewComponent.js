@@ -30,10 +30,8 @@ const ReviewComponent = ({ productID }) => {
   const getReviews = async () => {
     try {
       const response = await fetchReviews(productID);
-
-      console.log('Reviews response now:', response); // Log the response
       if (response && response.data) {
-        console.log('Reviews data:', response.data); // Log the reviews data
+        //console.log('Reviews data:', response.data); // Log the reviews data
 
         // Modify reviewContent based on approvalStatus
         const modifiedReviews = response.data.map(review => {
@@ -46,7 +44,7 @@ const ReviewComponent = ({ productID }) => {
           return review;
         });
 
-        console.log('Modified reviews:', modifiedReviews); // Log the modified reviews
+        //console.log('Modified reviews:', modifiedReviews); // Log the modified reviews
 
         setReviews(modifiedReviews);
         // Fetch overall rating separately
