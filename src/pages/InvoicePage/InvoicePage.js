@@ -1,7 +1,7 @@
 // InvoicePage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchOrder, mailInvoiceByIdtoEmail, downloadInvoiceById } from '../../api/orderapi';
+import { fetchOrder, downloadInvoiceById } from '../../api/orderapi';
 import { fetchAddressById } from '../../api/addressapi';
 import { fetchUserProfile } from '../../api/userapi';
 import './InvoicePage.css';

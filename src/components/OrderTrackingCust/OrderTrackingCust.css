@@ -42,4 +42,27 @@
   .order-content strong {
     color: #333;
   }
-  
+
+.order-card {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.view-invoice-button {
+  position: absolute;
+  top: 20px;    /* Adjust as needed */
+  right: 20px;  /* Adjust as needed */
+  padding: 10px 15px;
+  background-color: #b1902e;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.view-invoice-button:hover {
+  background-color: #937b12;
+}
