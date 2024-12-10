@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import './PaymentPage.css';
-import { processPayment, createOrder } from '../../api/orderapi'; // Import the API function
+import { processPayment, createOrder, mailInvoiceByIdtoEmail } from '../../api/orderapi'; // Import the API function
 import { fetchCart } from '../../api/cartapi';
 import { useNavigate } from 'react-router-dom';
 import { getProductImage } from '../../api/storeapi';
 import {jwtDecode} from 'jwt-decode'; // Doğru kütüphane import edildi
 import axios from 'axios';
+import { fetchUserProfile } from '../../api/userapi';
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -82,26 +83,34 @@ const PaymentPage = () => {
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Add billing info using billing api (TO DO)
-
-      // Do payment with payment api
+      // Process payment
       const response = await processPayment({ creditCard: paymentInfo });
       if (response.status !== 200) {
         setPaymentError('The payment information you entered is incorrect. Please try again.');
         return;
       }
 
-      // Create an order with order api
+      // Create the order
       const orderResponse = await createOrder({ address: addressInfo });
-
       if (orderResponse.status !== 200) {
         setPaymentError('Failed to create order. Please try again.');
         return;
       }
 
       const orderId = orderResponse.data.orderID;
+
+      // Fetch user email and send the invoice
+      const userProfile = await fetchUserProfile();
+      const email = userProfile.data.user.email;
+
+      if (email) {
+        await mailInvoiceByIdtoEmail(orderId, email);
+      } else {
+        console.error('No email found for user');
+      }
+
       navigate(`/invoice/${orderId}`);
-      setPaymentError(null); // Clear any previous error message if payment is successful
+      setPaymentError(null);
     } catch (err) {
       console.error('Error processing payment:', err);
       setPaymentError('An error occurred while processing your payment. Please try again.');

@@ -26,17 +26,10 @@ const InvoicePage = () => {
         setOrderDetails(response.data);
 
         const addressResponse = await fetchAddressById(response.data.deliveryAddressID);
-        //console.log("addressResponse: ", addressResponse.data);
         setOrderAddress(addressResponse.data);
 
-        const userProfile = await fetchUserProfile();
-        const email = userProfile.data.user.email;
+        // Removed the email sending code from here
 
-        if (!email) {
-          console.error('No email found for user');
-        }
-
-        await mailInvoiceByIdtoEmail(orderId, email);
       } catch (err) {
         setError('Failed to load order details');
         console.error('Error fetching order:', err.response ? err.response.data : err.message);
