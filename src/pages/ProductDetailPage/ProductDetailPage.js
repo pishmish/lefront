@@ -237,6 +237,12 @@ const ProductDetailPage = () => {
     }
   };
 
+  // Handler for the Add to Wishlist button
+  const handleAddToWishlist = () => {
+    // Placeholder for future functionality
+    console.log('Product added to wishlist');
+  };
+
   // Loading indicator
   if (loading) {
     return <div>Loading...</div>;
@@ -341,7 +347,12 @@ const ProductDetailPage = () => {
             Add to Cart
           </button>
           {cartMessage && <p className="cart-message">{cartMessage}</p>}
-          <button>Add to Wishlist</button>
+          <button
+            onClick={handleAddToWishlist}
+            className="action-button"  // Use a shared class name
+          >
+            Add to Wishlist
+          </button>
         </div>
       </div>
       {/* Product Reviews */}

@@ -252,3 +252,25 @@
     text-align: left; /* Ensures text is aligned to the left */
   }
 }
+
+.action-button {
+  /* Existing styles applied to the Add to Cart button */
+
+  /* Example styles: */
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  border-radius: 4px;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
