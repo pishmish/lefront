@@ -341,6 +341,7 @@ const ProductDetailPage = () => {
             Add to Cart
           </button>
           {cartMessage && <p className="cart-message">{cartMessage}</p>}
+          <button>Add to Wishlist</button>
         </div>
       </div>
       {/* Product Reviews */}
