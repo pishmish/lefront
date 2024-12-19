@@ -274,3 +274,12 @@
 .action-button:hover {
   background-color: #0056b3;
 }
+
+.action-button.wishlisted {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.action-button.wishlisted:hover {
+  background-color: #ff3333;
+}

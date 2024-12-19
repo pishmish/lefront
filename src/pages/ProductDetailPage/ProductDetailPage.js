@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './ProductDetailPage.css';
 import { fetchProductById, getProductImage, fetchSupplierByProductId } from '../../api/storeapi';
 import { fetchCart, addProductToCart } from '../../api/cartapi'; // Add product to cart API
@@ -7,8 +7,10 @@ import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 import { jwtDecode } from 'jwt-decode';
 import nearestColor from 'nearest-color';
 import { colornames } from 'color-name-list';
+import { addProductToWishlist, removeProductFromWishlist, isProductInWishlist } from '../../api/wishlistapi';
 
 const ProductDetailPage = () => {
+  const navigate = useNavigate(); // Add this line after useParams
   const { productId } = useParams(); // Retrieve product ID from URL params
   const [product, setProduct] = useState(null); // State for product details
   const [supplier, setSupplier] = useState(null); // State for supplier details
@@ -18,6 +20,7 @@ const ProductDetailPage = () => {
   const [cartMessage, setCartMessage] = useState(''); // Feedback message for cart actions
   const [customerID, setCustomerID] = useState(null);
   const [currentCartQuantity, setCurrentCartQuantity] = useState(0); // Add state for cart quantity
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   // Initialize color matcher
   const colors = colornames.reduce((accumulator, { name, hex }) => {
@@ -214,6 +217,20 @@ const ProductDetailPage = () => {
     };
   }, [product]);
 
+  useEffect(() => {
+    const checkWishlistStatus = async () => {
+      try {
+        if (!customerID || !productId) return;
+        const response = await isProductInWishlist(customerID, productId);
+        setIsWishlisted(response.data.exists);
+      } catch (error) {
+        console.error('Error checking wishlist status:', error);
+      }
+    };
+
+    checkWishlistStatus();
+  }, [customerID, productId]);
+
   // Handle adding product to the cart
   const handleAddToCart = async () => {
     try {
@@ -238,9 +255,29 @@ const ProductDetailPage = () => {
   };
 
   // Handler for the Add to Wishlist button
-  const handleAddToWishlist = () => {
-    // Placeholder for future functionality
-    console.log('Product added to wishlist');
+  const handleWishlistToggle = async () => {
+    try {
+      if (!customerID) {
+        // Redirect to login if not authenticated
+        navigate('/login');
+        return;
+      }
+
+      if (!isWishlisted) {
+        await addProductToWishlist(customerID, productId);
+        setIsWishlisted(true);
+        setCartMessage('Product added to wishlist!');
+      } else {
+        await removeProductFromWishlist(customerID, productId);
+        setIsWishlisted(false);
+        setCartMessage('Product removed from wishlist!');
+      }
+
+      setTimeout(() => setCartMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating wishlist:', error);
+      setCartMessage('Failed to update wishlist.');
+    }
   };
 
   // Loading indicator
@@ -346,13 +383,13 @@ const ProductDetailPage = () => {
           >
             Add to Cart
           </button>
-          {cartMessage && <p className="cart-message">{cartMessage}</p>}
           <button
-            onClick={handleAddToWishlist}
-            className="action-button"  // Use a shared class name
+            onClick={handleWishlistToggle}
+            className={`action-button ${isWishlisted ? 'wishlisted' : ''}`}
           >
-            Add to Wishlist
+            {isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
           </button>
+          {cartMessage && <p className="cart-message">{cartMessage}</p>}
         </div>
       </div>
       {/* Product Reviews */}
