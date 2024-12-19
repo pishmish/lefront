@@ -1,6 +1,6 @@
 // components/ProductManagement/ProductManagement.js
 import React, { useState, useEffect } from 'react';
-import { fetchProductsForManager, updateProduct, deleteProduct } from '../../api/storeapi';
+import { fetchProductsForManager, updateProduct, deleteProduct, createProduct, fetchCategories } from '../../api/storeapi';
 import './ProductManagement.css';
 
 const ProductManagement = ({ username }) => {
@@ -9,43 +9,105 @@ const ProductManagement = ({ username }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [newProductData, setNewProductData] = useState({
+    name: '',
+    unitPrice: 0,
+    stock: 0,
+    description: '',
+    brand: '',
+    color: '',
+    material: '',
+    warrantyMonths: 0,
+    serialNumber: '',
+    capacityLitres: 0,
+    supplierID: '',
+    categoryName: '',
+    // Include other necessary fields
+  });
+
+  const getProducts = async () => {
+    try {
+      console.log('Fetching products for manager:', username);
+      const response = await fetchProductsForManager(username);
+      console.log('Products response:', response);
+      
+      if (response && response.data) {
+        console.log('Products data:', response.data);
+        setProducts(response.data);
+      } else {
+        setError('No products found');
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setError('Failed to fetch products');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getProducts = async () => {
+    const getCategories = async () => {
       try {
-        console.log('Fetching products for manager:', username);
-        const response = await fetchProductsForManager(username);
-        console.log('Products response:', response);
-        
-        if (response && response.data) {
-          console.log('Products data:', response.data);
-          setProducts(response.data);
-        } else {
-          console.error('No data in response:', response);
-        }
+        const response = await fetchCategories();
+        setCategories(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        setError('Failed to fetch products');
-      } finally {
-        setLoading(false);
+        console.error('Error fetching categories:', error);
       }
     };
 
     if (username) {
       getProducts();
+      getCategories();
     }
   }, [username]);
 
-  const handleAddProduct = (e) => {
-    e.preventDefault();
-    const newProduct = { 
-      id: Date.now(), 
-      name: 'New Product', 
-      price: 0, 
-      description: 'New product description.', 
-      discount: 0 
-    };
-    setProducts([...products, newProduct]);
+  const handleAddProduct = () => {
+    setIsAddingProduct(true);
+  };
+
+  const handleSaveNewProduct = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('name', newProductData.name);
+      formData.append('unitPrice', newProductData.unitPrice);
+      formData.append('stock', newProductData.stock);
+      formData.append('description', newProductData.description);
+      formData.append('brand', newProductData.brand);
+      formData.append('color', newProductData.color);
+      formData.append('material', newProductData.material);
+      formData.append('warrantyMonths', newProductData.warrantyMonths);
+      formData.append('serialNumber', newProductData.serialNumber);
+      formData.append('capacityLitres', newProductData.capacityLitres);
+      formData.append('supplierID', newProductData.supplierID);
+      formData.append('categoryName', newProductData.categoryName);
+      // Append other fields as required
+      if (newProductData.image) {
+        formData.append('image', newProductData.image);
+      }
+      const response = await createProduct(formData);
+      setProducts([...products, response.data]);
+      setIsAddingProduct(false);
+      setNewProductData({
+        name: '',
+        unitPrice: 0,
+        stock: 0,
+        description: '',
+        brand: '',
+        color: '',
+        material: '',
+        warrantyMonths: 0,
+        serialNumber: '',
+        capacityLitres: 0,
+        supplierID: '',
+        categoryName: '',
+        // Reset other fields
+      });
+      await getProducts(); // Fetch updated products list
+    } catch (error) {
+      console.error('Error creating product:', error);
+    }
   };
 
   const handleSearch = (e) => {
@@ -89,6 +151,8 @@ const ProductManagement = ({ username }) => {
   };
 
   const filteredProducts = products.filter((product) =>
+    product &&
+    product.name &&
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -102,6 +166,170 @@ const ProductManagement = ({ username }) => {
         <button className="add-product-button" onClick={handleAddProduct}>
           Add New Product
         </button>
+      </div>
+
+      {isAddingProduct && (
+        <div className="product-edit-form">
+          <label>
+            Name:
+            <input
+              type="text"
+              value={newProductData.name}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                name: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Price:
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={newProductData.unitPrice}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                unitPrice: parseFloat(e.target.value)
+              })}
+            />
+          </label>
+          <label>
+            Stock:
+            <input
+              type="number"
+              min="0"
+              value={newProductData.stock}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                stock: parseInt(e.target.value)
+              })}
+            />
+          </label>
+          <label>
+            Description:
+            <textarea
+              value={newProductData.description}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                description: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Brand:
+            <input
+              type="text"
+              value={newProductData.brand}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                brand: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Color:
+            <input
+              type="text"
+              value={newProductData.color}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                color: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Material:
+            <input
+              type="text"
+              value={newProductData.material}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                material: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Warranty Months:
+            <input
+              type="number"
+              min="0"
+              value={newProductData.warrantyMonths}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                warrantyMonths: parseInt(e.target.value)
+              })}
+            />
+          </label>
+          <label>
+            Serial Number:
+            <input
+              type="text"
+              value={newProductData.serialNumber}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                serialNumber: e.target.value
+              })}
+            />
+          </label>
+          <label>
+            Capacity Litres:
+            <input
+              type="number"
+              min="0"
+              step="0.1"
+              value={newProductData.capacityLitres}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                capacityLitres: parseFloat(e.target.value)
+              })}
+            />
+          </label>
+          <label>
+            Category:
+            <select
+              value={newProductData.categoryName}
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                categoryName: e.target.value
+              })}
+            >
+              <option value="">Select Category</option>
+              {categories.map((category) => (
+                <option key={category.categoryID} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Image:
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewProductData({
+                ...newProductData,
+                image: e.target.files[0]
+              })}
+            />
+          </label>
+          <div className="edit-buttons">
+            <button 
+              className="save-button"
+              onClick={handleSaveNewProduct}
+            >
+              Save
+            </button>
+            <button 
+              className="cancel-button"
+              onClick={() => setIsAddingProduct(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+      {!isAddingProduct && (
         <input
           type="text"
           className="product-search-bar"
@@ -109,7 +337,7 @@ const ProductManagement = ({ username }) => {
           value={searchTerm}
           onChange={handleSearch}
         />
-      </div>
+      )}
 
       <div className="product-grid">
         {filteredProducts.map((product) => (

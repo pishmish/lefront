@@ -39,7 +39,7 @@ const ProductManagerPage = () => {
           <ReviewApproval username={username} />
         </section>
       );
-    } else if (activeTab === 'orders') { // Yeni Orders sekmesi için içerik
+    } else if (activeTab === 'orders') {
       return (
         <section className="product-section">
           <OrderTracking />
@@ -65,7 +65,7 @@ const ProductManagerPage = () => {
           Reviews
         </button>
         <button
-          className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`} // Yeni Orders sekme butonu
+          className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
           onClick={() => setActiveTab('orders')}
         >
           Orders
