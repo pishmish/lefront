@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./OrderTracking.css";
+import { fetchOrder } from '../../api/orderapi';
+import { fetchAddressById } from '../../api/addressapi';
 
 const OrderTracking = () => {
   const steps = ["Processing", "In-transit", "Delivered"];
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedOrders, setExpandedOrders] = useState(new Set());
+  const [orderDetails, setOrderDetails] = useState({});
 
   const getAllOrders = async () => {
     try {
@@ -49,6 +53,31 @@ const OrderTracking = () => {
     }
   };
 
+  const toggleOrderExpand = async (orderId) => {
+    const newExpanded = new Set(expandedOrders);
+    if (expandedOrders.has(orderId)) {
+      newExpanded.delete(orderId);
+    } else {
+      newExpanded.add(orderId);
+      if (!orderDetails[orderId]) {
+        try {
+          const response = await fetchOrder(orderId);
+          const addressResponse = await fetchAddressById(response.data.deliveryAddressID);
+          setOrderDetails(prev => ({
+            ...prev,
+            [orderId]: {
+              ...response.data,
+              address: addressResponse.data
+            }
+          }));
+        } catch (error) {
+          console.error('Error fetching order details:', error);
+        }
+      }
+    }
+    setExpandedOrders(newExpanded);
+  };
+
   useEffect(() => {
     getAllOrders();
   }, []);
@@ -76,13 +105,58 @@ const OrderTracking = () => {
         {orders.length > 0 ? (
           orders.map((order) => {
             const currentStep = getCurrentStep(order.deliveryStatus);
+            const isExpanded = expandedOrders.has(order.orderID);
             return (
               <div key={order.orderID} className="order-card">
-                <h4>Order ID: {order.orderID}</h4>
+                <div className="order-header">
+                  <h4>Order ID: {order.orderID}</h4>
+                  <button 
+                    className="expand-button"
+                    onClick={() => toggleOrderExpand(order.orderID)}
+                  >
+                    {isExpanded ? '−' : '+'}
+                  </button>
+                </div>
+
                 <p><strong>Order Number:</strong> {order.orderNumber}</p>
                 <p><strong>Total Price:</strong> ${order.totalPrice}</p>
                 <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
                 <p><strong>Estimated Arrival:</strong> {new Date(order.estimatedArrival).toLocaleDateString()}</p>
+
+                {isExpanded && orderDetails[order.orderID] && (
+                  <div className="order-details-expanded">
+                    <div className="order-items">
+                      <h4>Ordered Items</h4>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {orderDetails[order.orderID].orderItems?.map((item) => (
+                            <tr key={item.productId}>
+                              <td>{item.productName}</td>
+                              <td>{item.quantity}</td>
+                              <td>${parseFloat(item.purchasePrice).toFixed(2)}</td>
+                              <td>${(parseFloat(item.quantity) * parseFloat(item.purchasePrice)).toFixed(2)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="delivery-address">
+                      <h4>Delivery Address</h4>
+                      <p>{orderDetails[order.orderID].address?.streetAddress}</p>
+                      <p>{orderDetails[order.orderID].address?.city}, {orderDetails[order.orderID].address?.province}</p>
+                      <p>{orderDetails[order.orderID].address?.zipCode}</p>
+                      <p>{orderDetails[order.orderID].address?.country}</p>
+                    </div>
+                  </div>
+                )}
                 <div className="steps-container">
                   {steps.map((step, index) => (
                     <div key={index} className={`step ${index <= currentStep ? "active" : ""}`}>

@@ -43,13 +43,16 @@
 .steps-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .step {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 .circle {
@@ -80,11 +83,15 @@
 
 .status-buttons {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  gap: 0;
   margin-top: 15px;
+  width: 100%;
 }
 
 .status-button {
+  flex: 1;
+  margin: 0 10px;
   padding: 5px 10px;
   border: none;
   border-radius: 4px;
@@ -92,6 +99,16 @@
   background-color: #ddd;
   color: #333;
   transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.status-button:first-child {
+  margin-left: 0;
+}
+
+.status-button:last-child {
+  margin-right: 0;
 }
 
 .status-button.active {
@@ -102,4 +119,56 @@
 .status-button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.expand-button {
+  background: none;
+  border: 2px solid #000;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.expand-button:hover {
+  background: #000;
+  color: white;
+}
+
+.order-details-expanded {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.order-details-expanded table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+}
+
+.order-details-expanded th,
+.order-details-expanded td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.delivery-address {
+  margin-top: 20px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 4px;
 }
