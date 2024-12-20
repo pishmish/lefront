@@ -258,7 +258,6 @@ const ProductDetailPage = () => {
   const handleWishlistToggle = async () => {
     try {
       if (!customerID) {
-        // Redirect to login if not authenticated
         navigate('/login');
         return;
       }
@@ -266,17 +265,12 @@ const ProductDetailPage = () => {
       if (!isWishlisted) {
         await addProductToWishlist(customerID, productId);
         setIsWishlisted(true);
-        setCartMessage('Product added to wishlist!');
       } else {
         await removeProductFromWishlist(customerID, productId);
         setIsWishlisted(false);
-        setCartMessage('Product removed from wishlist!');
       }
-
-      setTimeout(() => setCartMessage(''), 3000);
     } catch (error) {
       console.error('Error updating wishlist:', error);
-      setCartMessage('Failed to update wishlist.');
     }
   };
 
@@ -324,7 +318,16 @@ const ProductDetailPage = () => {
         </div>
         {/* Product Details */}
         <div className="product-details">
-          <h1 className="product-name">{product.name}</h1>
+          <div className="product-header">
+            <h1 className="product-name">{product.name}</h1>
+            <button
+              onClick={handleWishlistToggle}
+              className={`action-button ${isWishlisted ? 'wishlisted' : ''}`}
+              title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+            >
+              <i className={`fa-heart ${isWishlisted ? 'fas' : 'far'}`}></i>
+            </button>
+          </div>
 
           <p className="product-description">{product.description}</p>
 
@@ -382,12 +385,6 @@ const ProductDetailPage = () => {
             disabled={isAddToCartDisabled}
           >
             Add to Cart
-          </button>
-          <button
-            onClick={handleWishlistToggle}
-            className={`action-button ${isWishlisted ? 'wishlisted' : ''}`}
-          >
-            {isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
           </button>
           {cartMessage && <p className="cart-message">{cartMessage}</p>}
         </div>

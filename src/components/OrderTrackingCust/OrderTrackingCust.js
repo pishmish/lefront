@@ -82,7 +82,15 @@ const OrderTrackingCust = () => {
           );
         })
       ) : (
-        <p>No orders available.</p>
+        <div className="no-orders">
+          <p>You haven't placed any orders yet.</p>
+          <button 
+            className="start-shopping-button"
+            onClick={() => navigate('/')}
+          >
+            Start Shopping
+          </button>
+        </div>
       )}
     </div>
   );

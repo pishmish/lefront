@@ -59,6 +59,8 @@
   font-size: 2rem;
   font-weight: bold;
   color: #333;
+  margin: 0;
+  flex: 1;
 }
 
 .product-description {
@@ -254,32 +256,56 @@
 }
 
 .action-button {
-  /* Existing styles applied to the Add to Cart button */
-
-  /* Example styles: */
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  color: #ffffff;
-  background-color: #007bff;
-  border: none;
-  padding: 12px 24px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 0px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #000000 !important;
   cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
-.action-button:hover {
-  background-color: #0056b3;
+.action-button i {
+  font-size: 1.2rem;
+  color: #000000;
+  transition: all 0.3s ease;
 }
 
 .action-button.wishlisted {
-  background-color: #ff4d4d;
-  color: white;
+  background-color: #ffffff;
+  border-color: #000000 !important;
+}
+
+.action-button.wishlisted i {
+  color: #ea1818;
+}
+
+.action-button:hover {
+  transform: scale(1.05);
+  background-color: #ffffff !important;
+  border-color: #000000 !important;
+}
+
+.action-button:hover i {
+  color: #ea1818 !important;
 }
 
 .action-button.wishlisted:hover {
-  background-color: #ff3333;
+  background-color: #ffffff !important;
+}
+
+.action-button.wishlisted:hover i {
+  color: #ea1818 !important;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  width: 100%;
 }

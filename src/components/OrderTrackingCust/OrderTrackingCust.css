@@ -66,3 +66,35 @@
 .view-invoice-button:hover {
   background-color: #937b12;
 }
+
+.no-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.no-orders p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.start-shopping-button {
+  padding: 12px 24px;
+  background-color: #846b22;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  border-radius: 0px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.start-shopping-button:hover {
+  background-color: #43380a;
+  transform: translateY(-2px);
+}

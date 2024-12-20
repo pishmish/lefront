@@ -65,7 +65,15 @@ const WishListPage = () => {
             />
           ))
         ) : (
-          <p>No items in your wishlist yet.</p>
+          <div className="no-items-container">
+            <p>No items in your wishlist yet.</p>
+            <button 
+              className="start-shopping-button"
+              onClick={() => navigate('/')}
+            >
+              Start Shopping
+            </button>
+          </div>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 // components/ProductManagement/ProductManagement.js
 import React, { useState, useEffect } from 'react';
-import { fetchProductsForManager, updateProduct, deleteProduct, createProduct, fetchCategories } from '../../api/storeapi';
+import { fetchProductsForManager, updateProduct, deleteProduct, createProduct, fetchSubCategories } from '../../api/storeapi';
 import './ProductManagement.css';
 
 const ProductManagement = ({ username }) => {
@@ -50,7 +50,7 @@ const ProductManagement = ({ username }) => {
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const response = await fetchCategories();
+        const response = await fetchSubCategories();
         setCategories(response.data);
       } catch (error) {
         console.error('Error fetching categories:', error);

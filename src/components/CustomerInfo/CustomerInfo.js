@@ -113,7 +113,9 @@ const CustomerInfo = () => {
           </button>
         </div>
       ) : (
-        <button onClick={handleEditToggle}>Edit Profile</button>
+        <button className="edit-profile-button" onClick={handleEditToggle}>
+          Edit Profile
+        </button>
       )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
