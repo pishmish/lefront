@@ -24,7 +24,8 @@ const RefundCust = () => {
       quantity: 1,
     },
   ]);
-  const [accordionOpen, setAccordionOpen] = useState(false);
+  const [pastAccordionOpen, setPastAccordionOpen] = useState(false);
+  const [orderAccordionOpen, setOrderAccordionOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetails, setOrderDetails] = useState(null);
   const [refundItems, setRefundItems] = useState([]);
@@ -38,7 +39,6 @@ const RefundCust = () => {
   };
 
   const handleOrderSelect = (order) => {
-    // Eğer seçili order'a tekrar tıklanırsa detaylar kapansın
     if (selectedOrder?.orderID === order.orderID) {
       setSelectedOrder(null);
       setOrderDetails(null);
@@ -60,12 +60,15 @@ const RefundCust = () => {
 
   return (
     <div className="refund-cust">
-      {/* Accordion for Past Requests */}
+      {/* Accordion for Past Refund Requests */}
       <div className="past-requests">
-        <div className="accordion-header" onClick={() => setAccordionOpen(!accordionOpen)}>
+        <div
+          className="accordion-header"
+          onClick={() => setPastAccordionOpen(!pastAccordionOpen)}
+        >
           <h2>Past Refund Requests</h2>
         </div>
-        {accordionOpen && (
+        {pastAccordionOpen && (
           <div className="accordion-body">
             {pastRequests.map((request) => (
               <div key={request.requestID} className="refund-card">
@@ -74,10 +77,18 @@ const RefundCust = () => {
                   <p>Status: {request.returnStatus}</p>
                 </div>
                 <div className="refund-body">
-                  <p><strong>Reason:</strong> {request.reason}</p>
-                  <p><strong>Order ID:</strong> {request.orderID}</p>
-                  <p><strong>Product ID:</strong> {request.productID}</p>
-                  <p><strong>Quantity:</strong> {request.quantity}</p>
+                  <p>
+                    <strong>Reason:</strong> {request.reason}
+                  </p>
+                  <p>
+                    <strong>Order ID:</strong> {request.orderID}
+                  </p>
+                  <p>
+                    <strong>Product ID:</strong> {request.productID}
+                  </p>
+                  <p>
+                    <strong>Quantity:</strong> {request.quantity}
+                  </p>
                 </div>
               </div>
             ))}
@@ -85,19 +96,32 @@ const RefundCust = () => {
         )}
       </div>
 
+      {/* Accordion for Your Orders */}
       <div className="orders-list">
-        <h2>Your Orders</h2>
-        {orders.map((order) => (
-          <div
-            key={order.orderID}
-            className={`order-item ${selectedOrder?.orderID === order.orderID ? 'selected' : ''}`}
-            onClick={() => handleOrderSelect(order)}
-          >
-            <p>Order ID: {order.orderID}</p>
-            <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
+        <div
+          className="accordion-header"
+          onClick={() => setOrderAccordionOpen(!orderAccordionOpen)}
+        >
+          <h2>Your Orders</h2>
+        </div>
+        {orderAccordionOpen && (
+          <div className="accordion-body">
+            {orders.map((order) => (
+              <div
+                key={order.orderID}
+                className={`order-item ${
+                  selectedOrder?.orderID === order.orderID ? 'selected' : ''
+                }`}
+                onClick={() => handleOrderSelect(order)}
+              >
+                <p>Order ID: {order.orderID}</p>
+                <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
+
       {orderDetails && (
         <div className="order-details">
           <h2>Order Details</h2>
@@ -105,7 +129,9 @@ const RefundCust = () => {
             <div key={item.productID} className="order-item-detail">
               <div className="product-info">
                 <p className="product-name">{item.productName}</p>
-                <p className="product-quantity">Available Quantity: {item.quantity}</p>
+                <p className="product-quantity">
+                  Available Quantity: {item.quantity}
+                </p>
               </div>
               <div className="return-quantity">
                 <input
@@ -114,9 +140,12 @@ const RefundCust = () => {
                   max={item.quantity}
                   placeholder="Enter quantity"
                   onChange={(e) =>
-                    setRefundItems((prevItems) =>
-                      [...prevItems.filter((i) => i.productID !== item.productID), { productID: item.productID, quantity: parseInt(e.target.value, 10) }]
-                    )
+                    setRefundItems((prevItems) => [
+                      ...prevItems.filter(
+                        (i) => i.productID !== item.productID
+                      ),
+                      { productID: item.productID, quantity: parseInt(e.target.value, 10) },
+                    ])
                   }
                 />
               </div>
@@ -127,7 +156,6 @@ const RefundCust = () => {
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           ></textarea>
-          {/* Submit button directly under the textarea */}
           <button onClick={handleSubmit}>Submit Refund Request</button>
         </div>
       )}
