@@ -181,19 +181,33 @@ const ProductManagement = ({ username }) => {
               })}
             />
           </label>
-          <label>
-            Price:
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={newProductData.unitPrice}
-              onChange={(e) => setNewProductData({
-                ...newProductData,
-                unitPrice: parseFloat(e.target.value)
-              })}
-            />
-          </label>
+          {isAddingProduct ? (
+            // Price field for new product - editable
+            <label>
+              Price:
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={newProductData.unitPrice}
+                onChange={(e) => setNewProductData({
+                  ...newProductData,
+                  unitPrice: parseFloat(e.target.value)
+                })}
+              />
+            </label>
+          ) : (
+            // Price field for editing - read only
+            <label>
+              Price:
+              <input
+                type="number"
+                value={editingProduct?.unitPrice || 0}
+                readOnly
+                disabled
+              />
+            </label>
+          )}
           <label>
             Stock:
             <input
@@ -355,19 +369,33 @@ const ProductManagement = ({ username }) => {
                     })}
                   />
                 </label>
-                <label>
-                  Price:
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={editingProduct.unitPrice}
-                    onChange={(e) => setEditingProduct({
-                      ...editingProduct,
-                      unitPrice: parseFloat(e.target.value)
-                    })}
-                  />
-                </label>
+                {isAddingProduct ? (
+                  // Price field for new product - editable
+                  <label>
+                    Price:
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={newProductData.unitPrice}
+                      onChange={(e) => setNewProductData({
+                        ...newProductData,
+                        unitPrice: parseFloat(e.target.value)
+                      })}
+                    />
+                  </label>
+                ) : (
+                  // Price field for editing - read only
+                  <label>
+                    Price:
+                    <input
+                      type="number"
+                      value={editingProduct?.unitPrice || 0}
+                      readOnly
+                      disabled
+                    />
+                  </label>
+                )}
                 <label>
                   Stock:
                   <input
