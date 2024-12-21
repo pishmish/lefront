@@ -1,63 +1,205 @@
-/* SalesManagerPage.css */
 .sales-manager-page {
-    padding: 2rem;
-    background-color: #f9fafb;
-    min-height: 100vh;
-    font-family: Arial, sans-serif;
-  }
-  
-  .sales-manager-page h1 {
-    text-align: center;
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 2rem;
-    font-weight: bold;
-  }
-  
-  .sales-section {
-    margin: 1.5rem 0;
-    padding: 1.5rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .sales-section h2 {
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 0.5rem;
-  }
-  
-  .sales-chart-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1rem 0;
-  }
-  
-  .order-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  
-  .order-table th,
-  .order-table td {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    text-align: left;
-    font-size: 0.95rem;
-  }
-  
-  .order-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .order-table tr:nth-child(even) {
-    background-color: #fafafa;
-  }
-  
+  padding: 2rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.sales-manager-page h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+  font-weight: bold;
+}
+
+.sales-section {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sales-section h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.sales-chart-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.order-table th,
+.order-table td {
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.order-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #555;
+}
+
+.order-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Tabs for Sales and Refund */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.tabs-container button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 16px;
+  color: #007bff;
+  background-color: #ffffff;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tabs-container button:hover {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.tabs-container .active-tab {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+/* Refund Section */
+.refund-section {
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.refund-section h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.refund-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.refund-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.refund-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.refund-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.refund-header select {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.refund-body {
+  margin-bottom: 15px;
+}
+
+.refund-body p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.refund-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.refund-actions button {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.refund-actions button:hover {
+  background-color: #0056b3;
+}
+
+.refund-status {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-radius: 5px;
+  text-align: center;
+}
+.search-bar-container {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar-container input {
+  width: 300px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-bar-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
