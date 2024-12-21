@@ -19,7 +19,12 @@ export const fetchProductsForManager= (username) => API.get(`/store/product/admi
 export const fetchMainCategories = () => API.get('/store/category/main'); // Fetch categories
 export const fetchSubCategories = () => API.get('/store/category/sub'); // Fetch categories
 export const fetchCategoryByName = (name) => API.get(`/store/category/${name}`); // Fetch category by name
-export const createCategory = (data) => API.post('/store/category', data); // Create new category
+export const createCategory = (formData) => 
+  API.post('/store/category', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }); // Create new category
 export const updateCategory = (id, data) => API.put(`/store/category/${id}`, data); // Update category
 export const deleteCategory = (id) => API.delete(`/store/category/${id}`); // Delete category
 export const fetchCategoryProducts = (name) => API.get(`/store/category/${name}/products`); // Fetch products in category
@@ -61,6 +66,33 @@ export const sortProductsByPopularity = (order, data) => sortProductsBy('popular
 
 // API call to get product image
 export const getProductImage = (id) => API.get(`/store/product/${id}/image`, { responseType: 'blob' });
+
+// Image API calls
+export const uploadImage = (formData) => 
+  API.post('/images/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+export const deleteImage = (imageName) => 
+  API.delete(`/images/${imageName}`);
+
+export const fetchImage = (imageName) => 
+  API.get(`/images/${imageName}`, {
+    responseType: 'blob'
+  });
+
+export const fetchAllImages = () => 
+  API.get('/images');
+
+// For category images specifically
+export const uploadCategoryImage = (categoryId, formData) => 
+  API.post(`/images/category/${categoryId}/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 
 // Export default API instance
 export default API;

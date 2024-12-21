@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import ProductManagement from '../../components/ProductManagement/ProductManagement';
 import ReviewApproval from '../../components/ReviewApproval/ReviewApproval';
 import OrderTracking from '../../components/OrderTracking/OrderTracking'; // OrderTracking bileşenini import ettik
+import CategoryManagement from '../../components/CategoryManagement/CategoryManagement';
 import './ProductManagerPage.css';
 
 const ProductManagerPage = () => {
@@ -45,6 +46,12 @@ const ProductManagerPage = () => {
           <OrderTracking />
         </section>
       );
+    } else if (activeTab === 'category') {
+      return (
+        <section className="product-section">
+          <CategoryManagement />
+        </section>
+      );
     }
   };
 
@@ -69,6 +76,12 @@ const ProductManagerPage = () => {
           onClick={() => setActiveTab('orders')}
         >
           Orders
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'category' ? 'active' : ''}`}
+          onClick={() => setActiveTab('category')}
+        >
+          Category
         </button>
       </div>
       {renderContent()}

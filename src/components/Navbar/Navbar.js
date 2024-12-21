@@ -7,57 +7,7 @@ import './Navbar.css';
 import CartSidebar from '../CartSidebar/CartSidebar';
 import { AUTH_STATE_CHANGED } from '../../utils/authEvents';
 import { deleteCartIfEmpty } from '../../api/cartapi'; // Import the deleteCartIfEmpty function
-
-const categories = [
-  {
-    name: 'Handbags',
-    items: [
-      { name: 'Tote Bags', link: '/category/Tote Bags', img: '/images/tote-bags.jpg' },
-      { name: 'Crossbody Bags', link: '/category/Crossbody Bags', img: '/images/crossbody-bags.jpg' },
-      { name: 'Clutch Bags', link: '/category/Clutch Bags', img: '/images/clutch-bags.jpg' },
-      { name: 'Satchels', link: '/category/Satchels', img: '/images/satchels.jpg' },
-      { name: 'Shoulder Bags', link: '/category/Shoulder Bags', img: '/images/shoulder-bags.jpg' },
-      { name: 'Hobo Bags', link: '/category/Hobo Bags', img: '/images/hobo-bags.jpg' },
-    ],
-  },
-  {
-    name: 'Backpacks',
-    items: [
-      { name: 'Casual Backpacks', link: '/category/Casual Backpacks', img: '/images/casual-backpacks.jpg' },
-      { name: 'Laptop Backpacks', link: '/category/Laptop Backpacks', img: '/images/laptop-backpacks.jpg' },
-      { name: 'Hiking Backpacks', link: '/category/Hiking Backpacks', img: '/images/hiking-backpacks.jpg' },
-      { name: 'Travel Backpacks', link: '/category/Travel Backpacks', img: '/images/travel-backpacks.jpg' },
-      { name: 'Mini Backpacks', link: '/category/Mini Backpacks', img: '/images/mini-backpacks.jpg' },
-    ],
-  },
-  {
-    name: 'Luggage',
-    items: [
-      { name: 'Carry-On Bags', link: '/category/Carry-On Bags', img: '/images/carry-on-bags.jpg' },
-      { name: 'Checked Luggage', link: '/category/Checked Luggage', img: '/images/checked-luggage.jpg' },
-      { name: 'Duffel Bags', link: '/category/Duffel Bags', img: '/images/duffel-bags.jpg' },
-      { name: 'Garment Bags', link: '/category/Garment Bags', img: '/images/garment-bags.jpg' },
-      { name: 'Luggage Sets', link: '/category/Luggage Sets', img: '/images/luggage-sets.jpg' },
-    ],
-  },
-  {
-    name: 'Travel Bags',
-    items: [
-      { name: 'Weekender Bags', link: '/category/Weekender Bags', img: '/images/weekender-bags.jpg' },
-      { name: 'Rolling Bags', link: '/category/Rolling Bags', img: '/images/rolling-bags.jpg' },
-      { name: 'Messenger Bags', link: '/category/Messenger Bags', img: '/images/messenger-bags.jpg' },
-      { name: 'Toiletry Bags', link: '/category/Toiletry Bags', img: '/images/toiletry-bags.jpg' },
-    ],
-  },
-  {
-    name: 'Sports Bags',
-    items: [
-      { name: 'Gym Bags', link: '/category/Gym Bags', img: '/images/gym-bags.jpg' },
-      { name: 'Sports Duffle Bags', link: '/category/Sports Duffle Bags', img: '/images/sports-duffle-bags.jpg' },
-      { name: 'Cooler Bags', link: '/category/Cooler Bags', img: '/images/cooler-bags.jpg' },
-    ],
-  },
-];
+import { fetchMainCategories, fetchSubCategories, fetchImage } from '../../api/storeapi';
 
 const Navbar = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -68,6 +18,10 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
   const [customerID, setCustomerID] = useState(null);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [mainCategories, setMainCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categoryImages, setCategoryImages] = useState({});
   const navigate = useNavigate();
   const dropdownTimeout = useRef(null);
 
@@ -158,6 +112,59 @@ const Navbar = () => {
     };
   }, [customerID]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const [mainResponse, subResponse] = await Promise.all([
+          fetchMainCategories(),
+          fetchSubCategories()
+        ]);
+
+        setMainCategories(mainResponse.data);
+        setSubCategories(subResponse.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const loadCategoryImages = async () => {
+      const imageUrls = {};
+      
+      for (const category of subCategories) {
+        try {
+          const response = await fetchImage(category.name);
+          const blob = new Blob([response.data], { type: 'image/jpeg' });
+          const imageUrl = URL.createObjectURL(blob);
+          imageUrls[category.categoryID] = imageUrl;
+        } catch (error) {
+          console.error(`Error loading image for ${category.name}:`, error);
+        }
+      }
+      
+      setCategoryImages(imageUrls);
+    };
+
+    if (subCategories.length > 0) {
+      loadCategoryImages();
+    }
+
+    // Cleanup function to revoke object URLs
+    return () => {
+      Object.values(categoryImages).forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [subCategories]);
+
+  // Helper function to get subcategories for a main category
+  const getSubcategoriesForMain = (mainCategoryId) => {
+    return subCategories.filter(sub => sub.parentCategoryID === mainCategoryId);
+  };
+
   const toggleCartSidebar = () => {
     setIsCartOpen(!isCartOpen);
   };
@@ -224,32 +231,39 @@ const Navbar = () => {
         </div>
 
         <ul className="navbar-links">
-          {categories.map((category) => (
+          {!isLoading && mainCategories.map((category) => (
             <li
-              key={category.name}
-              onMouseEnter={() => handleCategoryHover(category.name)}
+              key={category.categoryID}
+              onMouseEnter={() => handleCategoryHover(category.categoryID)}
               onMouseLeave={handleCategoryLeave}
             >
-              <Link to={`/category/${category.name}`}>{category.name}</Link>
-              {hoveredCategory === category.name && (
+              <Link to={`/category/${category.name.toLowerCase()}`}>
+                {category.name}
+              </Link>
+              {hoveredCategory === category.categoryID && (
                 <div className="dropdown-menu">
                   <div
                     className="category-grid"
                     onMouseEnter={() => clearTimeout(dropdownTimeout.current)}
                     onMouseLeave={handleCategoryLeave}
                   >
-                    {category.items.map((item) => (
+                    {getSubcategoriesForMain(category.categoryID).map((subCategory) => (
                       <div
-                        key={item.name}
+                        key={subCategory.categoryID}
                         className="category-item"
-                        onClick={() => navigate(item.link)}
+                        onClick={() => navigate(`/category/${subCategory.name.toLowerCase()}`)}
                       >
-                        <img
-                          src={item.img}
-                          alt={item.name}
-                          onError={(e) => (e.target.src = '/images/default-image.jpg')}
-                        />
-                        <p>{item.name}</p>
+                        <div className="category-image-container">
+                          <img 
+                            src={categoryImages[subCategory.categoryID] || '/placeholder.png'}
+                            alt={subCategory.name}
+                            onError={(e) => {
+                              e.target.src = '/placeholder.png'; // Replace with default image path
+                              e.target.onerror = null;
+                            }}
+                          />
+                        </div>
+                        <p>{subCategory.name}</p>
                       </div>
                     ))}
                   </div>
