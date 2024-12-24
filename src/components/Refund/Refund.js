@@ -5,6 +5,7 @@ const Refund = ({ searchQuery }) => {
   const [refundRequests, setRefundRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [refundCosts, setRefundCosts] = useState({}); // Yeni state, maliyetleri tutmak için
 
   // API'den verileri çek
   useEffect(() => {
@@ -91,12 +92,51 @@ const Refund = ({ searchQuery }) => {
     }
   };
 
-  const handleDoRefund = (id) => {
-    setRefundRequests((prevRequests) =>
-      prevRequests.map((request) =>
-        request.requestID === id ? { ...request, returnStatus: 'Refund Done' } : request
-      )
-    );
+  // İade işlemi
+  const handleDoRefund = async (id) => {
+    if (window.confirm('Are you sure you want to process the refund?')) {
+      try {
+        const response = await fetch(`http://localhost:5001/payment/refund/${id}`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.msg || 'Failed to process refund');
+        }
+
+        // İade başarılı olduğunda maliyeti al
+        const costResponse = await fetch(`http://localhost:5001/returns/request/${id}/cost`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!costResponse.ok) {
+          throw new Error('Failed to fetch cost of refund');
+        }
+
+        const costData = await costResponse.json();
+
+        // Refund Done statüsünü ve maliyeti güncelle
+        setRefundRequests((prevRequests) =>
+          prevRequests.map((request) =>
+            request.requestID === id ? { ...request, returnStatus: 'Refund Done' } : request
+          )
+        );
+        setRefundCosts((prevCosts) => ({ ...prevCosts, [id]: costData.cost }));
+
+        alert('Refund processed successfully!');
+      } catch (err) {
+        alert(`Error processing refund: ${err.message}`);
+      }
+    }
   };
 
   if (loading) {
@@ -137,6 +177,7 @@ const Refund = ({ searchQuery }) => {
           {request.returnStatus === 'Refund Done' && (
             <div className="refund-status">
               <p>Refund Done</p>
+              <p>Cost of Refund: {refundCosts[request.requestID]?.toFixed(2)} USD</p>
             </div>
           )}
         </div>
