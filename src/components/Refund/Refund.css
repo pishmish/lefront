@@ -81,4 +81,36 @@
     border-radius: 5px;
     text-align: center;
   }
-  
+  .refund-header select {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    appearance: none; /* Tarayıcı varsayılan ok simgesini gizler */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path d="M70 105L10 35h120L70 105z" fill="%23ccc"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.refund-header select:hover {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.refund-header select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+.refund-header h3 {
+  font-size: 12px; /* Yazı boyutunu küçültüyoruz */
+  font-weight: bold; /* Kalınlığı koruyoruz */
+  margin: 0; /* Fazla boşlukları kaldırıyoruz */
+  color: #333; /* Yazı rengi */
+}

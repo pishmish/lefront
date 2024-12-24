@@ -17,11 +17,11 @@ const Refund = ({ searchQuery }) => {
             'Content-Type': 'application/json',
           },
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch refund requests');
         }
-  
+
         const data = await response.json();
         setRefundRequests(data);
         setLoading(false);
@@ -30,22 +30,41 @@ const Refund = ({ searchQuery }) => {
         setLoading(false);
       }
     };
-  
+
     fetchRefundRequests();
   }, []);
-  
 
   // Filtreleme işlemi
   const filteredRequests = refundRequests.filter((request) =>
     request.requestID.toString().includes(searchQuery)
   );
 
-  const handleStatusChange = (id, newStatus) => {
-    setRefundRequests((prevRequests) =>
-      prevRequests.map((request) =>
+  // Durum değişikliğini backend'e gönder
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5001/returns/request/${id}/status`, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.msg || 'Failed to update status');
+      }
+
+      const updatedRequest = refundRequests.map((request) =>
         request.requestID === id ? { ...request, returnStatus: newStatus } : request
-      )
-    );
+      );
+
+      setRefundRequests(updatedRequest);
+      alert('Status updated successfully!');
+    } catch (err) {
+      alert(`Error updating status: ${err.message}`);
+    }
   };
 
   const handleAuthorizePayment = (id) => {
@@ -80,13 +99,14 @@ const Refund = ({ searchQuery }) => {
               value={request.returnStatus}
               onChange={(e) => handleStatusChange(request.requestID, e.target.value)}
             >
-              <option value="Pending">Pending</option>
-              <option value="Approved">Approved</option>
-              <option value="Rejected">Rejected</option>
+              <option value="accepted">Accepted</option>
+              <option value="awaitingProduct">Awaiting Product</option>
+              <option value="productReceived">Product Received</option>
             </select>
           </div>
           <div className="refund-body">
             <p><strong>Reason:</strong> {request.reason}</p>
+            <p><strong>Status:</strong> {request.returnStatus}</p>
             <p><strong>Order ID:</strong> {request.orderID}</p>
             <p><strong>Product ID:</strong> {request.productID}</p>
             <p><strong>Quantity:</strong> {request.quantity}</p>
