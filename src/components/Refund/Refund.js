@@ -67,9 +67,27 @@ const Refund = ({ searchQuery }) => {
     }
   };
 
-  const handleAuthorizePayment = (id) => {
+  // Ödeme yetkilendirme işlemi
+  const handleAuthorizePayment = async (id) => {
     if (window.confirm('Are you sure you want to authorize the payment?')) {
-      alert('Payment Authorized!');
+      try {
+        const response = await fetch(`http://localhost:5001/returns/request/${id}/authorizepayment`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.msg || 'Failed to authorize payment');
+        }
+
+        alert('Payment Authorized Successfully!');
+      } catch (err) {
+        alert(`Error authorizing payment: ${err.message}`);
+      }
     }
   };
 
