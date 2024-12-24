@@ -1,29 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Refund.css';
 
 const Refund = ({ searchQuery }) => {
-  const [refundRequests, setRefundRequests] = useState([
-    {
-      requestID: 1,
-      returnStatus: 'Pending',
-      reason: 'Product was damaged upon arrival.',
-      orderID: 1,
-      productID: 23,
-      quantity: 1,
-      customerID: 2,
-    },
-    {
-      requestID: 2,
-      returnStatus: 'Approved',
-      reason: 'Size was too big.',
-      orderID: 2,
-      productID: 51,
-      quantity: 1,
-      customerID: 1,
-    },
-  ]);
+  const [refundRequests, setRefundRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filter refunds based on search query
+  // API'den verileri çek
+  useEffect(() => {
+    const fetchRefundRequests = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/returns/all', {
+          method: 'GET',
+          credentials: 'include', // Çerezlerin istekle birlikte gönderilmesini sağlar
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch refund requests');
+        }
+  
+        const data = await response.json();
+        setRefundRequests(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+  
+    fetchRefundRequests();
+  }, []);
+  
+
+  // Filtreleme işlemi
   const filteredRequests = refundRequests.filter((request) =>
     request.requestID.toString().includes(searchQuery)
   );
@@ -49,6 +61,14 @@ const Refund = ({ searchQuery }) => {
       )
     );
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="refund-cards">
