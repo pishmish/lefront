@@ -1,123 +1,75 @@
 .refund-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    max-width: 1000px;
-    margin: auto;
-  }
-  
-  .refund-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .refund-card {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .refund-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  }
-  
-  .refund-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  
-  .refund-header select {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-  }
-  
-  .refund-body {
-    margin-bottom: 15px;
-  }
-  
-  .refund-body p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #555;
-  }
-  
-  .refund-actions {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  
-  .refund-actions button {
-    padding: 10px 15px;
-    font-size: 14px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .refund-actions button:hover {
-    background-color: #0056b3;
-  }
-  
-  .refund-status {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-    border-radius: 5px;
-    text-align: center;
-  }
-  .refund-header select {
-    padding: 10px 15px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-    color: #333;
-    appearance: none; /* Tarayıcı varsayılan ok simgesini gizler */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path d="M70 105L10 35h120L70 105z" fill="%23ccc"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 12px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.refund-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.refund-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.refund-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.refund-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.refund-header select {
+  padding: 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  appearance: none; /* Tarayıcı varsayılan ok simgesini gizler */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><path d="M70 105L10 35h120L70 105z" fill="%23ccc"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .refund-header select:hover {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .refund-header select:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
+
 .refund-header h3 {
   font-size: 12px; /* Yazı boyutunu küçültüyoruz */
   font-weight: bold; /* Kalınlığı koruyoruz */
   margin: 0; /* Fazla boşlukları kaldırıyoruz */
   color: #333; /* Yazı rengi */
 }
+
 .status-filter {
   display: flex;
-  
-  
   margin-bottom: 15px;
 }
 
@@ -128,4 +80,20 @@
 .status-filter label {
   margin-right: 20px;
   font-size: 14px;
+}
+
+.accordion-header {
+  padding: 10px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  width: 100%;
+  text-align: left;
+}
+
+.accordion-body {
+  display: flex; /* This will make the cards appear horizontally */
+  flex-wrap: wrap; /* Ensures that cards wrap to the next line if needed */
+  margin-top: 20px; /* Adjust this value to move the cards slightly lower */
+  gap: 20px; /* Space between cards */
 }

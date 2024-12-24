@@ -8,6 +8,7 @@ const Refund = ({ searchQuery }) => {
   const [refundCosts, setRefundCosts] = useState({});
   const [activeFilter, setActiveFilter] = useState(true); // Track active status checkbox
   const [completedFilter, setCompletedFilter] = useState(true); // Track completed status checkbox
+  const [expandedOrderID, setExpandedOrderID] = useState(null); // Track which order ID is expanded in accordion
 
   // API'den verileri çek
   useEffect(() => {
@@ -134,7 +135,7 @@ const Refund = ({ searchQuery }) => {
         // Refund Done statüsünü ve maliyeti güncelle
         setRefundRequests((prevRequests) =>
           prevRequests.map((request) =>
-            request.requestID === id ? { ...request, returnStatus: 'Refund Done' } : request
+            request.requestID === id ? { ...request, returnStatus: 'completed' } : request
           )
         );
         setRefundCosts((prevCosts) => ({ ...prevCosts, [id]: costData.cost }));
@@ -155,6 +156,19 @@ const Refund = ({ searchQuery }) => {
     }
   };
 
+  const toggleAccordion = (orderID) => {
+    setExpandedOrderID(expandedOrderID === orderID ? null : orderID);
+  };
+
+  // Group requests by orderID
+  const groupedRequests = filteredRequests.reduce((acc, request) => {
+    if (!acc[request.orderID]) {
+      acc[request.orderID] = [];
+    }
+    acc[request.orderID].push(request);
+    return acc;
+  }, {});
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -164,9 +178,9 @@ const Refund = ({ searchQuery }) => {
   }
 
   return (
-    <div className="refund-cards">
+    <div className="refund-container">
       <div className="status-filter">
-        <label style={{ marginRight: '10px' }}> </label>
+        <label> </label>
         <input
           type="checkbox"
           id="active"
@@ -185,35 +199,46 @@ const Refund = ({ searchQuery }) => {
         <label htmlFor="completed">👍</label>
       </div>
 
-      {filteredRequests.map((request) => (
-        <div key={request.requestID} className="refund-card">
-          <div className="refund-header">
-            <h3>Request ID: {request.requestID}</h3>
-            <select
-              value={request.returnStatus}
-              onChange={(e) => handleStatusChange(request.requestID, e.target.value)}
-            >
-              <option value="accepted">Accepted</option>
-              <option value="awaitingProduct">Awaiting Product</option>
-              <option value="productReceived">Product Received</option>
-            </select>
-          </div>
-          <div className="refund-body">
-            <p><strong>Reason:</strong> {request.reason}</p>
-            <p><strong>Status:</strong> {request.returnStatus}</p>
-            <p><strong>Order ID:</strong> {request.orderID}</p>
-            <p><strong>Product ID:</strong> {request.productID}</p>
-            <p><strong>Quantity:</strong> {request.quantity}</p>
-            <p><strong>Customer ID:</strong> {request.customerID}</p>
-          </div>
-          <div className="refund-actions">
-            <button onClick={() => handleAuthorizePayment(request.requestID)}>Authorize Payment</button>
-            <button onClick={() => handleDoRefund(request.requestID)}>Do Refund</button>
-          </div>
-          {request.returnStatus === 'Refund Done' && (
-            <div className="refund-status">
-              <p>Refund Done</p>
-              <p>Cost of Refund: {refundCosts[request.requestID]?.toFixed(2)} USD</p>
+      {Object.keys(groupedRequests).map((orderID) => (
+        <div key={orderID} className="accordion">
+          <button className="accordion-header" onClick={() => toggleAccordion(orderID)}>
+            Order ID: {orderID}
+          </button>
+          {expandedOrderID === orderID && (
+            <div className="accordion-body">
+              {groupedRequests[orderID].map((request) => (
+                <div key={request.requestID} className="refund-card">
+                  <div className="refund-header">
+                    <h3>Request ID: {request.requestID}</h3>
+                    <select
+                      value={request.returnStatus}
+                      onChange={(e) => handleStatusChange(request.requestID, e.target.value)}
+                    >
+                      <option value="accepted">Accepted</option>
+                      <option value="awaitingProduct">Awaiting Product</option>
+                      <option value="productReceived">Product Received</option>
+                    </select>
+                  </div>
+                  <div className="refund-body">
+                    <p><strong>Reason:</strong> {request.reason}</p>
+                    <p><strong>Status:</strong> {request.returnStatus}</p>
+                    <p><strong>Order ID:</strong> {request.orderID}</p>
+                    <p><strong>Product ID:</strong> {request.productID}</p>
+                    <p><strong>Quantity:</strong> {request.quantity}</p>
+                    <p><strong>Customer ID:</strong> {request.customerID}</p>
+                  </div>
+                  <div className="refund-actions">
+                    <button onClick={() => handleAuthorizePayment(request.requestID)}>Authorize Payment</button>
+                    <button onClick={() => handleDoRefund(request.requestID)}>Do Refund</button>
+                  </div>
+                  {request.returnStatus === 'completed' && (
+                    <div className="refund-status">
+                      <p>Refund Done</p>
+                      <p>Cost of Refund: {refundCosts[request.requestID]?.toFixed(2)} USD</p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>
