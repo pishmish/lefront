@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './RefundCust.css';
 
 const RefundCust = () => {
-  const [orders] = useState([
-    { orderID: 1, totalPrice: 49.99 },
-    { orderID: 2, totalPrice: 99.99 },
-  ]);
+  const [orders, setOrders] = useState([]);
+  const [orderDetails, setOrderDetails] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [refundItems, setRefundItems] = useState([]);
+  const [reason, setReason] = useState('');
+
   const [pastRequests] = useState([
     {
       requestID: 1,
@@ -24,19 +26,53 @@ const RefundCust = () => {
       quantity: 1,
     },
   ]);
+
   const [pastAccordionOpen, setPastAccordionOpen] = useState(false);
   const [orderAccordionOpen, setOrderAccordionOpen] = useState(false);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [orderDetails, setOrderDetails] = useState(null);
-  const [refundItems, setRefundItems] = useState([]);
-  const [reason, setReason] = useState('');
 
-  const mockOrderDetails = {
-    orderItems: [
-      { productID: 1, productName: 'Product A', quantity: 2 },
-      { productID: 2, productName: 'Product B', quantity: 1 },
-    ],
-  };
+  // Fetch orders data from API
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/order/user', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setOrders(data); // Store the fetched orders in the state
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  // Fetch order details when an order is selected
+  useEffect(() => {
+    const fetchOrderDetails = async () => {
+      if (selectedOrder) {
+        try {
+          const response = await fetch(`http://localhost:5001/order/getorder/${selectedOrder.orderID}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          setOrderDetails(data); // Store the order details in the state
+        } catch (error) {
+          console.error('Error fetching order details:', error);
+        }
+      }
+    };
+
+    fetchOrderDetails();
+  }, [selectedOrder]);
 
   const handleOrderSelect = (order) => {
     if (selectedOrder?.orderID === order.orderID) {
@@ -45,18 +81,77 @@ const RefundCust = () => {
       setRefundItems([]);
     } else {
       setSelectedOrder(order);
-      setOrderDetails(mockOrderDetails);
       setRefundItems([]);
     }
   };
 
-  const handleSubmit = () => {
-    alert('Refund request submitted!');
+  const handleQuantityChange = (e, productID, availableQuantity) => {
+    const quantity = parseInt(e.target.value, 10);
+
+    // Limit quantity input to the available quantity in the order
+    if (quantity <= availableQuantity) {
+      setRefundItems((prevItems) => [
+        ...prevItems.filter((i) => i.productID !== productID),
+        { productID, quantity },
+      ]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    // Prepare the refund request data
+    if (refundItems.length === 0 || !reason) {
+      alert('Please specify quantity and reason for the return.');
+      return;
+    }
+  
+    try {
+      let refundSuccess = true; // Variable to track if all refund requests succeed
+  
+      for (let item of refundItems) {
+        const response = await fetch('http://localhost:5001/returns/newrequest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            productID: item.productID,
+            quantity: item.quantity,
+            reason,
+            orderID: selectedOrder.orderID,
+          }),
+        });
+  
+        // Log the HTTP status and response body to check for server-side issues
+        console.log('Response Status:', response.status);
+        const data = await response.json();
+        console.log('Refund Request Response:', data);
+  
+        // Check if any of the requests fail
+        if (response.status < 200 || response.status >= 300) {
+          refundSuccess = false;
+          alert(`Error: ${data.message || 'An error occurred.'}`);
+          break; // Stop the loop if an error occurs
+        }
+      }
+  
+      // Only show the success message if all requests were successful
+      if (refundSuccess) {
+        alert('Refund request submitted successfully!');
+      }
+    } catch (error) {
+      console.error('Error submitting refund request:', error);
+      alert('Error submitting refund request.');
+    }
+  
+    // Reset state after submission
     setSelectedOrder(null);
     setOrderDetails(null);
     setRefundItems([]);
     setReason('');
   };
+  
+  
 
   return (
     <div className="refund-cust">
@@ -115,17 +210,19 @@ const RefundCust = () => {
                 onClick={() => handleOrderSelect(order)}
               >
                 <p>Order ID: {order.orderID}</p>
-                <p>Total Price: ${order.totalPrice.toFixed(2)}</p>
+                <p>Total Price: ${order.totalPrice}</p>
+                <p>Status: {order.deliveryStatus}</p>
+                <p>Estimated Arrival: {new Date(order.estimatedArrival).toLocaleString()}</p>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {orderDetails && (
+      {orderDetails && selectedOrder && (
         <div className="order-details">
-          <h2>Order Details</h2>
-          {orderDetails.orderItems.map((item) => (
+          <h2>Order Details for Order {selectedOrder.orderID}</h2>
+          {orderDetails.orderItems && orderDetails.orderItems.map((item) => (
             <div key={item.productID} className="order-item-detail">
               <div className="product-info">
                 <p className="product-name">{item.productName}</p>
@@ -140,12 +237,7 @@ const RefundCust = () => {
                   max={item.quantity}
                   placeholder="Enter quantity"
                   onChange={(e) =>
-                    setRefundItems((prevItems) => [
-                      ...prevItems.filter(
-                        (i) => i.productID !== item.productID
-                      ),
-                      { productID: item.productID, quantity: parseInt(e.target.value, 10) },
-                    ])
+                    handleQuantityChange(e, item.productID, item.quantity)
                   }
                 />
               </div>
