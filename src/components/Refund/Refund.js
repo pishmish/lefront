@@ -5,7 +5,9 @@ const Refund = ({ searchQuery }) => {
   const [refundRequests, setRefundRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refundCosts, setRefundCosts] = useState({}); // Yeni state, maliyetleri tutmak için
+  const [refundCosts, setRefundCosts] = useState({});
+  const [activeFilter, setActiveFilter] = useState(true); // Track active status checkbox
+  const [completedFilter, setCompletedFilter] = useState(true); // Track completed status checkbox
 
   // API'den verileri çek
   useEffect(() => {
@@ -13,7 +15,7 @@ const Refund = ({ searchQuery }) => {
       try {
         const response = await fetch('http://localhost:5001/returns/all', {
           method: 'GET',
-          credentials: 'include', // Çerezlerin istekle birlikte gönderilmesini sağlar
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -36,7 +38,12 @@ const Refund = ({ searchQuery }) => {
   }, []);
 
   // Filtreleme işlemi
-  const filteredRequests = refundRequests.filter((request) =>
+  const filteredRequests = refundRequests.filter((request) => {
+    // Eğer Active checkbox seçildiyse, active olanları göster
+    const isActive = activeFilter && request.returnStatus !== 'completed';
+    const isCompleted = completedFilter && request.returnStatus === 'completed';
+    return isActive || isCompleted;
+  }).filter((request) =>
     request.requestID.toString().includes(searchQuery)
   );
 
@@ -139,6 +146,15 @@ const Refund = ({ searchQuery }) => {
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (value === 'active') {
+      setActiveFilter(checked);
+    } else if (value === 'completed') {
+      setCompletedFilter(checked);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -149,6 +165,26 @@ const Refund = ({ searchQuery }) => {
 
   return (
     <div className="refund-cards">
+      <div className="status-filter">
+        <label style={{ marginRight: '10px' }}> </label>
+        <input
+          type="checkbox"
+          id="active"
+          value="active"
+          checked={activeFilter}
+          onChange={handleCheckboxChange}
+        />
+        <label htmlFor="active" style={{ marginRight: '20px' }}>⏳</label>
+        <input
+          type="checkbox"
+          id="completed"
+          value="completed"
+          checked={completedFilter}
+          onChange={handleCheckboxChange}
+        />
+        <label htmlFor="completed">👍</label>
+      </div>
+
       {filteredRequests.map((request) => (
         <div key={request.requestID} className="refund-card">
           <div className="refund-header">

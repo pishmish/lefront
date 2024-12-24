@@ -114,3 +114,18 @@
   margin: 0; /* Fazla boşlukları kaldırıyoruz */
   color: #333; /* Yazı rengi */
 }
+.status-filter {
+  display: flex;
+  
+  
+  margin-bottom: 15px;
+}
+
+.status-filter input {
+  margin-right: 5px;
+}
+
+.status-filter label {
+  margin-right: 20px;
+  font-size: 14px;
+}
