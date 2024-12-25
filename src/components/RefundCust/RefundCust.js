@@ -6,7 +6,7 @@ const RefundCust = () => {
   const [orderDetails, setOrderDetails] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [refundItems, setRefundItems] = useState([]);
-  const [reason, setReason] = useState('');
+  const [reasons, setReasons] = useState({}); // To store reasons per product
 
   const [pastRequests] = useState([
     {
@@ -127,8 +127,15 @@ const RefundCust = () => {
     }
   };
 
+  const handleReasonChange = (e, productID) => {
+    setReasons({
+      ...reasons,
+      [productID]: e.target.value,
+    });
+  };
+
   const handleSubmit = async () => {
-    if (refundItems.length === 0 || !reason) {
+    if (refundItems.length === 0 || Object.values(reasons).some(reason => !reason)) {
       alert('Please specify quantity and reason for the return.');
       return;
     }
@@ -146,7 +153,7 @@ const RefundCust = () => {
           body: JSON.stringify({
             productID: item.productID,
             quantity: item.quantity,
-            reason,
+            reason: reasons[item.productID], // Get the reason for each product
             orderID: selectedOrder.orderID,
           }),
         });
@@ -172,7 +179,7 @@ const RefundCust = () => {
     setSelectedOrder(null);
     setOrderDetails(null);
     setRefundItems([]);
-    setReason('');
+    setReasons({});
   };
 
   return (
@@ -223,20 +230,22 @@ const RefundCust = () => {
         </div>
         {orderAccordionOpen && (
           <div className="accordion-body">
-            {orders.map((order) => (
-              <div
-                key={order.orderID}
-                className={`order-item ${
-                  selectedOrder?.orderID === order.orderID ? 'selected' : ''
-                }`}
-                onClick={() => handleOrderSelect(order)}
-              >
-                <p>Order ID: {order.orderID}</p>
-                <p>Total Price: ${order.totalPrice}</p>
-                <p>Status: {order.deliveryStatus}</p>
-                <p>Estimated Arrival: {new Date(order.estimatedArrival).toLocaleString()}</p>
-              </div>
-            ))}
+            {orders
+              .filter((order) => order.totalPrice !== '0.00') // Filter out orders with totalPrice 0.00
+              .map((order) => (
+                <div
+                  key={order.orderID}
+                  className={`order-item ${
+                    selectedOrder?.orderID === order.orderID ? 'selected' : ''
+                  }`}
+                  onClick={() => handleOrderSelect(order)}
+                >
+                  <p>Order ID: {order.orderID}</p>
+                  <p>Total Price: ${order.totalPrice}</p>
+                  <p>Status: {order.deliveryStatus}</p>
+                  <p>Estimated Arrival: {new Date(order.estimatedArrival).toLocaleString()}</p>
+                </div>
+              ))}
           </div>
         )}
       </div>
@@ -270,16 +279,18 @@ const RefundCust = () => {
                       handleQuantityChange(e, item.productID, item.quantity)
                     }
                   />
+                  <textarea
+                    placeholder="Reason for return"
+                    value={reasons[item.productID] || ''}
+                    onChange={(e) => handleReasonChange(e, item.productID)}
+                  ></textarea>
                 </div>
               )}
             </div>
           ))}
-          <textarea
-            placeholder="Reason for return"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-          ></textarea>
-          <button onClick={handleSubmit}>Submit Refund Request</button>
+          {selectedOrder.deliveryStatus === 'Delivered' && (
+            <button onClick={handleSubmit}>Submit Refund Request</button>
+          )}
         </div>
       )}
     </div>
