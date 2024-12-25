@@ -103,7 +103,8 @@ const OrderTracking = () => {
       <h3>Order Tracking</h3>
       <div className="order-grid">
         {orders.length > 0 ? (
-          orders.map((order) => {
+          // Filter out orders with Total Price = $0.00
+          orders.filter(order => parseFloat(order.totalPrice) !== 0).map((order) => {
             const currentStep = getCurrentStep(order.deliveryStatus);
             const isExpanded = expandedOrders.has(order.orderID);
             return (

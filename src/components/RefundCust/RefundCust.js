@@ -51,27 +51,27 @@ const RefundCust = () => {
     fetchOrders();
   }, []);
 
-  // Fetch order details when an order is selected
-  useEffect(() => {
-    const fetchOrderDetails = async () => {
-      if (selectedOrder) {
-        try {
-          const response = await fetch(`http://localhost:5001/order/getorder/${selectedOrder.orderID}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-          const data = await response.json();
-          setOrderDetails(data); // Store the order details in the state
-        } catch (error) {
-          console.error('Error fetching order details:', error);
-        }
+  // Define the fetchOrderDetails function
+  const fetchOrderDetails = async () => {
+    if (selectedOrder) {
+      try {
+        const response = await fetch(`http://localhost:5001/order/getorder/${selectedOrder.orderID}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setOrderDetails(data); // Store the order details in the state
+      } catch (error) {
+        console.error('Error fetching order details:', error);
       }
-    };
+    }
+  };
 
-    fetchOrderDetails();
+  useEffect(() => {
+    fetchOrderDetails(); // Call fetchOrderDetails when selectedOrder changes
   }, [selectedOrder]);
 
   const handleOrderSelect = (order) => {
@@ -97,16 +97,45 @@ const RefundCust = () => {
     }
   };
 
+  const handleDelete = async (productID) => {
+    try {
+      const response = await fetch(`http://localhost:5001/order/orderitems/${selectedOrder.orderID}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          products: [
+            { productID } // Just sending the productID to delete the product
+          ]
+        }),
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        alert('Product deleted successfully!');
+        setOrderDetails(null);
+        setRefundItems([]);
+        await fetchOrderDetails(); // Fetch the updated order details
+      } else {
+        alert(`Error deleting product: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Error deleting product.');
+    }
+  };
+
   const handleSubmit = async () => {
-    // Prepare the refund request data
     if (refundItems.length === 0 || !reason) {
       alert('Please specify quantity and reason for the return.');
       return;
     }
-  
+
     try {
       let refundSuccess = true; // Variable to track if all refund requests succeed
-  
+
       for (let item of refundItems) {
         const response = await fetch('http://localhost:5001/returns/newrequest', {
           method: 'POST',
@@ -121,21 +150,16 @@ const RefundCust = () => {
             orderID: selectedOrder.orderID,
           }),
         });
-  
-        // Log the HTTP status and response body to check for server-side issues
-        console.log('Response Status:', response.status);
+
         const data = await response.json();
-        console.log('Refund Request Response:', data);
-  
-        // Check if any of the requests fail
+
         if (response.status < 200 || response.status >= 300) {
           refundSuccess = false;
           alert(`Error: ${data.message || 'An error occurred.'}`);
           break; // Stop the loop if an error occurs
         }
       }
-  
-      // Only show the success message if all requests were successful
+
       if (refundSuccess) {
         alert('Refund request submitted successfully!');
       }
@@ -143,15 +167,13 @@ const RefundCust = () => {
       console.error('Error submitting refund request:', error);
       alert('Error submitting refund request.');
     }
-  
+
     // Reset state after submission
     setSelectedOrder(null);
     setOrderDetails(null);
     setRefundItems([]);
     setReason('');
   };
-  
-  
 
   return (
     <div className="refund-cust">
@@ -230,17 +252,26 @@ const RefundCust = () => {
                   Available Quantity: {item.quantity}
                 </p>
               </div>
-              <div className="return-quantity">
-                <input
-                  type="number"
-                  min="1"
-                  max={item.quantity}
-                  placeholder="Enter quantity"
-                  onChange={(e) =>
-                    handleQuantityChange(e, item.productID, item.quantity)
-                  }
-                />
-              </div>
+              {selectedOrder.deliveryStatus === 'Processing' && (
+                <div className="delete-item">
+                  <button onClick={() => handleDelete(item.productID)}>
+                    Delete
+                  </button>
+                </div>
+              )}
+              {selectedOrder.deliveryStatus === 'Delivered' && (
+                <div className="return-quantity">
+                  <input
+                    type="number"
+                    min="1"
+                    max={item.quantity}
+                    placeholder="Enter quantity"
+                    onChange={(e) =>
+                      handleQuantityChange(e, item.productID, item.quantity)
+                    }
+                  />
+                </div>
+              )}
             </div>
           ))}
           <textarea

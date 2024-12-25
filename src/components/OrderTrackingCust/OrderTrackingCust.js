@@ -43,7 +43,8 @@ const OrderTrackingCust = () => {
   return (
     <div className="order-tracking-cust-container">
       {orders.length > 0 ? (
-        orders.map((order) => {
+        // Filter out orders with totalPrice = $0.00
+        orders.filter(order => parseFloat(order.totalPrice) !== 0).map((order) => {
           const currentStep = getCurrentStep(order.deliveryStatus);
           return (
             <div key={order.orderID} className="order-card">
