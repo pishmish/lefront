@@ -7,25 +7,7 @@ const RefundCust = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [refundItems, setRefundItems] = useState([]);
   const [reasons, setReasons] = useState({}); // To store reasons per product
-
-  const [pastRequests] = useState([
-    {
-      requestID: 1,
-      returnStatus: 'Pending',
-      reason: 'Product was damaged upon arrival.',
-      orderID: 1,
-      productID: 23,
-      quantity: 1,
-    },
-    {
-      requestID: 2,
-      returnStatus: 'Approved',
-      reason: 'Size was too big.',
-      orderID: 2,
-      productID: 51,
-      quantity: 1,
-    },
-  ]);
+  const [pastRequests, setPastRequests] = useState([]); // State to store past requests
 
   const [pastAccordionOpen, setPastAccordionOpen] = useState(false);
   const [orderAccordionOpen, setOrderAccordionOpen] = useState(false);
@@ -50,6 +32,52 @@ const RefundCust = () => {
 
     fetchOrders();
   }, []);
+
+  // Fetch past refund requests from API
+  useEffect(() => {
+    const fetchPastRequests = async () => {
+      try {
+        const username = 'cem'; // Replace 'cem' with the actual username if dynamic
+        const response = await fetch(`http://localhost:5001/returns/request/customer/${username}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setPastRequests(data.requests); // Store the past refund requests
+      } catch (error) {
+        console.error('Error fetching past requests:', error);
+      }
+    };
+
+    fetchPastRequests();
+  }, []); // Runs once on component mount
+
+  // Handle delete request
+  const handleDeleteRequest = async (requestID) => {
+    try {
+      const response = await fetch(`http://localhost:5001/returns/request/${requestID}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      if (response.status === 200) {
+        alert('Request deleted successfully!');
+        setPastRequests(pastRequests.filter(request => request.requestID !== requestID)); // Remove deleted request from state
+      } else {
+        alert(`Error deleting request: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting request:', error);
+      alert('Error deleting request.');
+    }
+  };
 
   // Define the fetchOrderDetails function
   const fetchOrderDetails = async () => {
@@ -214,6 +242,11 @@ const RefundCust = () => {
                     <strong>Quantity:</strong> {request.quantity}
                   </p>
                 </div>
+                {request.returnStatus !== 'completed' && (
+                  <button onClick={() => handleDeleteRequest(request.requestID)}>
+                    Delete
+                  </button>
+                )}
               </div>
             ))}
           </div>
