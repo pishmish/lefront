@@ -188,7 +188,7 @@ const Refund = ({ searchQuery }) => {
           checked={activeFilter}
           onChange={handleCheckboxChange}
         />
-        <label htmlFor="active" style={{ marginRight: '20px' }}>⏳</label>
+        <label htmlFor="active" style={{ marginRight: '20px' }}> Active Requests </label>
         <input
           type="checkbox"
           id="completed"
@@ -196,7 +196,7 @@ const Refund = ({ searchQuery }) => {
           checked={completedFilter}
           onChange={handleCheckboxChange}
         />
-        <label htmlFor="completed">👍</label>
+        <label htmlFor="completed"> Completed </label>
       </div>
 
       {Object.keys(groupedRequests).map((orderID) => (
