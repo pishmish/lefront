@@ -46,7 +46,7 @@ const SalesManagerPage = () => {
           <div className="search-bar-container">
             <input
               type="text"
-              placeholder="Search by Order ID or Request ID..."
+              placeholder="Search by Request ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
