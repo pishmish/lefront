@@ -226,7 +226,7 @@ const RefundCust = () => {
               <div key={request.requestID} className="refund-card">
                 <div className="refund-header">
                   <h3>Request ID: {request.requestID}</h3>
-                  <p>Status: {request.returnStatus}</p>
+                  <p>Status: {request.returnStatus === 'received' ? 'Pending' : request.returnStatus}</p>
                 </div>
                 <div className="refund-body">
                   <p>
