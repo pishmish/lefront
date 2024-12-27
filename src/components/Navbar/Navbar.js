@@ -227,69 +227,89 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         <div className="navbar-logo">
-          <Link to="/">Zad à Dos</Link>
+        {userRole !== 'salesManager' && userRole !== 'productManager' && (
+          <>
+            <Link to="/">Zad à Dos</Link>
+          </>
+        )}  
+        {(userRole === 'salesManager' || userRole === 'productManager') && (
+          <>
+            <Link>Zad à Dos</Link>
+          </>
+        )}
         </div>
-
-        <ul className="navbar-links">
-          {!isLoading && mainCategories.map((category) => (
-            <li
-              key={category.categoryID}
-              onMouseEnter={() => handleCategoryHover(category.categoryID)}
-              onMouseLeave={handleCategoryLeave}
-            >
-              <Link to={`/category/${category.name.toLowerCase()}`}>
-                {category.name}
-              </Link>
-              {hoveredCategory === category.categoryID && (
-                <div className="dropdown-menu">
-                  <div
-                    className="category-grid"
-                    onMouseEnter={() => clearTimeout(dropdownTimeout.current)}
-                    onMouseLeave={handleCategoryLeave}
-                  >
-                    {getSubcategoriesForMain(category.categoryID).map((subCategory) => (
+        {userRole !== 'salesManager' && userRole !== 'productManager' && (
+          <>
+            <ul className="navbar-links">
+              {!isLoading && mainCategories.map((category) => (
+                <li
+                  key={category.categoryID}
+                  onMouseEnter={() => handleCategoryHover(category.categoryID)}
+                  onMouseLeave={handleCategoryLeave}
+                >
+                  <Link to={`/category/${category.name.toLowerCase()}`}>
+                    {category.name}
+                  </Link>
+                  {hoveredCategory === category.categoryID && (
+                    <div className="dropdown-menu">
                       <div
-                        key={subCategory.categoryID}
-                        className="category-item"
-                        onClick={() => navigate(`/category/${subCategory.name.toLowerCase()}`)}
+                        className="category-grid"
+                        onMouseEnter={() => clearTimeout(dropdownTimeout.current)}
+                        onMouseLeave={handleCategoryLeave}
                       >
-                        <div className="category-image-container">
-                          <img 
-                            src={categoryImages[subCategory.categoryID] || '/placeholder.png'}
-                            alt={subCategory.name}
-                            onError={(e) => {
-                              e.target.src = '/placeholder.png'; // Replace with default image path
-                              e.target.onerror = null;
-                            }}
-                          />
-                        </div>
-                        <p>{subCategory.name}</p>
+                        {getSubcategoriesForMain(category.categoryID).map((subCategory) => (
+                          <div
+                            key={subCategory.categoryID}
+                            className="category-item"
+                            onClick={() => navigate(`/category/${subCategory.name.toLowerCase()}`)}
+                          >
+                            <div className="category-image-container">
+                              <img 
+                                src={categoryImages[subCategory.categoryID] || '/placeholder.png'}
+                                alt={subCategory.name}
+                                onError={(e) => {
+                                  e.target.src = '/placeholder.png'; // Replace with default image path
+                                  e.target.onerror = null;
+                                }}
+                              />
+                            </div>
+                            <p>{subCategory.name}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}    
 
         <div className="navbar-icons">
-          <div className="navbar-search">
-            <form onSubmit={handleSearch}>
-              <input
-                type="text"
-                placeholder="Search bags..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button type="submit">
-                <FiSearch />
-              </button>
-            </form>
-          </div>
-          <Link to="/wishlist" className="navbar-wishlist">
-            <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />
-          </Link>
+        {userRole !== 'salesManager' && userRole !== 'productManager' && (
+          <>
+            <div className="navbar-search">
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search bags..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button type="submit">
+                  <FiSearch />
+                </button>
+              </form>
+            </div>
+          </>
+        )}  
+        {userRole !== 'salesManager' && userRole !== 'productManager' && (
+          <>
+            <Link to="/wishlist" className="navbar-wishlist">
+              <FiHeart size={20} style={{ cursor: 'pointer', color: '#555' }} />
+            </Link>  
+          </>
+        )}  
           <div
             className="navbar-user"
             onMouseEnter={() => setShowUserDropdown(true)}
@@ -347,12 +367,16 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <div className="navbar-cart" onClick={toggleCartSidebar}>
-            <FiShoppingCart size={20} />
-              {cartItemCount > 0 && (
-                <span className="cart-badge">{cartItemCount}</span>
-              )}
-          </div>
+          {userRole !== 'salesManager' && userRole !== 'productManager' && (
+            <>
+              <div className="navbar-cart" onClick={toggleCartSidebar}>
+                <FiShoppingCart size={20} />
+                  {cartItemCount > 0 && (
+                    <span className="cart-badge">{cartItemCount}</span>
+                  )}
+              </div>
+            </>
+          )}      
         </div>
       </nav>
 
