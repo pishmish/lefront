@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import {jwtDecode} from 'jwt-decode';
+import { fetchUserOrders, fetchOrder, deleteOrderItems } from '../../api/orderapi';
+import { getCustomerReturnRequests, deleteReturnRequest, createReturnRequest } from '../../api/returnsapi';
 import './RefundCust.css';
 
 const RefundCust = () => {
@@ -8,23 +11,16 @@ const RefundCust = () => {
   const [refundItems, setRefundItems] = useState([]);
   const [reasons, setReasons] = useState({}); // To store reasons per product
   const [pastRequests, setPastRequests] = useState([]); // State to store past requests
-
   const [pastAccordionOpen, setPastAccordionOpen] = useState(false);
   const [orderAccordionOpen, setOrderAccordionOpen] = useState(false);
+  const [error, setError] = useState(null);
 
   // Fetch orders data from API
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch('http://localhost:5001/order/user', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setOrders(data); // Store the fetched orders in the state
+        const response = await fetchUserOrders();
+        setOrders(response.data); // Store the fetched orders in the state
       } catch (error) {
         console.error('Error fetching orders:', error);
       }
@@ -35,47 +31,40 @@ const RefundCust = () => {
 
   // Fetch past refund requests from API
   useEffect(() => {
-    const fetchPastRequests = async () => {
-      try {
-        const username = 'cem'; // Replace 'cem' with the actual username if dynamic
-        const response = await fetch(`http://localhost:5001/returns/request/customer/${username}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setPastRequests(data.requests); // Store the past refund requests
-      } catch (error) {
-        console.error('Error fetching past requests:', error);
-      }
-    };
-
-    fetchPastRequests();
+    fetchRequests();
   }, []); // Runs once on component mount
+
+  const fetchRequests = async () => {
+    try {
+      const token = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('authToken='));
+        
+        if (!token) {
+          throw new Error('Authentication token not found');
+        }
+        const decodedToken = jwtDecode(token.split('=')[1]);
+        const username = decodedToken.id;
+        if (!username) {
+          throw new Error('Username not found in token');
+        }
+        console.log('username:', username);
+      const response = await getCustomerReturnRequests(username);
+      console.log('response:', response.data);
+      setPastRequests(response.data.requests || []); // Ensure we set array even if empty
+    } catch (err) {
+      setError(err.message);
+      setPastRequests([]); // Reset to empty array on error
+    }
+  };
 
   // Handle delete request
   const handleDeleteRequest = async (requestID) => {
     try {
-      const response = await fetch(`http://localhost:5001/returns/request/${requestID}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-      if (response.status === 200) {
-        alert('Request deleted successfully!');
-        setPastRequests(pastRequests.filter(request => request.requestID !== requestID)); // Remove deleted request from state
-      } else {
-        alert(`Error deleting request: ${data.message}`);
-      }
-    } catch (error) {
-      console.error('Error deleting request:', error);
-      alert('Error deleting request.');
+      await deleteReturnRequest(requestID);
+      await fetchRequests(); // Refresh list after deletion
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -83,15 +72,8 @@ const RefundCust = () => {
   const fetchOrderDetails = async () => {
     if (selectedOrder) {
       try {
-        const response = await fetch(`http://localhost:5001/order/getorder/${selectedOrder.orderID}`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setOrderDetails(data); // Store the order details in the state
+        const response = await fetchOrder(selectedOrder.orderID);
+        setOrderDetails(response.data); // Store the order details in the state
       } catch (error) {
         console.error('Error fetching order details:', error);
       }
@@ -102,14 +84,24 @@ const RefundCust = () => {
     fetchOrderDetails(); // Call fetchOrderDetails when selectedOrder changes
   }, [selectedOrder]);
 
+  useEffect(() => {
+    if (selectedOrder) {
+      // When an order is selected, ensure the order details are visible
+      setOrderAccordionOpen(false); // Close orders list
+    }
+  }, [selectedOrder]);
+
   const handleOrderSelect = (order) => {
     if (selectedOrder?.orderID === order.orderID) {
+      // If clicking the same order again, collapse everything
       setSelectedOrder(null);
       setOrderDetails(null);
       setRefundItems([]);
     } else {
+      // When selecting a new order, close the orders accordion and show details
       setSelectedOrder(order);
       setRefundItems([]);
+      setOrderAccordionOpen(false); // Close the orders list accordion
     }
   };
 
@@ -127,18 +119,7 @@ const RefundCust = () => {
 
   const handleDelete = async (productID) => {
     try {
-      const response = await fetch(`http://localhost:5001/order/orderitems/${selectedOrder.orderID}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          products: [
-            { productID } // Just sending the productID to delete the product
-          ]
-        }),
-      });
+      const response = await deleteOrderItems(selectedOrder.orderID, productID);
 
       const data = await response.json();
       if (response.status === 200) {
@@ -172,18 +153,11 @@ const RefundCust = () => {
       let refundSuccess = true; // Variable to track if all refund requests succeed
 
       for (let item of refundItems) {
-        const response = await fetch('http://localhost:5001/returns/newrequest', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            productID: item.productID,
-            quantity: item.quantity,
-            reason: reasons[item.productID], // Get the reason for each product
-            orderID: selectedOrder.orderID,
-          }),
+        const response = await createReturnRequest({  
+          orderID: selectedOrder.orderID,
+          productID: item.productID,
+          quantity: item.quantity,
+          reason: reasons[item.productID]
         });
 
         const data = await response.json();
@@ -222,38 +196,43 @@ const RefundCust = () => {
         </div>
         {pastAccordionOpen && (
           <div className="accordion-body">
-            {pastRequests.map((request) => (
-              <div key={request.requestID} className="refund-card">
-                <div className="refund-header">
-                  <h3>Request ID: {request.requestID}</h3>
-                  <p>Status: {request.returnStatus === 'received' ? 'Pending' : request.returnStatus}</p>
+            {error && <div className="error-message">{error}</div>}
+      
+            {Array.isArray(pastRequests) && pastRequests.length > 0 ? (
+              pastRequests.map(request => (
+                <div key={request.requestID} className="refund-card">
+                  <div className="refund-header">
+                    <h3>Request ID: {request.requestID}</h3>
+                    <p>Status: {request.returnStatus === 'received' ? 'Pending' : request.returnStatus}</p>
+                  </div>
+                  <div className="refund-body">
+                    <p>
+                      <strong>Reason:</strong> {request.reason}
+                    </p>
+                    <p>
+                      <strong>Order ID:</strong> {request.orderID}
+                    </p>
+                    <p>
+                      <strong>Product ID:</strong> {request.productID}
+                    </p>
+                    <p>
+                      <strong>Quantity:</strong> {request.quantity}
+                    </p>
+                  </div>
+                  {request.returnStatus !== 'completed' && (
+                    <button className="refundButton" onClick={() => handleDeleteRequest(request.requestID)}>
+                      Delete
+                    </button>
+                  )}
                 </div>
-                <div className="refund-body">
-                  <p>
-                    <strong>Reason:</strong> {request.reason}
-                  </p>
-                  <p>
-                    <strong>Order ID:</strong> {request.orderID}
-                  </p>
-                  <p>
-                    <strong>Product ID:</strong> {request.productID}
-                  </p>
-                  <p>
-                    <strong>Quantity:</strong> {request.quantity}
-                  </p>
-                </div>
-                {request.returnStatus !== 'completed' && (
-                  <button onClick={() => handleDeleteRequest(request.requestID)}>
-                    Delete
-                  </button>
-                )}
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No refund requests found.</p>
+            )}
           </div>
         )}
       </div>
 
-      {/* Accordion for Your Orders */}
       <div className="orders-list">
         <div
           className="accordion-header"
@@ -296,7 +275,7 @@ const RefundCust = () => {
               </div>
               {selectedOrder.deliveryStatus === 'Processing' && (
                 <div className="delete-item">
-                  <button onClick={() => handleDelete(item.productID)}>
+                  <button className="refundButton" onClick={() => handleDelete(item.productID)}>
                     Delete
                   </button>
                 </div>
@@ -322,7 +301,7 @@ const RefundCust = () => {
             </div>
           ))}
           {selectedOrder.deliveryStatus === 'Delivered' && (
-            <button onClick={handleSubmit}>Submit Refund Request</button>
+            <button className="refundButton" onClick={handleSubmit}>Submit Refund Request</button>
           )}
         </div>
       )}

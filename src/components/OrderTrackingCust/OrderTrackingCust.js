@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./OrderTrackingCust.css";
+import { fetchUserOrders } from '../../api/orderapi';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
@@ -10,13 +11,11 @@ const OrderTrackingCust = () => {
 
   const getOrders = async () => {
     try {
-      const response = await axios.get("http://localhost:5001/order/user", {
-        withCredentials: true,
-      });
+      const response = await fetchUserOrders();
 
       if (response.status === 200) {
         setOrders(response.data);
-        console.log("Orders fetched:", response.data); // Log orders
+        //console.log("Orders fetched:", response.data); // Log orders
       }
     } catch (err) {
       console.log("Error: ", err.message);

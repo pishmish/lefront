@@ -57,14 +57,15 @@
   top: 20px;    /* Adjust as needed */
   right: 20px;  /* Adjust as needed */
   padding: 10px 15px;
-  background-color: #b1902e;
+  background-color: #bc600f !important;
+  border-radius: 0px !important;
   color: #fff;
   border: none;
   cursor: pointer;
 }
 
 .view-invoice-button:hover {
-  background-color: #937b12;
+  background-color: #000000 !important;
 }
 
 .no-orders {

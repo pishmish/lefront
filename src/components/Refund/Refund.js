@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getAllReturns, getReturnRequestStatus, authorizeReturnPayment, refundPayment, getReturnCost } from '../../api/returnsapi';
 import './Refund.css';
 
 const Refund = ({ searchQuery }) => {
@@ -14,13 +15,7 @@ const Refund = ({ searchQuery }) => {
   useEffect(() => {
     const fetchRefundRequests = async () => {
       try {
-        const response = await fetch('http://localhost:5001/returns/all', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await getAllReturns();
 
         if (!response.ok) {
           throw new Error('Failed to fetch refund requests');
@@ -38,9 +33,7 @@ const Refund = ({ searchQuery }) => {
     fetchRefundRequests();
   }, []);
 
-  // Filtreleme işlemi
   const filteredRequests = refundRequests.filter((request) => {
-    // Eğer Active checkbox seçildiyse, active olanları göster
     const isActive = activeFilter && request.returnStatus !== 'completed';
     const isCompleted = completedFilter && request.returnStatus === 'completed';
     return isActive || isCompleted;
@@ -48,17 +41,9 @@ const Refund = ({ searchQuery }) => {
     request.requestID.toString().includes(searchQuery)
   );
 
-  // Durum değişikliğini backend'e gönder
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5001/returns/request/${id}/status`, {
-        method: 'PUT',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await getReturnRequestStatus(id);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -80,13 +65,7 @@ const Refund = ({ searchQuery }) => {
   const handleAuthorizePayment = async (id) => {
     if (window.confirm('Are you sure you want to authorize the payment?')) {
       try {
-        const response = await fetch(`http://localhost:5001/returns/request/${id}/authorizepayment`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await authorizeReturnPayment(id);
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -104,27 +83,14 @@ const Refund = ({ searchQuery }) => {
   const handleDoRefund = async (id) => {
     if (window.confirm('Are you sure you want to process the refund?')) {
       try {
-        const response = await fetch(`http://localhost:5001/payment/refund/${id}`, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await refundPayment(id);
 
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.msg || 'Failed to process refund');
         }
 
-        // İade başarılı olduğunda maliyeti al
-        const costResponse = await fetch(`http://localhost:5001/returns/request/${id}/cost`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const costResponse = await getReturnCost(id);
 
         if (!costResponse.ok) {
           throw new Error('Failed to fetch cost of refund');
