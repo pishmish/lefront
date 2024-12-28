@@ -1,20 +1,19 @@
-// components/ProductManagement/SalesManagerProduct.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Import axios for making API calls
-import { fetchProducts, updateProduct } from '../../api/storeapi'; // Import the API function for fetching and updating price
+import axios from 'axios'; // API calls using axios
+import { fetchProducts, updateProduct } from '../../api/storeapi'; // fetch and update functions imported
 import './SalesManagerProduct.css';
 
 const SalesManagerProduct = () => {
-  const [products, setProducts] = useState([]); // Initially empty
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); // Search term state
+  const [products, setProducts] = useState([]); // Product list
+  const [editingProduct, setEditingProduct] = useState(null); // Product being edited
+  const [searchTerm, setSearchTerm] = useState(''); // Search term
 
-  // Fetch products from the API when the component mounts
+  // Fetch products from the API when the component is mounted
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchProducts(); // Fetch data using the API
-        setProducts(response.data); // Assuming `response.data` contains the product list
+        const response = await fetchProducts(); // Fetch product list
+        setProducts(response.data); // Update state with products
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -31,49 +30,89 @@ const SalesManagerProduct = () => {
     setEditingProduct(null);
   };
 
-  const handleSaveEdit = async (productId) => {
+  const handleSavePrice = async (productId) => {
     try {
-      // Update the price
-      await updateProduct(productId, {
-        unitPrice: parseFloat(editingProduct.unitPrice),
-      });
+      const updatedPriceData = {
+        unitPrice: parseFloat(editingProduct.unitPrice) || 0,
+      };
 
-      // Update the discount
-      await axios.put(
-        `http://localhost:5001/store/product/${productId}/discount`,
-        { discountPercentage: parseFloat(editingProduct.discountPercentage) }
-      );
+      // Update price
+      console.log('Updating price with data:', updatedPriceData);
+      await updateProduct(productId, updatedPriceData);
 
-      // Update the local state with the updated product
+      // Update local state
       setProducts((prevProducts) =>
         prevProducts.map((product) =>
           product.productID === productId
-            ? { ...editingProduct }
+            ? { ...product, unitPrice: updatedPriceData.unitPrice }
             : product
         )
       );
-      setEditingProduct(null);
+      setEditingProduct(null); // Exit edit mode
     } catch (error) {
-      console.error('Error updating product:', error);
+      console.error('Error updating price:', error);
+    }
+  };
+
+  const handleSaveDiscount = async (productId) => {
+    try {
+      // Retrieve the token
+      const token = localStorage.getItem('token');
+
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const updatedDiscountData = {
+        discountPercentage: parseFloat(editingProduct.discountPercentage) || 0,
+      };
+
+      console.log('Updating discount with data:', updatedDiscountData);
+
+      // Include token in the Authorization header
+      await axios.put(
+        `http://localhost:5001/salesManager/discount/${productId}`,
+        updatedDiscountData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Update local state
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.productID === productId
+            ? { ...product, discountPercentage: updatedDiscountData.discountPercentage }
+            : product
+        )
+      );
+      setEditingProduct(null); // Exit edit mode
+    } catch (error) {
+      console.error('Error updating discount:', error);
+      if (error.response) {
+        console.error('Server response:', error.response.data);
+      }
     }
   };
 
   const handlePriceChange = (newPrice) => {
     setEditingProduct((prev) => ({
       ...prev,
-      unitPrice: parseFloat(newPrice),
+      unitPrice: newPrice ? parseFloat(newPrice) : 0, // Default to 0 if invalid
     }));
   };
 
   const handleDiscountChange = (newDiscount) => {
     setEditingProduct((prev) => ({
       ...prev,
-      discountPercentage: parseFloat(newDiscount),
+      discountPercentage: newDiscount ? parseFloat(newDiscount) : 0, // Default to 0 if invalid
     }));
   };
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // Update the search term state
+    setSearchTerm(e.target.value); // Update search term
   };
 
   const filteredProducts = products.filter((product) =>
@@ -108,7 +147,7 @@ const SalesManagerProduct = () => {
                     type="number"
                     min="0"
                     step="0.01"
-                    value={editingProduct.unitPrice}
+                    value={editingProduct.unitPrice || 0} // Default to 0 if undefined
                     onChange={(e) => handlePriceChange(e.target.value)}
                   />
                 </label>
@@ -119,7 +158,7 @@ const SalesManagerProduct = () => {
                     min="0"
                     max="100"
                     step="0.1"
-                    value={editingProduct.discountPercentage || 0}
+                    value={editingProduct.discountPercentage || 0} // Default to 0 if undefined
                     onChange={(e) => handleDiscountChange(e.target.value)}
                   />
                 </label>
@@ -127,9 +166,15 @@ const SalesManagerProduct = () => {
                 <div className="edit-buttons">
                   <button
                     className="save-button"
-                    onClick={() => handleSaveEdit(product.productID)}
+                    onClick={() => handleSavePrice(product.productID)}
                   >
-                    Save
+                    Save Price
+                  </button>
+                  <button
+                    className="save-button"
+                    onClick={() => handleSaveDiscount(product.productID)}
+                  >
+                    Save Discount
                   </button>
                   <button className="cancel-button" onClick={handleCancelEdit}>
                     Cancel
