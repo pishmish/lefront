@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SalesChart from '../../components/SalesChart/SalesChart';
 import OrderList from '../../components/OrderList/OrderList';
 import Refund from '../../components/Refund/Refund';
+import SalesManagerProduct from '../../components/SalesManagerProduct/SalesManagerProduct';
 import './SalesManagerPage.css';
 
 const SalesManagerPage = () => {
@@ -25,6 +26,12 @@ const SalesManagerPage = () => {
           onClick={() => setActiveTab('refund')}
         >
           Refund
+        </button>
+        <button
+          className={activeTab === 'products' ? 'active-tab' : ''}
+          onClick={() => setActiveTab('products')}
+        >
+          Products
         </button>
       </div>
 
@@ -52,6 +59,12 @@ const SalesManagerPage = () => {
             />
           </div>
           <Refund searchQuery={searchQuery} />
+        </section>
+      )}
+
+      {activeTab === 'products' && (
+        <section className="products-section">
+          <SalesManagerProduct username="sales_manager_username" />
         </section>
       )}
     </div>
