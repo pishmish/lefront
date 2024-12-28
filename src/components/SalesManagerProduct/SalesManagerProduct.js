@@ -7,6 +7,7 @@ import './SalesManagerProduct.css';
 const SalesManagerProduct = () => {
   const [products, setProducts] = useState([]); // Initially empty
   const [editingProduct, setEditingProduct] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // Search term state
 
   // Fetch products from the API when the component mounts
   useEffect(() => {
@@ -71,11 +72,29 @@ const SalesManagerProduct = () => {
     }));
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // Update the search term state
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="product-management-container">
       <h3>Manage Products</h3>
+
+      {/* Search bar */}
+      <input
+        type="text"
+        className="product-search-bar"
+        placeholder="Search products by name..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
+
       <div className="product-grid">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div key={product.productID} className="product-card">
             {editingProduct?.productID === product.productID ? (
               <div className="product-edit-form">
