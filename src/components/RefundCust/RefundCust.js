@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {jwtDecode} from 'jwt-decode';
-import { fetchUserOrders, fetchOrder, deleteOrderItems } from '../../api/orderapi';
+import { fetchUserOrders, fetchOrder, deleteOrderItem } from '../../api/orderapi';
 import { getCustomerReturnRequests, deleteReturnRequest, createReturnRequest } from '../../api/returnsapi';
 import './RefundCust.css';
 
@@ -14,6 +14,20 @@ const RefundCust = () => {
   const [pastAccordionOpen, setPastAccordionOpen] = useState(false);
   const [orderAccordionOpen, setOrderAccordionOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [submitError, setSubmitError] = useState(null); // Add new state for submit error
+  const errorTimerRef = useRef(null); // Add timer ref at the top of component
+
+  // Add helper function at the top of the component
+  const getStatusDisplay = (status) => {
+    const statusMap = {
+      'pending': 'Pending',
+      'approved': 'Awaiting Product',
+      'productReceived': 'Processing Refund',
+      'completed': 'Completed',
+      'rejected': 'Rejected'
+    };
+    return statusMap[status] || status;
+  };
 
   // Fetch orders data from API
   useEffect(() => {
@@ -48,9 +62,7 @@ const RefundCust = () => {
         if (!username) {
           throw new Error('Username not found in token');
         }
-        console.log('username:', username);
       const response = await getCustomerReturnRequests(username);
-      console.log('response:', response.data);
       setPastRequests(response.data.requests || []); // Ensure we set array even if empty
     } catch (err) {
       setError(err.message);
@@ -119,20 +131,23 @@ const RefundCust = () => {
 
   const handleDelete = async (productID) => {
     try {
-      const response = await deleteOrderItems(selectedOrder.orderID, productID);
-
-      const data = await response.json();
+      const response = await deleteOrderItem(selectedOrder.orderID, productID);
+      console.log('Delete response:', response);
+      
       if (response.status === 200) {
         alert('Product deleted successfully!');
         setOrderDetails(null);
         setRefundItems([]);
-        await fetchOrderDetails(); // Fetch the updated order details
+        await fetchOrderDetails();
       } else {
-        alert(`Error deleting product: ${data.message}`);
+        // Extract error message from response
+        const errorMessage = response.data?.msg || response.msg || 'Unknown error occurred';
+        alert(`Error deleting product: ${errorMessage}`);
       }
     } catch (error) {
       console.error('Error deleting product:', error);
-      alert('Error deleting product.');
+      const errorMessage = error.response?.data?.msg || error.message || 'Error deleting product';
+      alert(errorMessage);
     }
   };
 
@@ -144,45 +159,91 @@ const RefundCust = () => {
   };
 
   const handleSubmit = async () => {
+    // Clear any existing error and timer
+    setSubmitError(null);
+    if (errorTimerRef.current) {
+      clearTimeout(errorTimerRef.current);
+    }
+
     if (refundItems.length === 0 || Object.values(reasons).some(reason => !reason)) {
       alert('Please specify quantity and reason for the return.');
       return;
     }
 
     try {
-      let refundSuccess = true; // Variable to track if all refund requests succeed
+      setSubmitError(null);
+      let refundSuccess = true;
 
       for (let item of refundItems) {
-        const response = await createReturnRequest({  
-          orderID: selectedOrder.orderID,
-          productID: item.productID,
-          quantity: item.quantity,
-          reason: reasons[item.productID]
-        });
-
-        const data = await response.json();
-
-        if (response.status < 200 || response.status >= 300) {
+        try {
+          const response = await createReturnRequest({
+            orderID: selectedOrder.orderID,
+            productID: item.productID,
+            quantity: item.quantity,
+            reason: reasons[item.productID]
+          });
+          
+          // Log full response for debugging
+          console.log('Full response:', response);
+          
+          if (response.data?.msg === 'Order exceeds 30 days') {
+            setSubmitError('This order cannot be refunded as it is more than 30 days old.');
+            refundSuccess = false;
+            break;
+          }
+        } catch (error) {
+          console.log('Full error object:', error);
+          console.log('Error response:', error.response);
+          
+          // Extract error message from response
+          const errorMessage = error.response?.data?.msg || error.message;
+          setSubmitError(errorMessage);
+          console.error('Error details:', {
+            message: errorMessage,
+            status: error.response?.status,
+            statusText: error.response?.statusText
+          });
           refundSuccess = false;
-          alert(`Error: ${data.message || 'An error occurred.'}`);
-          break; // Stop the loop if an error occurs
+          break;
         }
       }
 
       if (refundSuccess) {
+        await fetchRequests(); // Add this line to reload requests
         alert('Refund request submitted successfully!');
+        setSelectedOrder(null);
+        setOrderDetails(null);
+        setRefundItems([]);
+        setReasons({});
+        setSubmitError(null);
       }
     } catch (error) {
-      console.error('Error submitting refund request:', error);
-      alert('Error submitting refund request.');
+      console.error('Outer try-catch error:', error);
+      setSubmitError('Error submitting refund request. Please try again later.');
+    }
+  };
+
+  // Add useEffect to handle error timeout
+  useEffect(() => {
+    if (submitError) {
+      // Clear any existing timer
+      if (errorTimerRef.current) {
+        clearTimeout(errorTimerRef.current);
+      }
+      
+      // Set new 5-second timer
+      errorTimerRef.current = setTimeout(() => {
+        setSubmitError(null);
+      }, 5  * 1000); // 5 seconds in milliseconds
     }
 
-    // Reset state after submission
-    setSelectedOrder(null);
-    setOrderDetails(null);
-    setRefundItems([]);
-    setReasons({});
-  };
+    // Cleanup on unmount
+    return () => {
+      if (errorTimerRef.current) {
+        clearTimeout(errorTimerRef.current);
+      }
+    };
+  }, [submitError]);
 
   return (
     <div className="refund-cust">
@@ -203,7 +264,9 @@ const RefundCust = () => {
                 <div key={request.requestID} className="refund-card">
                   <div className="refund-header">
                     <h3>Request ID: {request.requestID}</h3>
-                    <p>Status: {request.returnStatus === 'received' ? 'Pending' : request.returnStatus}</p>
+                    <div className={`status-badge ${request.returnStatus}`}>
+                      {getStatusDisplay(request.returnStatus)}
+                    </div>
                   </div>
                   <div className="refund-body">
                     <p>
@@ -219,7 +282,7 @@ const RefundCust = () => {
                       <strong>Quantity:</strong> {request.quantity}
                     </p>
                   </div>
-                  {request.returnStatus !== 'completed' && (
+                  {request.returnStatus !== 'completed' && request.returnStatus !== 'rejected' && (
                     <button className="refundButton" onClick={() => handleDeleteRequest(request.requestID)}>
                       Delete
                     </button>
@@ -255,7 +318,11 @@ const RefundCust = () => {
                   <p>Order ID: {order.orderID}</p>
                   <p>Total Price: ${order.totalPrice}</p>
                   <p>Status: {order.deliveryStatus}</p>
-                  <p>Estimated Arrival: {new Date(order.estimatedArrival).toLocaleString()}</p>
+                  <p>Date Ordered: {new Date(order.timeOrdered).toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                  })}</p>
                 </div>
               ))}
           </div>
@@ -265,6 +332,11 @@ const RefundCust = () => {
       {orderDetails && selectedOrder && (
         <div className="order-details">
           <h2>Order Details for Order {selectedOrder.orderID}</h2>
+          {submitError && (
+            <div className="error-message">
+              {submitError}
+            </div>
+          )}
           {orderDetails.orderItems && orderDetails.orderItems.map((item) => (
             <div key={item.productID} className="order-item-detail">
               <div className="product-info">
@@ -303,6 +375,7 @@ const RefundCust = () => {
           {selectedOrder.deliveryStatus === 'Delivered' && (
             <button className="refundButton" onClick={handleSubmit}>Submit Refund Request</button>
           )}
+          {submitError && <div className="error-message">{submitError}</div>}
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ const OrderTracking = () => {
   const [error, setError] = useState(null);
   const [expandedOrders, setExpandedOrders] = useState(new Set());
   const [orderDetails, setOrderDetails] = useState({});
+  const [showDelivered, setShowDelivered] = useState(false);
 
   const getAllOrders = async () => {
     try {
@@ -101,86 +102,100 @@ const OrderTracking = () => {
   return (
     <div className="order-tracking-container">
       <h3>Order Tracking</h3>
+      
+      <div className="filter-section">
+        <label className="filter-label">
+          <input
+            type="checkbox"
+            checked={showDelivered}
+            onChange={(e) => setShowDelivered(e.target.checked)}
+          />
+          Show Delivered Orders
+        </label>
+      </div>
+
       <div className="order-grid">
         {orders.length > 0 ? (
-          // Filter out orders with Total Price = $0.00
-          orders.filter(order => parseFloat(order.totalPrice) !== 0).map((order) => {
-            const currentStep = getCurrentStep(order.deliveryStatus);
-            const isExpanded = expandedOrders.has(order.orderID);
-            return (
-              <div key={order.orderID} className="order-card">
-                <div className="order-header">
-                  <h4>Order ID: {order.orderID}</h4>
-                  <button 
-                    className="expand-button"
-                    onClick={() => toggleOrderExpand(order.orderID)}
-                  >
-                    {isExpanded ? '−' : '+'}
-                  </button>
-                </div>
-
-                <p><strong>Order Number:</strong> {order.orderNumber}</p>
-                <p><strong>Total Price:</strong> ${order.totalPrice}</p>
-                <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
-                <p><strong>Estimated Arrival:</strong> {new Date(order.estimatedArrival).toLocaleDateString()}</p>
-
-                {isExpanded && orderDetails[order.orderID] && (
-                  <div className="order-details-expanded">
-                    <div className="order-items">
-                      <h4>Ordered Items</h4>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Total</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {orderDetails[order.orderID].orderItems?.map((item) => (
-                            <tr key={item.productId}>
-                              <td>{item.productName}</td>
-                              <td>{item.quantity}</td>
-                              <td>${parseFloat(item.purchasePrice).toFixed(2)}</td>
-                              <td>${(parseFloat(item.quantity) * parseFloat(item.purchasePrice)).toFixed(2)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    <div className="delivery-address">
-                      <h4>Delivery Address</h4>
-                      <p>{orderDetails[order.orderID].address?.streetAddress}</p>
-                      <p>{orderDetails[order.orderID].address?.city}, {orderDetails[order.orderID].address?.province}</p>
-                      <p>{orderDetails[order.orderID].address?.zipCode}</p>
-                      <p>{orderDetails[order.orderID].address?.country}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="steps-container">
-                  {steps.map((step, index) => (
-                    <div key={index} className={`step ${index <= currentStep ? "active" : ""}`}>
-                      <div className="circle">{index + 1}</div>
-                      <p className="step-label">{step}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="status-buttons">
-                  {steps.map((step) => (
-                    <button
-                      key={step}
-                      className={`status-button ${step === order.deliveryStatus ? "active" : ""}`}
-                      onClick={() => updateOrderStatus(order.orderID, step)}
-                      disabled={step === order.deliveryStatus}
+          orders
+            .filter(order => parseFloat(order.totalPrice) !== 0)
+            .filter(order => showDelivered || order.deliveryStatus !== 'Delivered')
+            .map((order) => {
+              const currentStep = getCurrentStep(order.deliveryStatus);
+              const isExpanded = expandedOrders.has(order.orderID);
+              return (
+                <div key={order.orderID} className="order-card">
+                  <div className="order-header">
+                    <h4>Order ID: {order.orderID}</h4>
+                    <button 
+                      className="expand-button"
+                      onClick={() => toggleOrderExpand(order.orderID)}
                     >
-                      {step}
+                      {isExpanded ? '−' : '+'}
                     </button>
-                  ))}
+                  </div>
+
+                  <p><strong>Order Number:</strong> {order.orderNumber}</p>
+                  <p><strong>Total Price:</strong> ${order.totalPrice}</p>
+                  <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
+                  <p><strong>Estimated Arrival:</strong> {new Date(order.estimatedArrival).toLocaleDateString()}</p>
+
+                  {isExpanded && orderDetails[order.orderID] && (
+                    <div className="order-details-expanded">
+                      <div className="order-items">
+                        <h4>Ordered Items</h4>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Product</th>
+                              <th>Quantity</th>
+                              <th>Unit Price</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {orderDetails[order.orderID].orderItems?.map((item) => (
+                              <tr key={item.productId}>
+                                <td>{item.productName}</td>
+                                <td>{item.quantity}</td>
+                                <td>${parseFloat(item.purchasePrice).toFixed(2)}</td>
+                                <td>${(parseFloat(item.quantity) * parseFloat(item.purchasePrice)).toFixed(2)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="delivery-address">
+                        <h4>Delivery Address</h4>
+                        <p>{orderDetails[order.orderID].address?.streetAddress}</p>
+                        <p>{orderDetails[order.orderID].address?.city}, {orderDetails[order.orderID].address?.province}</p>
+                        <p>{orderDetails[order.orderID].address?.zipCode}</p>
+                        <p>{orderDetails[order.orderID].address?.country}</p>
+                      </div>
+                    </div>
+                  )}
+                  <div className="steps-container">
+                    {steps.map((step, index) => (
+                      <div key={index} className={`step ${index <= currentStep ? "active" : ""}`}>
+                        <div className="circle">{index + 1}</div>
+                        <p className="step-label">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="status-buttons">
+                    {steps.map((step) => (
+                      <button
+                        key={step}
+                        className={`status-button ${step === order.deliveryStatus ? "active" : ""}`}
+                        onClick={() => updateOrderStatus(order.orderID, step)}
+                        disabled={step === order.deliveryStatus}
+                      >
+                        {step}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
         ) : (
           <p>No orders available.</p>
         )}

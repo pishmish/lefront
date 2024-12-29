@@ -314,6 +314,9 @@ const Navbar = () => {
             className="navbar-user"
             onMouseEnter={() => setShowUserDropdown(true)}
             onMouseLeave={() => setShowUserDropdown(false)}
+            style={{ 
+              marginRight: (userRole === 'salesManager' || userRole === 'productManager') ? '40px' : '0'
+            }}
           >
             <FiUser 
               size={20} 

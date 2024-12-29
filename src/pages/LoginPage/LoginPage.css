@@ -135,6 +135,7 @@
   background-color: #000000;
   color: #fff;
   border: none;
+  border-radius: 0px;
   padding: 10px 15px;
   cursor: pointer;
   margin-bottom: 0px;

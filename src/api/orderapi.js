@@ -14,7 +14,7 @@ export const createOrder = (data) => API.post('/order/neworder', data); // Creat
 export const updateOrder = (id, data) => API.put(`/order/updateorder/${id}`, data); // Update an existing order
 export const cancelOrder = (id) => API.put(`/order/cancelorder/${id}`); // Cancel an order
 export const updateOrderItems = (id, data) => API.put(`/order/orderitems/${id}`, data); // Update items in an order
-export const deleteOrderItems = (id, data) => API.delete(`/order/orderitems/${id}`, data); // Delete items from an order
+export const deleteOrderItem = (orderId, productId) => API.delete(`/order/orderitems/${orderId}/${productId}`); // Delete an from an order
 
 // Product Manager Order APIs
 export const fetchAllOrders = () => API.get('/order/getallorders');

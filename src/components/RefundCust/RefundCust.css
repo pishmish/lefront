@@ -209,7 +209,6 @@
   .accordion-header:hover {
     background-color: #f5f5f5;
     border-color: #bc600f;
-    transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
@@ -256,4 +255,46 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-size: 15px;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-badge.pending {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.status-badge.approved {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #64b5f6;
+}
+
+.status-badge.productReceived {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ba68c8;
+}
+
+.status-badge.completed {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #81c784;
+}
+
+.error-message {
+  background-color: #fff3f3;
+  color: #d32f2f;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ffa4a4;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
 }

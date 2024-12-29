@@ -29,7 +29,7 @@ const ProfilePage = () => {
           className={activeComponent === 'refund' ? 'active' : ''}
           onClick={() => setActiveComponent('refund')}
         >
-          Refund Request & Order Deletion
+          Order & Refund Management
         </button>
       </div>
 

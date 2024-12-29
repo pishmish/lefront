@@ -14,6 +14,9 @@ export const getReturnRequest = (id) => API.get(`/returns/request/${id}`);
 // Get return request status
 export const getReturnRequestStatus = (id) => API.get(`/returns/request/${id}/status`);
 
+// Get refund approval request status
+export const getRefundRequestStatus = (id) => API.get(`/returns/refund/${id}/status`);
+
 // Create new return request (Customer only)
 export const createReturnRequest = (data) => API.post('/returns/newrequest', data);
 

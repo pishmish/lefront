@@ -28,7 +28,7 @@ const OrderList = () => {
         }
 
         const response = await fetchSupplierOrders(username);
-        console.log('response:', response.data);
+        //console.log('response:', response.data);
         if (response.status === 200 && Array.isArray(response.data)) {
           // Sort orders by orderID
           const sortedOrders = response.data.sort((a, b) => 

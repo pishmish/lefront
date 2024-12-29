@@ -37,6 +37,8 @@ const LoginPage = () => {
       // Redirect based on the user's role
       if (role === 'customer') {
         navigate('/profile');
+        // Merge carts on login
+      await mergeCartsOnLogin(decodedToken.customerID);
       } else if (role === 'productManager') {
         navigate('/admin/products'); // for now it takes to the admin page
       } else if (role === 'salesManager') {
@@ -44,8 +46,6 @@ const LoginPage = () => {
       } else { // for now it takes to the admin page
         setErrorMessage('Unknown role. Please contact support.');
       }
-      // Merge carts on login
-      await mergeCartsOnLogin(decodedToken.customerID);
     } catch (error) {
       // Handle login errors
       console.error('Login error:', error);
