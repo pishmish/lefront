@@ -94,7 +94,7 @@ npm install
 npm start
 ```
 
-🌐 Access the application at `http://localhost:3000`
+Access the application at `http://localhost:3000`
 
 ---
 
@@ -157,7 +157,7 @@ npm start
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -196,6 +196,4 @@ The developers behind Zad à Dos:
 This project is licensed under the Sabancı University.
 
 ---
-<div align="center">
-Made with ❤️ by the Zad à Dos Team
-</div>
+
