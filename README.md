@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛍️ Zad à Dos - Modern E-commerce Platform
+# Zad à Dos - Modern E-commerce Platform
 
 [![Sabancı University](https://img.shields.io/badge/Sabancı-University-blue.svg)](https://www.sabanciuniv.edu/en)
 [![Made with React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -15,40 +15,47 @@
 
 ---
 
-## ✨ Features
+## Features
 
 ### For Customers
-- 🏠 **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#home-page)
-- 🔍 **Advanced Product Discovery** 
+  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#home-page)
+  - **Advanced Product Discovery** 
   - Smart filtering and sorting options [View Catalog](#product-listings)
   - Detailed product pages with high-resolution images [View Details](#product-details)
   - Real-time stock updates
-- 🛒 **Seamless Shopping Experience**
+ 
+    
+  - **Seamless Shopping Experience**
   - Easy cart management [View Cart](#shopping-cart)
   - Wishlist functionality [View Wishlist](#wishlist)
   - Streamlined checkout process [View Checkout](#checkout)
-- 👤 **User Management**
+ 
+    
+  -  **User Management**
   - Secure authentication system [View Authentication](#authentication)
   - Personal profile customization
   - Order history tracking
 
 ### For Administrators
-- 📊 **Comprehensive Dashboard**
+  - **Comprehensive Dashboard**
   - Real-time sales analytics [View Sales Dashboard](#sales-dashboard)
   - Customer insights [View Customer Info](#customer-management)
   - Inventory management
-- 🎯 **Product Management**
+
+    
+  - **Product Management**
   - Bulk product upload [View Product Management](#product-management)
   - Category management
   - Price and stock updates
-- 👥 **Customer Management**
+    
+  - **Customer Management**
   - Detailed customer profiles
   - Order tracking
   - Communication tools
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend:**
   - React.js
@@ -60,7 +67,7 @@
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -91,7 +98,7 @@ npm start
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Customer Interface
 
@@ -163,11 +170,11 @@ src/
 ```
 
 ---
-## 🤝 Contributing
+## Contributing
 
-## 👥 Team
+## Team
 
-Meet the talented developers behind Zad à Dos:
+The developers behind Zad à Dos:
 
 - Nuh Al-Sharafi 
 - Musab Ahmed Khan 
@@ -184,15 +191,9 @@ Meet the talented developers behind Zad à Dos:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the Sabancı University.
-
-## 🙏 Acknowledgments
-
-- Special thanks to Sabanci University for the project opportunity
-- All contributors who have helped shape Zad à Dos
-- The open-source community for their invaluable resources
 
 ---
 <div align="center">
