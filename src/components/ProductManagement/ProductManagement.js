@@ -114,12 +114,6 @@ const ProductManagement = ({ username }) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleDiscountChange = (id, discount) => {
-    setProducts(products.map((product) =>
-      product.id === id ? { ...product, discount } : product
-    ));
-  };
-
   const handleEdit = (product) => {
     setEditingProduct({
       ...product,
@@ -161,7 +155,6 @@ const ProductManagement = ({ username }) => {
 
   return (
     <div className="product-management-container">
-      <h3>Manage Products</h3>
       <div className="product-controls">
         <button className="add-product-button" onClick={handleAddProduct}>
           Add New Product

@@ -57,7 +57,6 @@ const ReviewApproval = ({ username }) => {
 
   return (
     <div className="review-approval">
-      <h2>Pending Reviews</h2>
       {reviews.length === 0 ? (
         <p>No pending reviews</p>
       ) : (

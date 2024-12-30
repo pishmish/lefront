@@ -79,7 +79,6 @@ const CategoryManagement = () => {
 
   return (
     <div className="category-management">
-      <h2>Category Management</h2>
       
       <div className="category-controls">
         <button 

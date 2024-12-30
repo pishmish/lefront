@@ -101,7 +101,6 @@ const OrderTracking = () => {
 
   return (
     <div className="order-tracking-container">
-      <h3>Order Tracking</h3>
       
       <div className="filter-section">
         <label className="filter-label">

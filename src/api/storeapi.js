@@ -11,6 +11,8 @@ export const fetchProductById = (id) => API.get(`/store/product/${id}`); // Fetc
 export const fetchSupplierByProductId = (id) => API.get(`/store/supplier/${id}`); // Fetch supplier by product ID
 export const createProduct = (data) => API.post('/store/product', data); // Create new product
 export const updateProduct = (id, data) => API.put(`/store/product/${id}`, data); // Update product
+export const updateProductPrice = (id, data) => API.put(`/store/product/price/${id}`, data); // Update product price
+export const updateProductDiscountPercentage = (id, data) => API.put(`/store/product/discount/${id}`, data); // Update product discount percentage
 export const deleteProduct = (id) => API.delete(`/store/product/${id}`); // Delete product
 export const incrementProductPopularity = (id) => API.put(`/store/product/popularity/${id}`); // Increment product popularity
 //export const fetchProductsBySupplier = (supplierId) => API.get(`/store/product/supplier/${supplierId}`);
@@ -64,6 +66,9 @@ export const sortProductsByMaterial = (order, data) => sortProductsBy('material'
 export const sortProductsByCapacity = (order, data) => sortProductsBy('capacity', order, data);
 export const sortProductsByWarranty = (order, data) => sortProductsBy('warranty', order, data);
 export const sortProductsByPopularity = (order, data) => sortProductsBy('popularity', order, data);
+
+// Sales manager discount API calls
+export const setDiscount = (id, data) => API.put(`/store/product/discount/${id}`, data);
 
 // API call to get product image
 export const getProductImage = (id) => API.get(`/store/product/${id}/image`, { responseType: 'blob' });

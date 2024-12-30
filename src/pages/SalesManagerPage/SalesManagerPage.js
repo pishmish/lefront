@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import SalesChart from '../../components/SalesChart/SalesChart';
 import OrderList from '../../components/OrderList/OrderList';
 import Refund from '../../components/Refund/Refund';
-import SalesManagerProduct from '../../components/SalesManagerProduct/SalesManagerProduct';
+import SalesDiscounts from '../../components/SalesDiscounts/SalesDiscounts';
+import SalesPrices from '../../components/SalesPrices/SalesPrices';
 import './SalesManagerPage.css';
 
 const SalesManagerPage = () => {
   const [activeTab, setActiveTab] = useState('sales'); // Default olarak 'sales' seçili
   const [searchQuery, setSearchQuery] = useState(''); // Arama çubuğu için state
+  const [username, setUsername] = useState('');
+  
+    useEffect(() => {
+      try {
+        const token = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('authToken='));
+        
+        if (token) {
+          const decodedToken = jwtDecode(token.split('=')[1]);
+          setUsername(decodedToken.id); // Assuming username is stored as 'id' in token
+          // console.log('Decoded token:', decodedToken);
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }, []);
 
   return (
     <div className="sales-manager-page">
@@ -28,10 +47,16 @@ const SalesManagerPage = () => {
           Refund
         </button>
         <button
-          className={activeTab === 'products' ? 'active-tab' : ''}
-          onClick={() => setActiveTab('products')}
+          className={activeTab === 'discounts' ? 'active-tab' : ''}
+          onClick={() => setActiveTab('discounts')}
         >
-          Products
+          Discounts
+        </button>
+        <button
+          className={activeTab === 'prices' ? 'active-tab' : ''}
+          onClick={() => setActiveTab('prices')}
+        >
+          Prices
         </button>
       </div>
 
@@ -48,7 +73,7 @@ const SalesManagerPage = () => {
 
       {activeTab === 'refund' && (
         <section className="refund-section">
-          <h2>Refund Requests</h2>
+          <h2>Refund Management</h2>
           {/* Search Bar for Refund Requests */}
           <div className="search-bar-container">
             <input
@@ -62,9 +87,17 @@ const SalesManagerPage = () => {
         </section>
       )}
 
-      {activeTab === 'products' && (
-        <section className="products-section">
-          <SalesManagerProduct username="sales_manager_username" />
+      {activeTab === 'discounts' && (
+        <section className="discounts-section">
+          <h2>Discounts Management</h2>
+          <SalesDiscounts username={username} />
+        </section>
+      )}
+
+      {activeTab === 'prices' && (
+        <section className="prices-section">
+          <h2>Price Management</h2>
+          <SalesPrices username={username} />
         </section>
       )}
     </div>

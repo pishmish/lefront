@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
+import { getAllSales, getMonthlySales, getQuarterlySales, getYearlySales, getSalesComparison } from '../../api/analyticsapi';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,7 +10,6 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { getAllSales, getMonthlySales, getQuarterlySales, getYearlySales } from '../../api/analyticsapi';
 import './SalesChart.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -19,6 +19,14 @@ const SalesChart = () => {
   const [salesData, setSalesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dateRange, setDateRange] = useState({
+    start1: '2024-01-01',
+    end1: '2024-12-31',
+    start2: '2023-01-01',
+    end2: '2023-12-31'
+  });
+  const [comparisonData, setComparisonData] = useState(null);
+  const [activeTab, setActiveTab] = useState('period'); // 'period' or 'compare'
 
   const fetchSalesData = async () => {
     setLoading(true);
@@ -53,6 +61,32 @@ const SalesChart = () => {
     fetchSalesData();
   }, [period]);
 
+  const handleDateChange = (e) => {
+    setDateRange({
+      ...dateRange,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const fetchComparisonData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getSalesComparison(
+        dateRange.start1,
+        dateRange.end1,
+        dateRange.start2,
+        dateRange.end2
+      );
+      console.log(response.data);
+      setComparisonData(response.data);
+    } catch (err) {
+      setError('Failed to fetch comparison data');
+      console.error(err);
+    }
+    setLoading(false);
+  };
+
   const chartData = {
     labels: salesData.map(item => {
       switch (period) {
@@ -86,7 +120,20 @@ const SalesChart = () => {
     ]
   };
 
-  const options = {
+  const comparisonChartData = {
+    labels: ['Period 1', 'Period 2'],
+    datasets:
+      {
+        label: 'Revenue',
+        data: comparisonData ? [
+          comparisonData.period1.totalRevenue,
+          comparisonData.period2.totalRevenue
+        ] : [],
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      }
+  };
+
+  const options1 = {
     responsive: true,
     plugins: {
       legend: {
@@ -103,6 +150,24 @@ const SalesChart = () => {
       },
     },
   };
+  
+  const options2 = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Compare Sales`,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -110,32 +175,110 @@ const SalesChart = () => {
   return (
     <div>
       <div className="period-selector">
+        {activeTab === 'period' ? (
+          <>
+            <button
+              className={period === 'daily' ? 'active' : ''}
+              onClick={() => setPeriod('daily')}
+            >
+              Daily
+            </button>
+            <button
+              className={period === 'monthly' ? 'active' : ''}
+              onClick={() => setPeriod('monthly')}
+            >
+              Monthly
+            </button>
+            <button
+              className={period === 'quarterly' ? 'active' : ''}
+              onClick={() => setPeriod('quarterly')}
+            >
+              Quarterly
+            </button>
+            <button
+              className={period === 'yearly' ? 'active' : ''}
+              onClick={() => setPeriod('yearly')}
+            >
+              Yearly
+            </button>
+          </>
+        ) : null}
         <button
-          className={period === 'daily' ? 'active' : ''}
-          onClick={() => setPeriod('daily')}
+          className={`tab-button ${activeTab === 'compare' ? 'active' : ''}`}
+          onClick={() => setActiveTab(activeTab === 'period' ? 'compare' : 'period')}
         >
-          Daily
-        </button>
-        <button
-          className={period === 'monthly' ? 'active' : ''}
-          onClick={() => setPeriod('monthly')}
-        >
-          Monthly
-        </button>
-        <button
-          className={period === 'quarterly' ? 'active' : ''}
-          onClick={() => setPeriod('quarterly')}
-        >
-          Quarterly
-        </button>
-        <button
-          className={period === 'yearly' ? 'active' : ''}
-          onClick={() => setPeriod('yearly')}
-        >
-          Yearly
+          {activeTab === 'period' ? 'Compare Periods' : 'Back to Periods'}
         </button>
       </div>
-      <Bar data={chartData} options={options} />
+
+      {activeTab === 'period' ? (
+        <Bar data={chartData} options={options1} />
+      ) : (
+        <div className="sales-comparison-container">
+          <div className="date-inputs">
+            <div>
+              <h4>Period 1</h4>
+              <input
+                type="date"
+                name="start1"
+                value={dateRange.start1}
+                onChange={handleDateChange}
+              />
+              <input
+                type="date"
+                name="end1"
+                value={dateRange.end1}
+                onChange={handleDateChange}
+              />
+            </div>
+            <div>
+              <h4>Period 2</h4>
+              <input
+                type="date"
+                name="start2"
+                value={dateRange.start2}
+                onChange={handleDateChange}
+              />
+              <input
+                type="date"
+                name="end2"
+                value={dateRange.end2}
+                onChange={handleDateChange}
+              />
+            </div>
+            <button 
+              onClick={fetchComparisonData}
+              disabled={loading}
+            >
+              Compare
+            </button>
+          </div>
+
+          {error && <div className="error">{error}</div>}
+          {loading && <div>Loading...</div>}
+          
+          {comparisonData && (
+            <div className="chart-container">
+              <Bar 
+                data={{
+                  labels: ['Period 1', 'Period 2'],
+                  datasets: [
+                    {
+                      label: 'Revenue',
+                      data: [
+                        comparisonData.period1.totalRevenue,
+                        comparisonData.period2.totalRevenue
+                      ],
+                      backgroundColor: 'rgba(53, 162, 235, 0.5)'
+                    }
+                  ]
+                }}
+                options={options2}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

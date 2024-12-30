@@ -5,8 +5,6 @@ const API = axios.create({
     withCredentials: true, // Enables cookies or tokens if needed
 });
 
-const API_URL = '/api/wishlist';
-
 export const getOrCreateWishlist = async (customerID) => {
   return await API.post(`/wishlist/customer/${customerID}`);
 };
@@ -31,9 +29,7 @@ export const getWishlistByID = async (id) => {
   return await API.get(`/wishlist/${id}`);
 };
 
-export const sendSaleEmail = async () => {
-  return await API.post(`/wishlist/sendMail`);
-};
+export const sendSaleEmail = (productIDs) => API.post(`/wishlist/sendMail`, productIDs);
 
 export const isProductInWishlist = async (customerID, productID) => {
   return await API.get(`/wishlist/check/${customerID}/${productID}`);

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import ProductManagement from '../../components/ProductManagement/ProductManagement';
 import ReviewApproval from '../../components/ReviewApproval/ReviewApproval';
-import OrderTracking from '../../components/OrderTracking/OrderTracking'; // OrderTracking bileşenini import ettik
+import OrderTracking from '../../components/OrderTracking/OrderTracking';
 import CategoryManagement from '../../components/CategoryManagement/CategoryManagement';
 import './ProductManagerPage.css';
 
@@ -19,72 +19,71 @@ const ProductManagerPage = () => {
       
       if (token) {
         const decodedToken = jwtDecode(token.split('=')[1]);
-        setUsername(decodedToken.id); // Assuming username is stored as 'id' in token
-        // console.log('Decoded token:', decodedToken);
+        setUsername(decodedToken.id);
       }
     } catch (error) {
       console.error('Error decoding token:', error);
     }
   }, []);
 
-  const renderContent = () => {
-    if (activeTab === 'product') {
-      return (
-        <section className="product-section">
-          <ProductManagement username={username} />
-        </section>
-      );
-    } else if (activeTab === 'reviews') {
-      return (
-        <section className="product-section">
-          <ReviewApproval username={username} />
-        </section>
-      );
-    } else if (activeTab === 'orders') {
-      return (
-        <section className="product-section">
-          <OrderTracking />
-        </section>
-      );
-    } else if (activeTab === 'category') {
-      return (
-        <section className="product-section">
-          <CategoryManagement />
-        </section>
-      );
-    }
-  };
-
   return (
     <div className="product-manager-page">
       <h1>Product Dashboard</h1>
-      <div className="product-tabs">
+
+      <div className="tabs-container">
         <button
-          className={`tab-button ${activeTab === 'product' ? 'active' : ''}`}
+          className={activeTab === 'product' ? 'active-tab' : ''}
           onClick={() => setActiveTab('product')}
         >
-          Product
+          Products
         </button>
         <button
-          className={`tab-button ${activeTab === 'reviews' ? 'active' : ''}`}
+          className={activeTab === 'reviews' ? 'active-tab' : ''}
           onClick={() => setActiveTab('reviews')}
         >
           Reviews
         </button>
         <button
-          className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
+          className={activeTab === 'orders' ? 'active-tab' : ''}
           onClick={() => setActiveTab('orders')}
         >
           Orders
         </button>
         <button
-          className={`tab-button ${activeTab === 'category' ? 'active' : ''}`}
+          className={activeTab === 'category' ? 'active-tab' : ''}
           onClick={() => setActiveTab('category')}
         >
           Category
         </button>
       </div>
-      {renderContent()}
+
+      {activeTab === 'product' && (
+        <section className="product-section">
+          <h2>Product Management</h2>
+          <ProductManagement username={username} />
+        </section>
+      )}
+
+      {activeTab === 'reviews' && (
+        <section className="product-section">
+          <h2>Review Approval</h2>
+          <ReviewApproval username={username} />
+        </section>
+      )}
+
+      {activeTab === 'orders' && (
+        <section className="product-section">
+          <h2>Order Tracking</h2>
+          <OrderTracking />
+        </section>
+      )}
+
+      {activeTab === 'category' && (
+        <section className="product-section">
+          <h2>Category Management</h2>
+          <CategoryManagement />
+        </section>
+      )}
     </div>
   );
 };
