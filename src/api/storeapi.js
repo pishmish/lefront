@@ -12,6 +12,7 @@ export const fetchSupplierByProductId = (id) => API.get(`/store/supplier/${id}`)
 export const createProduct = (data) => API.post('/store/product', data); // Create new product
 export const updateProduct = (id, data) => API.put(`/store/product/${id}`, data); // Update product
 export const deleteProduct = (id) => API.delete(`/store/product/${id}`); // Delete product
+export const incrementProductPopularity = (id) => API.put(`/store/product/popularity/${id}`); // Increment product popularity
 //export const fetchProductsBySupplier = (supplierId) => API.get(`/store/product/supplier/${supplierId}`);
 export const fetchProductsForManager= (username) => API.get(`/store/product/admin/${username}`);
 

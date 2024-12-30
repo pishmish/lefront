@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './ProductDetailPage.css';
-import { fetchProductById, getProductImage, fetchSupplierByProductId } from '../../api/storeapi';
+import { fetchProductById, getProductImage, fetchSupplierByProductId, incrementProductPopularity } from '../../api/storeapi';
 import { fetchCart, addProductToCart } from '../../api/cartapi'; // Add product to cart API
 import ReviewComponent from '../../components/ReviewComponent/ReviewComponent';
 import { jwtDecode } from 'jwt-decode';
@@ -21,6 +21,13 @@ const ProductDetailPage = () => {
   const [customerID, setCustomerID] = useState(null);
   const [currentCartQuantity, setCurrentCartQuantity] = useState(0); // Add state for cart quantity
   const [isWishlisted, setIsWishlisted] = useState(false);
+
+  // Add this useEffect after states and before other functions
+  useEffect(() => {
+    if (productId) {
+      incrementProductPopularity(productId).catch(console.error);
+    }
+  }, [productId]);
 
   // Initialize color matcher
   const colors = colornames.reduce((accumulator, { name, hex }) => {
