@@ -298,3 +298,67 @@
   font-size: 14px;
   text-align: center;
 }
+
+.product-card {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.product-header {
+  padding: 15px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.product-header:hover {
+  background-color: #f0f0f0;
+}
+
+.product-name {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.product-quantity {
+  color: #666;
+}
+
+.product-refund-form {
+  padding: 20px;
+  border-top: 1px solid #eee;
+  background-color: #fff;
+}
+
+.quantity-input,
+.reason-input {
+  margin-bottom: 15px;
+}
+
+.quantity-input label,
+.reason-input label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.quantity-input input {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.reason-input textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}

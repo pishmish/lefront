@@ -11,6 +11,13 @@
   gap: 20px;
 }
 
+.refund-amount {
+  margin: 10px 0;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
 .refund-card {
   background-color: #ffffff;
   border: 1px solid #ddd;
@@ -237,11 +244,12 @@
 
 /* Add styles for refund cost */
 .refund-cost {
-  margin-top: 10px;
-  padding: 8px;
+  margin-top: 15px;
+  padding: 12px;
   background-color: #f8f9fa;
-  border-radius: 4px;
-  text-align: right;
+  border-radius: 6px;
+  text-align: center;
+  border: 1px solid #e9ecef;
 }
 
 .refund-cost p {

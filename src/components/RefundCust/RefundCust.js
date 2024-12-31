@@ -16,6 +16,7 @@ const RefundCust = () => {
   const [error, setError] = useState(null);
   const [submitError, setSubmitError] = useState(null); // Add new state for submit error
   const errorTimerRef = useRef(null); // Add timer ref at the top of component
+  const [expandedProducts, setExpandedProducts] = useState({}); // Add new state at the top of the component after other state declarations
 
   // Add helper function at the top of the component
   const getStatusDisplay = (status) => {
@@ -245,6 +246,14 @@ const RefundCust = () => {
     };
   }, [submitError]);
 
+  // Add new handler after other handlers
+  const toggleProductExpand = (productID) => {
+    setExpandedProducts(prev => ({
+      ...prev,
+      [productID]: !prev[productID]
+    }));
+  };
+
   return (
     <div className="refund-cust">
       {/* Accordion for Past Refund Requests */}
@@ -338,44 +347,61 @@ const RefundCust = () => {
             </div>
           )}
           {orderDetails.orderItems && orderDetails.orderItems.map((item) => (
-            <div key={item.productID} className="order-item-detail">
-              <div className="product-info">
-                <p className="product-name">{item.productName}</p>
-                <p className="product-quantity">
-                  Available Quantity: {item.quantity}
-                </p>
-              </div>
-              {selectedOrder.deliveryStatus === 'Processing' && (
-                <div className="delete-item">
-                  <button className="refundButton" onClick={() => handleDelete(item.productID)}>
-                    Delete
-                  </button>
+            <div key={item.productID} className="product-card">
+              <div 
+                className="product-header"
+                onClick={() => toggleProductExpand(item.productID)}
+              >
+                <div>
+                  <span className="product-name">{item.productName}</span>
+                  <span className="product-quantity"> (Qty: {item.quantity})</span>
                 </div>
-              )}
-              {selectedOrder.deliveryStatus === 'Delivered' && (
-                <div className="return-quantity">
-                  <input
-                    type="number"
-                    min="1"
-                    max={item.quantity}
-                    placeholder="Enter quantity"
-                    onChange={(e) =>
-                      handleQuantityChange(e, item.productID, item.quantity)
-                    }
-                  />
-                  <textarea
-                    placeholder="Reason for return"
-                    value={reasons[item.productID] || ''}
-                    onChange={(e) => handleReasonChange(e, item.productID)}
-                  ></textarea>
+                <span>{expandedProducts[item.productID] ? '▼' : '▶'}</span>
+              </div>
+              
+              {expandedProducts[item.productID] && (
+                <div className="product-refund-form">
+                  {selectedOrder.deliveryStatus === 'Processing' ? (
+                    <button 
+                      className="refundButton" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(item.productID);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  ) : selectedOrder.deliveryStatus === 'Delivered' && (
+                    <>
+                      <div className="quantity-input">
+                        <label>Return Quantity:</label>
+                        <input
+                          type="number"
+                          min="1"
+                          max={item.quantity}
+                          placeholder="Quantity"
+                          onChange={(e) => handleQuantityChange(e, item.productID, item.quantity)}
+                        />
+                      </div>
+                      <div className="reason-input">
+                        <label>Reason for Return:</label>
+                        <textarea
+                          placeholder="Please provide a reason for return"
+                          value={reasons[item.productID] || ''}
+                          onChange={(e) => handleReasonChange(e, item.productID)}
+                        ></textarea>
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
           ))}
           {selectedOrder.deliveryStatus === 'Delivered' && (
-            <button className="refundButton" onClick={handleSubmit}>Submit Refund Request</button>
+            <button className="refundButton" onClick={handleSubmit}>
+              Submit Refund Request
+            </button>
           )}
-          {submitError && <div className="error-message">{submitError}</div>}
         </div>
       )}
     </div>

@@ -11,6 +11,7 @@ const Refund = ({ searchQuery }) => {
   const [completedFilter, setCompletedFilter] = useState(true); // Track completed status checkbox
   const [expandedOrderID, setExpandedOrderID] = useState(null); // Track which order ID is expanded in accordion
   const [refundStatuses, setRefundStatuses] = useState({}); // Add new state for refund statuses
+  const [refundAmounts, setRefundAmounts] = useState({}); // Add to state declarations at top
 
   useEffect(() => {
     const fetchRefundRequests = async () => {
@@ -61,12 +62,13 @@ const Refund = ({ searchQuery }) => {
     const fetchAllCosts = async () => {
       const costs = {};
       for (const request of refundRequests) {
-        if (request.returnStatus === 'completed') {
+        if (request.returnStatus === 'completed' || request.returnStatus === 'productReceived' || refundStatuses[request.requestID] === 'authorized') {
           try {
             const costResponse = await getReturnCost(request.requestID);
             if (costResponse.status === 200) {
               costs[request.requestID] = costResponse.data.cost;
             }
+            console.log('costResponse', costResponse.data.cost);
           } catch (err) {
             console.error(`Error fetching cost for request ${request.requestID}:`, err);
           }
@@ -90,19 +92,33 @@ const Refund = ({ searchQuery }) => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await getReturnRequestStatus(id);
-
+      const response = await updateReturnRequestStatus(id, newStatus);
+      
       if (!response || response.status !== 200) {
         throw new Error(response.msg || 'Failed to update status');
       }
 
-      const updatedRequest = refundRequests.map((request) =>
-        request.requestID === id ? { ...request, returnStatus: newStatus } : request
+      // Fetch refund amount when status changes to productReceived
+      if (newStatus === 'productReceived') {
+        const costResponse = await getReturnCost(id);
+        if (costResponse.status === 200) {
+          setRefundCosts(prev => ({
+            ...prev,
+            [id]: costResponse.data.cost
+          }));
+        }
+        
+        setRefundStatuses(prev => ({
+          ...prev,
+          [id]: 'pending'
+        }));
+      }
+
+      setRefundRequests((prevRequests) =>
+        prevRequests.map((request) =>
+          request.requestID === id ? { ...request, returnStatus: newStatus } : request
+        )
       );
-
-      setRefundRequests(updatedRequest);
-
-      updateReturnRequestStatus(id, newStatus);
 
       alert('Status updated successfully!');
     } catch (err) {
@@ -275,10 +291,13 @@ const Refund = ({ searchQuery }) => {
                     <p><strong>Customer ID:</strong> {request.customerID}</p>
                   </div>
                   <div className="refund-actions">
-                    {refundStatuses[request.requestID] === 'pending' && request.returnStatus !== 'rejected' && (
+                    {request.returnStatus === 'pending' && (
                       <>
-                        <button onClick={() => handleAuthorizePayment(request.requestID)}>
-                          Authorize Payment
+                        <button 
+                          onClick={() => handleStatusChange(request.requestID, 'approved')}
+                          className="accept-button"
+                        >
+                          Accept Request
                         </button>
                         <button 
                           onClick={() => handleReject(request.requestID)}
@@ -288,16 +307,47 @@ const Refund = ({ searchQuery }) => {
                         </button>
                       </>
                     )}
-                    {refundStatuses[request.requestID] === 'authorized' && request.returnStatus !== 'rejected' && (
-                      <button onClick={() => handleDoRefund(request.requestID)}>
+
+                    {request.returnStatus === 'approved' && (
+                      <button 
+                        onClick={() => handleStatusChange(request.requestID, 'productReceived')}
+                        className="product-received-button"
+                      >
+                        Product Received
+                      </button>
+                    )}
+
+                    {(request.returnStatus === 'completed' || request.returnStatus === 'rejected' || request.returnStatus === 'productReceived' || refundStatuses[request.requestID] !== 'pending') && (
+                      <div className="refund-status-log">
+                        <p>Refund Status: {
+                          request.returnStatus === 'rejected' 
+                            ? 'Rejected' 
+                            : refundStatuses[request.requestID] || 'pending'
+                        }</p>
+                      </div>
+                    )}
+
+                    {request.returnStatus === 'productReceived' && refundStatuses[request.requestID] === 'pending' && (
+                      <button 
+                        onClick={() => handleAuthorizePayment(request.requestID)}
+                        className="authorize-button"
+                      >
+                        Authorize Payment
+                      </button>
+                    )}
+
+                    {refundStatuses[request.requestID] === 'authorized' && (
+                      <button 
+                        onClick={() => handleDoRefund(request.requestID)}
+                        className="refund-button"
+                      >
                         Do Refund
                       </button>
                     )}
-                    <div className="refund-status-log">
-                      <p>Refund Status: {refundStatuses[request.requestID] || 'pending'}</p>
-                    </div>
                   </div>
-                  {request.returnStatus === 'completed' && (
+                  {(request.returnStatus === 'productReceived' || 
+                    refundStatuses[request.requestID] === 'authorized' || 
+                    request.returnStatus === 'completed') && (
                     <div className="refund-cost">
                       <p><strong>Refund Amount:</strong> ${refundCosts[request.requestID] || '0.00'}</p>
                     </div>
