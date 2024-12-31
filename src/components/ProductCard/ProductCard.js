@@ -2,14 +2,38 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
-import { getProductImage } from '../../api/storeapi';
+import { fetchProductById, getProductImage } from '../../api/storeapi';
 import { isProductInWishlist, addProductToWishlist, removeProductFromWishlist } from '../../api/wishlistapi';
-import './ProductCard.css'; // Ensure you have appropriate CSS for .wishlisted
+import './ProductCard.css';
 
-const ProductCard = ({ id, name, price, stock, initialWishlisted = false, onWishlistRemove }) => {
+const ProductCard = ({ id, onWishlistRemove }) => {
   const navigate = useNavigate();
-  const [isWishlisted, setIsWishlisted] = useState(initialWishlisted);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const [image, setImage] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch product details
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      try {
+        const response = await fetchProductById(id);
+        console.log('Product details:', response.data[0]);
+        if (response.status === 200) {
+          setProduct(response.data[0]);
+        } else {
+          console.error('Error fetching product details:', response.statusText);
+        }
+        
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductDetails();
+  }, [id]);
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -89,12 +113,26 @@ const ProductCard = ({ id, name, price, stock, initialWishlisted = false, onWish
     }
   };
 
-  const numericPrice = parseFloat(price);
+  if (loading || !product) {
+    return <div className="product-card">Loading...</div>;
+  }
+
+  const numericPrice = parseFloat(product.unitPrice);
+  const hasDiscount = product.discountPercentage > 0;
+  const discountedPrice = hasDiscount ? 
+    numericPrice * (1 - product.discountPercentage / 100) : 
+    numericPrice;
   const displayPrice = !isNaN(numericPrice) ? numericPrice.toFixed(2) : 'N/A';
+  const displayDiscountedPrice = !isNaN(discountedPrice) ? discountedPrice.toFixed(2) : 'N/A';
 
   return (
     <div className="product-card">
-      {/* Wishlist Icon */}
+      {hasDiscount && (
+        <div className="discount-badge">
+          -{product.discountPercentage}%
+        </div>
+      )}
+      
       <div
         className={`wishlist-icon ${isWishlisted ? 'wishlisted' : ''}`}
         onClick={handleWishlist}
@@ -102,19 +140,25 @@ const ProductCard = ({ id, name, price, stock, initialWishlisted = false, onWish
         <i className={`fa-heart ${isWishlisted ? 'fas' : 'far'}`}></i>
       </div>
 
-      {/* Product Image */}
       <div className="product-card-image" onClick={handleViewProduct}>
-        {image ? <img src={image} alt={name} /> : <p>Loading image...</p>}
+        {image ? <img src={image} alt={product.name} /> : <p>Loading image...</p>}
       </div>
 
-      {/* Product Info */}
       <div className="product-card-info">
-        <h3 className="product-card-name">{name}</h3>
-        <p className="product-card-price">${displayPrice}</p>
-        <p className="product-card-stock">Stock: {stock}</p>
+        <h3 className="product-card-name">{product.name}</h3>
+        <div className="price-container">
+          {hasDiscount ? (
+            <>
+              <p className="original-price">${displayPrice}</p>
+              <p className="discounted-price">${displayDiscountedPrice}</p>
+            </>
+          ) : (
+            <p className="product-card-price">${displayPrice}</p>
+          )}
+        </div>
+        <p className="product-card-stock">Stock: {product.stock}</p>
       </div>
 
-      {/* View Product Button */}
       <button className="view-product-button" onClick={handleViewProduct}>
         View Product
       </button>

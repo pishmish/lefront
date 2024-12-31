@@ -68,9 +68,6 @@ const ProductListingPage = () => {
               <ProductCard
                 key={product.productID}
                 id={product.productID}
-                name={product.name}
-                price={product.unitPrice}
-                stock={product.stock}
               />
             ))
           ) : (

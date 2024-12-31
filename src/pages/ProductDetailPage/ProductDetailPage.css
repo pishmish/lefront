@@ -21,6 +21,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  position: relative; /* Add this */
 }
 
 .product-image {
@@ -220,10 +221,42 @@
 /* Container for Price and Stock */
 .price-stock-container {
   display: flex;
-  justify-content: flex-end; /* Aligns items to the right */
+  justify-content: space-between;
   align-items: center;
-  gap: 1rem; /* Adds space between price and stock */
-  margin-top: 1rem; /* Adds spacing above the container */
+  margin: 1rem 0;
+}
+
+.price-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.discount-badge-detail {
+  background-color: #ff4444;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 1rem;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.original-price-detail {
+  color: red;
+  text-decoration: line-through;
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.discounted-price-detail {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.7rem;
+  margin: 0;
 }
 
 /* Product Price */
@@ -252,6 +285,13 @@
   .product-price,
   .product-stock {
     text-align: left; /* Ensures text is aligned to the left */
+  }
+
+  .discount-badge-detail {
+    top: 10px;
+    right: 10px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
   }
 }
 

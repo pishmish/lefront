@@ -293,7 +293,12 @@ const ProductDetailPage = () => {
 
   // Format price for display
   const numericPrice = parseFloat(product.unitPrice);
+  const hasDiscount = product.discountPercentage > 0;
+  const discountedPrice = hasDiscount ? 
+    numericPrice * (1 - product.discountPercentage / 100) : 
+    numericPrice;
   const displayPrice = !isNaN(numericPrice) ? numericPrice.toFixed(2) : 'N/A';
+  const displayDiscountedPrice = !isNaN(discountedPrice) ? discountedPrice.toFixed(2) : 'N/A';
 
   // Get closest color hex code
   const closestColorHex = getClosestColor(product.color);
@@ -317,6 +322,11 @@ const ProductDetailPage = () => {
       <div className="product-top-section">
         {/* Product Images */}
         <div className="product-images">
+          {hasDiscount && (
+            <div className="discount-badge-detail">
+              -{product.discountPercentage}%
+            </div>
+          )}
           {image ? (
             <img src={image} alt={product.name} className="product-image" />
           ) : (
@@ -382,7 +392,14 @@ const ProductDetailPage = () => {
 
           {/* Price and Stock */}
           <div className="price-stock-container">
-            <p className="product-price">${displayPrice}</p>
+            {hasDiscount ? (
+              <div className="price-wrapper">
+                <p className="original-price-detail">${displayPrice}</p>
+                <p className="discounted-price-detail">${displayDiscountedPrice}</p>
+              </div>
+            ) : (
+              <p className="product-price">${displayPrice}</p>
+            )}
             <p className="product-stock">Stock: {product.stock}</p>
           </div>
 
