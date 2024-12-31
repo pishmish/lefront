@@ -62,7 +62,7 @@
 /* Login Button */
 .login-button {
   width: 40%;
-  padding: 0.9rem;
+  padding: 1.2rem 0.9rem;
   background-color: #000000;
   color: white;
   border: none;
@@ -72,6 +72,11 @@
   cursor: pointer;
   margin-bottom: 18px;
   transition: background-color 0.3s, transform 0.2s;
+  line-height: 1;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-button:hover {
