@@ -95,7 +95,7 @@ const InvoicePage = () => {
                 <th>Product</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
-                <th>Total</th>
+                <th>Subtotal</th>
               </tr>
             </thead>
             <tbody>
@@ -109,6 +109,12 @@ const InvoicePage = () => {
               ))}
             </tbody>
           </table>
+          <hr className="invoice-divider" />
+          <div className="total-section">
+            <p>Total: ${orderDetails?.orderItems?.reduce((sum, item) => 
+              sum + (parseFloat(item.quantity) * parseFloat(item.purchasePrice)), 0).toFixed(2) || '0.00'}
+            </p>
+          </div>
         </div>
       </div>
     </div>

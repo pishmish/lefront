@@ -81,6 +81,19 @@
   border-top: 2px solid #eee;
 }
 
+.invoice-divider {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #ddd;
+}
+
+.total-section {
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 10px 0;
+}
+
 @media print {
   .print-button {
     display: none;

@@ -39,7 +39,7 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
         setCartItems(productsWithImages);
         const calculatedTotal = productsWithImages.reduce(
-          (sum, item) => sum + parseFloat(item.unitPrice) * item.quantity,
+          (sum, item) => sum + parseFloat(item.unitPrice * (1 - item.discountPercentage/100)) * item.quantity,
           0
         );
         setTotal(calculatedTotal);
@@ -95,7 +95,7 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
           updatedProduct.quantity += 1;
           updatedCartItems[productIndex] = updatedProduct;
 
-          setTotal((prevTotal) => prevTotal + parseFloat(updatedProduct.unitPrice));
+          setTotal((prevTotal) => prevTotal + parseFloat(updatedProduct.unitPrice * (1 - updatedProduct.discountPercentage/100)));
           dispatchProductQuantityUpdate(productID, updatedProduct.quantity);
           
           return updatedCartItems;
@@ -122,11 +122,11 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
 
           if (updatedProduct.quantity > 0) {
             updatedCartItems[productIndex] = updatedProduct;
-            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
+            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice * (1 - updatedProduct.discountPercentage/100)));
             dispatchProductQuantityUpdate(productID, updatedProduct.quantity);
           } else {
             updatedCartItems.splice(productIndex, 1);
-            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice));
+            setTotal((prevTotal) => prevTotal - parseFloat(updatedProduct.unitPrice * (1 - updatedProduct.discountPercentage/100)));
             dispatchProductQuantityUpdate(productID, 0);
           }
 
@@ -149,7 +149,7 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         const itemToDelete = prevItems.find((item) => item.productID === productID);
         if (itemToDelete) {
           setTotal((prevTotal) => 
-            prevTotal - parseFloat(itemToDelete.unitPrice) * itemToDelete.quantity
+            prevTotal - parseFloat(itemToDelete.unitPrice * (1 - itemToDelete.discountPercentage/100)) * itemToDelete.quantity
           );
           dispatchProductQuantityUpdate(productID, 0);
         }
@@ -216,10 +216,28 @@ const CartSidebar = ({ isOpen, onClose, customerID, onCartUpdate }) => {
         <div className="cart-items">
           {cartItems.map((item) => (
             <div key={item.productID} className="cart-item">
-              <img src={item.imageUrl} alt={item.name} />
+              <div className="cart-item-image">
+                <img src={item.imageUrl} alt={item.name} />
+                {item.discountPercentage > 0 && (
+                  <div className="cart-discount-badge">
+                    -{item.discountPercentage}%
+                  </div>
+                )}
+              </div>
               <div className="cart-item-info">
                 <h3>{item.name}</h3>
-                <p>${parseFloat(item.unitPrice).toFixed(2)}</p>
+                <div className="cart-price-container">
+                  {item.discountPercentage > 0 ? (
+                    <>
+                      <p className="cart-original-price">${parseFloat(item.unitPrice).toFixed(2)}</p>
+                      <p className="cart-discounted-price">
+                        ${(parseFloat(item.unitPrice) * (1 - item.discountPercentage / 100)).toFixed(2)}
+                      </p>
+                    </>
+                  ) : (
+                    <p>${parseFloat(item.unitPrice).toFixed(2)}</p>
+                  )}
+                </div>
                 <div className="cart-item-controls">
                   <div className="quantity-controls">
                     <button 

@@ -55,7 +55,7 @@ const PaymentPage = () => {
 
         setCartItems(productsWithImages);
         const calculatedTotal = productsWithImages.reduce(
-          (sum, item) => sum + parseFloat(item.unitPrice) * item.quantity,
+          (sum, item) => sum + parseFloat(item.unitPrice * (1 - item.discountPercentage/100)) * item.quantity,
           0
         );
         setTotal(calculatedTotal);
@@ -224,11 +224,29 @@ const PaymentPage = () => {
             ) : (
               cartItems.map((item) => (
                 <div key={item.productID} className="cart-item">
-                  <img src={item.imageUrl} alt={item.name} />
+                  <div className="cart-item-image">
+                    <img src={item.imageUrl} alt={item.name} />
+                    {item.discountPercentage > 0 && (
+                      <div className="cart-discount-badge">
+                        -{item.discountPercentage}%
+                      </div>
+                    )}
+                  </div>
                   <div className="cart-item-info">
                     <h3>{item.name}</h3>
                     <p>Quantity: {item.quantity}</p>
-                    <p>Price: ${parseFloat(item.unitPrice).toFixed(2)}</p>
+                    <div className="cart-price-container">
+                      {item.discountPercentage > 0 ? (
+                        <>
+                          <p className="cart-original-price">${parseFloat(item.unitPrice).toFixed(2)}</p>
+                          <p className="cart-discounted-price">
+                            ${(parseFloat(item.unitPrice) * (1 - item.discountPercentage / 100)).toFixed(2)}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="cart-price">${parseFloat(item.unitPrice).toFixed(2)}</p>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))

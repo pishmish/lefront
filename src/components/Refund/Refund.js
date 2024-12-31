@@ -8,7 +8,7 @@ const Refund = ({ searchQuery }) => {
   const [error, setError] = useState(null);
   const [refundCosts, setRefundCosts] = useState({});
   const [activeFilter, setActiveFilter] = useState(true); // Track active status checkbox
-  const [completedFilter, setCompletedFilter] = useState(true); // Track completed status checkbox
+  const [completedFilter, setCompletedFilter] = useState(false); // Track completed status checkbox
   const [expandedOrderID, setExpandedOrderID] = useState(null); // Track which order ID is expanded in accordion
   const [refundStatuses, setRefundStatuses] = useState({}); // Add new state for refund statuses
   const [refundAmounts, setRefundAmounts] = useState({}); // Add to state declarations at top

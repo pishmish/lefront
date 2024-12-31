@@ -64,6 +64,14 @@
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Add new image container class */
+.cart-item-image {
+  position: relative;
+  width: 60px;
+  height: 60px;
 }
 
 .cart-item-info {
@@ -275,4 +283,38 @@
 
 .delete-button:hover svg {
   color: red; /* Trash icon turns red on hover */
+}
+
+.cart-discount-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #ff4444;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  z-index: 2;
+}
+
+.cart-price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cart-original-price {
+  color: #ff0000 !important; /* Bright red */
+  text-decoration: line-through;
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.cart-discounted-price {
+  color: #333;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 0;
 }

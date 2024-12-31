@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {jwtDecode} from 'jwt-decode';
 import { fetchUserOrders, fetchOrder, deleteOrderItem } from '../../api/orderapi';
-import { getCustomerReturnRequests, deleteReturnRequest, createReturnRequest } from '../../api/returnsapi';
+import { getCustomerReturnRequests, deleteReturnRequest, createReturnRequest, getReturnCost } from '../../api/returnsapi';
 import './RefundCust.css';
 
 const RefundCust = () => {
@@ -17,6 +17,7 @@ const RefundCust = () => {
   const [submitError, setSubmitError] = useState(null); // Add new state for submit error
   const errorTimerRef = useRef(null); // Add timer ref at the top of component
   const [expandedProducts, setExpandedProducts] = useState({}); // Add new state at the top of the component after other state declarations
+  const [refundCosts, setRefundCosts] = useState({}); // Add to state declarations at top
 
   // Add helper function at the top of the component
   const getStatusDisplay = (status) => {
@@ -64,7 +65,9 @@ const RefundCust = () => {
           throw new Error('Username not found in token');
         }
       const response = await getCustomerReturnRequests(username);
+      
       setPastRequests(response.data.requests || []); // Ensure we set array even if empty
+      console.log('Past requests:', response.data.requests);
     } catch (err) {
       setError(err.message);
       setPastRequests([]); // Reset to empty array on error
@@ -254,6 +257,33 @@ const RefundCust = () => {
     }));
   };
 
+  // Add new useEffect after other useEffects
+  useEffect(() => {
+    const fetchAllCosts = async () => {
+      const costs = {};
+      if (Array.isArray(pastRequests)) {
+        for (const request of pastRequests) {
+          if (request.returnStatus === 'completed' || 
+              request.returnStatus === 'productReceived') {
+            try {
+              const costResponse = await getReturnCost(request.requestID);
+              if (costResponse.status === 200) {
+                costs[request.requestID] = costResponse.data.cost;
+              }
+            } catch (err) {
+              console.error(`Error fetching cost for request ${request.requestID}:`, err);
+            }
+          }
+        }
+      }
+      setRefundCosts(costs);
+    };
+
+    if (pastRequests.length > 0) {
+      fetchAllCosts();
+    }
+  }, [pastRequests]);
+
   return (
     <div className="refund-cust">
       {/* Accordion for Past Refund Requests */}
@@ -290,8 +320,15 @@ const RefundCust = () => {
                     <p>
                       <strong>Quantity:</strong> {request.quantity}
                     </p>
+                    <p>
+                      <strong>Refund Amount:</strong> {
+                        request.returnStatus === 'completed' || request.returnStatus === 'productReceived' || request.returnStatus === 'pending' 
+                          ? `$${refundCosts[request.requestID] || '0.00'}`
+                          : 'Pending'
+                      }
+                    </p>
                   </div>
-                  {request.returnStatus !== 'completed' && request.returnStatus !== 'rejected' && (
+                  {request.returnStatus === 'pending' && (
                     <button className="refundButton" onClick={() => handleDeleteRequest(request.requestID)}>
                       Delete
                     </button>
