@@ -18,33 +18,32 @@
 ## Features
 
 ### For Customers
-  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#customer-home-page)
+  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Screenshot](screenshots.md#home-page)
   - **Advanced Product Discovery** 
-  - Smart filtering and sorting options [View Catalog](#customer-product-listings)
-  - Detailed product pages with high-resolution images [View Details](#customer-product-details)
+  - Smart filtering and sorting options [View Screenshot](screenshots.md#product-listings)
+  - Detailed product pages with high-resolution images [View Screenshot](screenshots.md#product-details)
   - Real-time stock updates
  
     
   - **Seamless Shopping Experience**
-  - Easy cart management [View Cart](#customer-shopping-cart)
-  - Wishlist functionality [View Wishlist](#customer-wishlist)
-  - Streamlined checkout process [View Checkout](#customer-checkout)
+  - Easy cart management [View Screenshot](screenshots.md#shopping-cart)
+  - Wishlist functionality [View Screenshot](screenshots.md#wishlist)
+  - Streamlined checkout process [View Screenshot](screenshots.md#checkout)
  
     
   -  **User Management**
-  - Secure authentication system [View Authentication](#customer-authentication)
+  - Secure authentication system [View Screenshot](screenshots.md#authentication)
   - Personal profile customization
   - Order history tracking
 
 ### For Administrators
   - **Comprehensive Dashboard**
-  - Real-time sales analytics [View Sales Dashboard](#admin-sales-dashboard)
-  - Customer insights [View Customer Info](#admin-customer-management)
+  - Real-time sales analytics [View Screenshot](screenshots.md#sales-dashboard)
+  - Customer insights [View Screenshot](screenshots.md#customer-management)
   - Inventory management
-
     
   - **Product Management**
-  - Bulk product upload [View Product Management](#admin-product-management)
+  - Bulk product upload [View Screenshot](screenshots.md#product-management)
   - Category management
   - Price and stock updates
     
@@ -192,17 +191,5 @@ The developers behind Zad à Dos:
 - Muhammad Haris 
 - Areeb Kamal 
 - Cem Görkem Baysal
-
-## We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the Sabancı University.
 
 ---
