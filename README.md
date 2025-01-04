@@ -9,8 +9,6 @@
 
 **Zad à Dos** is a modern, feature-rich e-commerce platform specialized in bag retail. Built with React.js and powered by Express.js & MySQL, it delivers a seamless shopping experience with enterprise-grade features.
 
-[View Demo](https://your-demo-link.com) 
-
 </div>
 
 ---
@@ -52,6 +50,24 @@
   - Detailed customer profiles
   - Order tracking
   - Communication tools
+
+---
+
+## Quick Navigation
+
+### Customer Interface Screenshots
+- [Home Page](#home-page-screenshot)
+- [Product Listings](#product-listings-screenshot)
+- [Product Details](#product-details-screenshot)
+- [Shopping Cart](#shopping-cart-screenshot)
+- [Wishlist](#wishlist-screenshot)
+- [Authentication](#authentication-screenshots)
+- [Checkout](#checkout-screenshot)
+
+### Admin Interface Screenshots
+- [Sales Dashboard](#sales-dashboard-screenshot)
+- [Product Management](#product-management-screenshot)
+- [Customer Management](#customer-management-screenshot)
 
 ---
 
@@ -100,60 +116,52 @@ Access the application at `http://localhost:3000`
 
 ## Screenshots
 
-### Customer Interface
+### Customer Interface Screenshots
 
-<details>
-<summary>Click to expand</summary>
-
-#### Home Page
+#### Home Page Screenshot
 ![Home Page](./screenshots/SS/home_page.JPG)
 *Engaging landing page with featured products and categories*
 
-#### Product Listings
+#### Product Listings Screenshot
 ![Product Listings](./screenshots/SS/Product_listings.JPG)
 *Comprehensive product catalog with advanced filtering*
 
-#### Product Details
+#### Product Details Screenshot
 ![Product Details](./screenshots/SS/Product_details.JPG)
 *Detailed product information with high-resolution images*
 
-#### Shopping Cart
+#### Shopping Cart Screenshot
 ![Shopping Cart](./screenshots/SS/cart.jpg)
 *Intuitive cart management system*
 
-#### Wishlist
+#### Wishlist Screenshot
 ![Wishlist](./screenshots/SS/wishlist.jpg)
 *Personal wishlist for saved items*
 
-#### Authentication
+#### Authentication Screenshots
 ![Login Page](./screenshots/SS/login.JPG)
 *Secure user login system*
 
 ![Sign-Up Page](./screenshots/SS/signup.JPG)
 *User-friendly registration process*
 
-#### Checkout
+#### Checkout Screenshot
 ![Checkout](./screenshots/SS/checkout.JPG)
 *Streamlined checkout experience*
-</details>
 
-### Admin Interface
+### Admin Interface Screenshots
 
-<details>
-<summary>Click to expand</summary>
-
-#### Sales Dashboard
+#### Sales Dashboard Screenshot
 ![Sales Overview](./screenshots/SS/Sales_Overview.JPG)
 *Comprehensive sales analytics and reporting*
 
-#### Product Management
+#### Product Management Screenshot
 ![Manage Products](./screenshots/SS/Manage_Products.JPG)
 *Advanced product management interface*
 
-#### Customer Management
+#### Customer Management Screenshot
 ![Customer Info](./screenshots/SS/customer_info.JPG)
 *Detailed customer insights and management*
-</details>
 
 ---
 
@@ -196,4 +204,3 @@ The developers behind Zad à Dos:
 This project is licensed under the Sabancı University.
 
 ---
-
