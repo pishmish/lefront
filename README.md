@@ -18,33 +18,33 @@
 ## Features
 
 ### For Customers
-  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#home-page)
+  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#customer-home-page)
   - **Advanced Product Discovery** 
-  - Smart filtering and sorting options [View Catalog](#product-listings)
-  - Detailed product pages with high-resolution images [View Details](#product-details)
+  - Smart filtering and sorting options [View Catalog](#customer-product-listings)
+  - Detailed product pages with high-resolution images [View Details](#customer-product-details)
   - Real-time stock updates
  
     
   - **Seamless Shopping Experience**
-  - Easy cart management [View Cart](#shopping-cart)
-  - Wishlist functionality [View Wishlist](#wishlist)
-  - Streamlined checkout process [View Checkout](#checkout)
+  - Easy cart management [View Cart](#customer-shopping-cart)
+  - Wishlist functionality [View Wishlist](#customer-wishlist)
+  - Streamlined checkout process [View Checkout](#customer-checkout)
  
     
   -  **User Management**
-  - Secure authentication system [View Authentication](#authentication)
+  - Secure authentication system [View Authentication](#customer-authentication)
   - Personal profile customization
   - Order history tracking
 
 ### For Administrators
   - **Comprehensive Dashboard**
-  - Real-time sales analytics [View Sales Dashboard](#sales-dashboard)
-  - Customer insights [View Customer Info](#customer-management)
+  - Real-time sales analytics [View Sales Dashboard](#admin-sales-dashboard)
+  - Customer insights [View Customer Info](#admin-customer-management)
   - Inventory management
 
     
   - **Product Management**
-  - Bulk product upload [View Product Management](#product-management)
+  - Bulk product upload [View Product Management](#admin-product-management)
   - Category management
   - Price and stock updates
     
@@ -103,36 +103,43 @@ Access the application at `http://localhost:3000`
 ### Customer Interface
 
 <details>
-<summary>Click to expand</summary>
+<summary>Customer Interface Screenshots</summary>
 
-#### Home Page
+<h4 id="customer-home-page">Home Page</h4>
+
 ![Home Page](./screenshots/SS/home_page.JPG)
 *Engaging landing page with featured products and categories*
 
-#### Product Listings
+<h4 id="customer-product-listings">Product Listings</h4>
+
 ![Product Listings](./screenshots/SS/Product_listings.JPG)
 *Comprehensive product catalog with advanced filtering*
 
-#### Product Details
+<h4 id="customer-product-details">Product Details</h4>
+
 ![Product Details](./screenshots/SS/Product_details.JPG)
 *Detailed product information with high-resolution images*
 
-#### Shopping Cart
+<h4 id="customer-shopping-cart">Shopping Cart</h4>
+
 ![Shopping Cart](./screenshots/SS/cart.jpg)
 *Intuitive cart management system*
 
-#### Wishlist
+<h4 id="customer-wishlist">Wishlist</h4>
+
 ![Wishlist](./screenshots/SS/wishlist.jpg)
 *Personal wishlist for saved items*
 
-#### Authentication
+<h4 id="customer-authentication">Authentication</h4>
+
 ![Login Page](./screenshots/SS/login.JPG)
 *Secure user login system*
 
 ![Sign-Up Page](./screenshots/SS/signup.JPG)
 *User-friendly registration process*
 
-#### Checkout
+<h4 id="customer-checkout">Checkout</h4>
+
 ![Checkout](./screenshots/SS/checkout.JPG)
 *Streamlined checkout experience*
 </details>
@@ -140,17 +147,20 @@ Access the application at `http://localhost:3000`
 ### Admin Interface
 
 <details>
-<summary>Click to expand</summary>
+<summary>Admin Interface Screenshots</summary>
 
-#### Sales Dashboard
+<h4 id="admin-sales-dashboard">Sales Dashboard</h4>
+
 ![Sales Overview](./screenshots/SS/Sales_Overview.JPG)
 *Comprehensive sales analytics and reporting*
 
-#### Product Management
+<h4 id="admin-product-management">Product Management</h4>
+
 ![Manage Products](./screenshots/SS/Manage_Products.JPG)
 *Advanced product management interface*
 
-#### Customer Management
+<h4 id="admin-customer-management">Customer Management</h4>
+
 ![Customer Info](./screenshots/SS/customer_info.JPG)
 *Detailed customer insights and management*
 </details>
@@ -196,4 +206,3 @@ The developers behind Zad à Dos:
 This project is licensed under the Sabancı University.
 
 ---
-
