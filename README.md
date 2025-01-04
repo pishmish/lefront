@@ -1,5 +1,3 @@
-
-
 <div align="center">
 
 # Zad à Dos - Modern E-commerce Platform
@@ -20,33 +18,33 @@
 ## Features
 
 ### For Customers
-  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#customer-home-page)
+  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home Page](#home-page)
   - **Advanced Product Discovery** 
-  - Smart filtering and sorting options [View Catalog](#customer-product-listings)
-  - Detailed product pages with high-resolution images [View Details](#customer-product-details)
+  - Smart filtering and sorting options [View Catalog](#product-listings)
+  - Detailed product pages with high-resolution images [View Details](#product-details)
   - Real-time stock updates
  
     
   - **Seamless Shopping Experience**
-  - Easy cart management [View Cart](#customer-shopping-cart)
-  - Wishlist functionality [View Wishlist](#customer-wishlist)
-  - Streamlined checkout process [View Checkout](#customer-checkout)
+  - Easy cart management [View Cart](#shopping-cart)
+  - Wishlist functionality [View Wishlist](#wishlist)
+  - Streamlined checkout process [View Checkout](#checkout)
  
     
   -  **User Management**
-  - Secure authentication system [View Authentication](#customer-authentication)
+  - Secure authentication system [View Authentication](#authentication)
   - Personal profile customization
   - Order history tracking
 
 ### For Administrators
   - **Comprehensive Dashboard**
-  - Real-time sales analytics [View Sales Dashboard](#admin-sales-dashboard)
-  - Customer insights [View Customer Info](#admin-customer-management)
+  - Real-time sales analytics [View Sales Dashboard](#sales-dashboard)
+  - Customer insights [View Customer Info](#customer-management)
   - Inventory management
 
     
   - **Product Management**
-  - Bulk product upload [View Product Management](#admin-product-management)
+  - Bulk product upload [View Product Management](#product-management)
   - Category management
   - Price and stock updates
     
@@ -104,59 +102,58 @@ Access the application at `http://localhost:3000`
 
 ### Customer Interface
 
-<details id="customer-interface">
-<summary>Customer Interface Screenshots</summary>
+<details>
+<summary>Click to expand</summary>
 
-#### Home Page {#customer-home-page}
+#### Home Page
 ![Home Page](./screenshots/SS/home_page.JPG)
 *Engaging landing page with featured products and categories*
 
-#### Product Listings {#customer-product-listings}
+#### Product Listings
 ![Product Listings](./screenshots/SS/Product_listings.JPG)
 *Comprehensive product catalog with advanced filtering*
 
-#### Product Details {#customer-product-details}
+#### Product Details
 ![Product Details](./screenshots/SS/Product_details.JPG)
 *Detailed product information with high-resolution images*
 
-#### Shopping Cart {#customer-shopping-cart}
+#### Shopping Cart
 ![Shopping Cart](./screenshots/SS/cart.jpg)
 *Intuitive cart management system*
 
-#### Wishlist {#customer-wishlist}
+#### Wishlist
 ![Wishlist](./screenshots/SS/wishlist.jpg)
 *Personal wishlist for saved items*
 
-#### Authentication {#customer-authentication}
+#### Authentication
 ![Login Page](./screenshots/SS/login.JPG)
 *Secure user login system*
 
 ![Sign-Up Page](./screenshots/SS/signup.JPG)
 *User-friendly registration process*
 
-#### Checkout {#customer-checkout}
+#### Checkout
 ![Checkout](./screenshots/SS/checkout.JPG)
 *Streamlined checkout experience*
 </details>
 
 ### Admin Interface
 
-<details id="admin-interface">
-<summary>Admin Interface Screenshots</summary>
+<details>
+<summary>Click to expand</summary>
 
-#### Sales Dashboard {#admin-sales-dashboard}
+#### Sales Dashboard
 ![Sales Overview](./screenshots/SS/Sales_Overview.JPG)
 *Comprehensive sales analytics and reporting*
 
-#### Product Management {#admin-product-management}
+#### Product Management
 ![Manage Products](./screenshots/SS/Manage_Products.JPG)
 *Advanced product management interface*
 
-#### Customer Management {#admin-customer-management}
+#### Customer Management
 ![Customer Info](./screenshots/SS/customer_info.JPG)
 *Detailed customer insights and management*
 </details>
-
 
 ---
 
@@ -186,6 +183,17 @@ The developers behind Zad à Dos:
 - Areeb Kamal 
 - Cem Görkem Baysal
 
+## We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the Sabancı University.
 
 ---
 
