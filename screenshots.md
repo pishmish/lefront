@@ -1,22 +1,5 @@
 # Zad à Dos Screenshots
 
-## Quick Navigation
-
-### Customer Interface
-- [Home Page](#home-page)
-- [Product Listings](#product-listings)
-- [Product Details](#product-details)
-- [Shopping Cart](#shopping-cart)
-- [Wishlist](#wishlist)
-- [Authentication](#authentication)
-- [Checkout](#checkout)
-
-### Admin Interface
-- [Sales Dashboard](#sales-dashboard)
-- [Product Management](#product-management)
-- [Customer Management](#customer-management)
-
-
 ### [Return to README](README.md)
 
 
