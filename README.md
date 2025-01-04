@@ -18,32 +18,32 @@
 ## Features
 
 ### For Customers
-  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Screenshot](screenshots.md#home-page)
+  - **Intuitive Home Page** - Showcase of featured products and trending categories [View Home_Page](screenshots.md#home-page)
   - **Advanced Product Discovery** 
-  - Smart filtering and sorting options [View Screenshot](screenshots.md#product-listings)
-  - Detailed product pages with high-resolution images [View Screenshot](screenshots.md#product-details)
+  - Smart filtering and sorting options [View product_listings](screenshots.md#product-listings)
+  - Detailed product pages with high-resolution images [View product_details](screenshots.md#product-details)
   - Real-time stock updates
  
     
   - **Seamless Shopping Experience**
-  - Easy cart management [View Screenshot](screenshots.md#shopping-cart)
-  - Wishlist functionality [View Screenshot](screenshots.md#wishlist)
-  - Streamlined checkout process [View Screenshot](screenshots.md#checkout)
+  - Easy cart management [View cart](screenshots.md#shopping-cart)
+  - Wishlist functionality [View wishlist](screenshots.md#wishlist)
+  - Streamlined checkout process [View checkout](screenshots.md#checkout)
  
     
   -  **User Management**
-  - Secure authentication system [View Screenshot](screenshots.md#authentication)
+  - Secure authentication system [View authentication](screenshots.md#authentication)
   - Personal profile customization
   - Order history tracking
 
 ### For Administrators
   - **Comprehensive Dashboard**
-  - Real-time sales analytics [View Screenshot](screenshots.md#sales-dashboard)
-  - Customer insights [View Screenshot](screenshots.md#customer-management)
+  - Real-time sales analytics [View Sales_Dashboard](screenshots.md#sales-dashboard)
+  - Customer insights [View Customer_info](screenshots.md#customer-management)
   - Inventory management
     
   - **Product Management**
-  - Bulk product upload [View Screenshot](screenshots.md#product-management)
+  - Bulk product upload [View Product_Managment](screenshots.md#product-management)
   - Category management
   - Price and stock updates
     
