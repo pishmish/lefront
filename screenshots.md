@@ -16,6 +16,9 @@
 - [Product Management](#product-management)
 - [Customer Management](#customer-management)
 
+[Return to README](README.md)
+
+
 ## Customer Interface
 
 ### Home Page
