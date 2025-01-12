@@ -20,9 +20,11 @@ const SignUpPage = () => {
       streetAddress: '',
     },
     phone: '',
+    taxID: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,6 +63,7 @@ const SignUpPage = () => {
     setErrorMessage('');
   };
 
+  // Update handleSignUp
   const handleSignUp = async (e) => {
     e.preventDefault();
     setErrorMessage('');
@@ -73,7 +76,8 @@ const SignUpPage = () => {
         username: formData.username,
         password: formData.password,
         address: formData.address,
-        phone: formData.phone
+        phone: formData.phone,
+        taxID: formData.taxID
       };
 
       await registerUser(userData);
@@ -120,6 +124,17 @@ const SignUpPage = () => {
                   />
                 </div>
                 <div className="form-group">
+                  <label htmlFor="phone">Phone Number*</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
                   <label htmlFor="username">Username*</label>
                   <input
                     type="text"
@@ -161,12 +176,12 @@ const SignUpPage = () => {
             ) : (
               <>
                 <div className="form-group">
-                  <label htmlFor="phone">Phone Number*</label>
+                  <label htmlFor="taxID">Tax ID*</label>
                   <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
+                    type="id"
+                    id="taxID"
+                    name="taxID"
+                    value={formData.taxID}
                     onChange={handleChange}
                     required
                   />

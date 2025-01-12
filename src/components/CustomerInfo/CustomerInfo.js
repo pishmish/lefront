@@ -23,7 +23,10 @@ const CustomerInfo = () => {
         setUpdatedData({
           name: response.data.user.name,
           phone: response.data.customer.phone || "",
+          email: response.data.user.email,
+          taxID: response.data.customer.taxID || "",
         });
+        console.log("userData:", userData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
         setErrorMessage("Failed to load user data. Please try again later.");
@@ -51,8 +54,8 @@ const CustomerInfo = () => {
       await updateUserProfile(updatedData);
       setUserData({
         ...userData,
-        user: { ...userData.user, name: updatedData.name },
-        customer: { ...userData.customer, phone: updatedData.phone },
+        user: { ...userData.user, name: updatedData.name, email: updatedData.email },
+        customer: { ...userData.customer, phone: updatedData.phone, taxID: updatedData.taxID },
       });
       setIsEditing(false);
     } catch (error) {
@@ -85,6 +88,19 @@ const CustomerInfo = () => {
           )}
         </p>
         <p>
+          <strong>Email:</strong>{" "}
+          {isEditing ? (
+            <input
+              type="text"
+              name="email"
+              value={updatedData.email}
+              onChange={handleInputChange}
+            />
+          ) : (
+            userData.user.email
+          )}
+        </p>
+        <p>
           <strong>Phone:</strong>{" "}
           {isEditing ? (
             <input
@@ -95,6 +111,19 @@ const CustomerInfo = () => {
             />
           ) : (
             userData.customer.phone || "No phone number provided"
+          )}
+        </p>
+        <p>
+          <strong>Tax ID:</strong>{" "}
+          {isEditing ? (
+            <input
+              type="number"
+              name="taxID"
+              value={updatedData.taxID}
+              onChange={handleInputChange}
+            />
+          ) : (
+            userData.customer.taxID || "No tax ID provided"
           )}
         </p>
         <p>
