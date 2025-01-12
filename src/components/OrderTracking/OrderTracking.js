@@ -63,6 +63,7 @@ const OrderTracking = () => {
       if (!orderDetails[orderId]) {
         try {
           const response = await fetchOrder(orderId);
+          console.log('Order details:', response.data);
           const addressResponse = await fetchAddressById(response.data.deliveryAddressID);
           setOrderDetails(prev => ({
             ...prev,
@@ -133,8 +134,10 @@ const OrderTracking = () => {
                     </button>
                   </div>
 
+                  <p><strong>Customer ID:</strong> {order.customerID}</p>
                   <p><strong>Order Number:</strong> {order.orderNumber}</p>
                   <p><strong>Total Price:</strong> ${order.totalPrice}</p>
+                  <p><strong>Delivery ID:</strong> {order.deliveryID}</p>
                   <p><strong>Delivery Status:</strong> {order.deliveryStatus}</p>
                   <p><strong>Estimated Arrival:</strong> {new Date(order.estimatedArrival).toLocaleDateString()}</p>
 
@@ -145,6 +148,7 @@ const OrderTracking = () => {
                         <table>
                           <thead>
                             <tr>
+                              <th>ID</th>
                               <th>Product</th>
                               <th>Quantity</th>
                               <th>Unit Price</th>
@@ -153,7 +157,8 @@ const OrderTracking = () => {
                           </thead>
                           <tbody>
                             {orderDetails[order.orderID].orderItems?.map((item) => (
-                              <tr key={item.productId}>
+                              <tr key={item.productID}>
+                                <td>{item.productID}</td>
                                 <td>{item.productName}</td>
                                 <td>{item.quantity}</td>
                                 <td>${parseFloat(item.purchasePrice).toFixed(2)}</td>
