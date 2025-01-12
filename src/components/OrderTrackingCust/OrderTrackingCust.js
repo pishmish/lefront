@@ -15,7 +15,6 @@ const OrderTrackingCust = () => {
 
       if (response.status === 200) {
         setOrders(response.data);
-        //console.log("Orders fetched:", response.data); // Log orders
       }
     } catch (err) {
       console.log("Error: ", err.message);
@@ -37,6 +36,14 @@ const OrderTrackingCust = () => {
       default:
         return -1; // Undefined step
     }
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
 
   return (
@@ -64,8 +71,12 @@ const OrderTrackingCust = () => {
                 <strong>Delivery Status:</strong> {order.deliveryStatus}
               </p>
               <p>
+                <strong>Date of Order:</strong>{" "}
+                {formatDate(order.timeOrdered)}
+              </p>
+              <p>
                 <strong>Estimated Arrival:</strong>{" "}
-                {new Date(order.estimatedArrival).toLocaleDateString()}
+                {formatDate(order.estimatedArrival)}
               </p>
               <div className="steps-container">
                 {steps.map((step, index) => (
