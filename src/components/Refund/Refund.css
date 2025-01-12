@@ -242,6 +242,25 @@
   border: 1px solid #ef5350;
 }
 
+/* Add these status badge styles */
+.status-badge.pending {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.status-badge.approved {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #64b5f6;
+}
+
+.status-badge.productReceived {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  border: 1px solid #ba68c8;
+}
+
 /* Add styles for refund cost */
 .refund-cost {
   margin-top: 15px;

@@ -273,14 +273,12 @@ const Refund = ({ searchQuery }) => {
                         {request.returnStatus === 'rejected' ? 'Rejected' : 'Completed'}
                       </div>
                     ) : (
-                      <select
-                        value={request.returnStatus}
-                        onChange={(e) => handleStatusChange(request.requestID, e.target.value)}
-                      >
-                        <option value="pending">Pending</option>
-                        <option value="approved">Approved</option>
-                        <option value="productReceived">Product Received</option>
-                      </select>
+                      <div className={`status-badge ${request.returnStatus}`}>
+                        {request.returnStatus === 'pending' ? 'Pending' : 
+                         request.returnStatus === 'approved' ? 'Approved' : 
+                         request.returnStatus === 'productReceived' ? 'Product Received' : 
+                         request.returnStatus}
+                      </div>
                     )}
                   </div>
                   <div className="refund-body">
