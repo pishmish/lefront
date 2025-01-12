@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { getAllSales, getMonthlySales, getQuarterlySales, getYearlySales, getSalesComparison } from '../../api/analyticsapi';
+import { getAllSales, getMonthlySales, getQuarterlySales, getYearlySales, getSalesComparison, getDailyProfit, getMonthlyProfit, getQuarterlyProfit, getYearlyProfit, getProfitComparison } from '../../api/analyticsapi';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +17,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 const SalesChart = () => {
   const [period, setPeriod] = useState('monthly');
   const [salesData, setSalesData] = useState([]);
+  const [profitData, setProfitData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dateRange, setDateRange] = useState({
@@ -57,8 +58,34 @@ const SalesChart = () => {
     setLoading(false);
   };
 
+  const fetchProfitData = async () => {
+    try {
+      let response;
+      switch (period) {
+        case 'daily':
+          response = await getDailyProfit();
+          break;
+        case 'monthly':
+          response = await getMonthlyProfit();
+          break;
+        case 'quarterly':
+          response = await getQuarterlyProfit();
+          break;
+        case 'yearly':
+          response = await getYearlyProfit();
+          break;
+        default:
+          response = await getMonthlyProfit();
+      }
+      setProfitData(response.data);
+    } catch (err) {
+      console.error('Error fetching profit data:', err);
+    }
+  };
+
   useEffect(() => {
     fetchSalesData();
+    fetchProfitData();
   }, [period]);
 
   const handleDateChange = (e) => {
@@ -72,14 +99,34 @@ const SalesChart = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await getSalesComparison(
-        dateRange.start1,
-        dateRange.end1,
-        dateRange.start2,
-        dateRange.end2
-      );
-      console.log(response.data);
-      setComparisonData(response.data);
+      const [salesResponse, profitResponse] = await Promise.all([
+        getSalesComparison(
+          dateRange.start1,
+          dateRange.end1,
+          dateRange.start2,
+          dateRange.end2
+        ),
+        getProfitComparison(
+          dateRange.start1,
+          dateRange.end1,
+          dateRange.start2,
+          dateRange.end2
+        )
+      ]);
+
+      setComparisonData({
+        period1: {
+          ...salesResponse.data.period1,
+          totalProfit: profitResponse.data.comparison.period1.totalProfit,
+          unitsSold: profitResponse.data.comparison.period1.unitsSold
+        },
+        period2: {
+          ...salesResponse.data.period2,
+          totalProfit: profitResponse.data.comparison.period2.totalProfit,
+          unitsSold: profitResponse.data.comparison.period2.unitsSold
+        }
+      });
+
     } catch (err) {
       setError('Failed to fetch comparison data');
       console.error(err);
@@ -111,6 +158,13 @@ const SalesChart = () => {
         borderWidth: 1
       },
       {
+        label: 'Profit ($)',
+        data: profitData.map(item => item.totalProfit),
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      },
+      {
         label: 'Units Sold',
         data: salesData.map(item => item.unitsSold),
         backgroundColor: 'rgba(53, 162, 235, 0.6)',
@@ -122,7 +176,7 @@ const SalesChart = () => {
 
   const comparisonChartData = {
     labels: ['Period 1', 'Period 2'],
-    datasets:
+    datasets: [
       {
         label: 'Revenue',
         data: comparisonData ? [
@@ -130,7 +184,24 @@ const SalesChart = () => {
           comparisonData.period2.totalRevenue
         ] : [],
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      },
+      {
+        label: 'Profit',
+        data: comparisonData ? [
+          comparisonData.period1.totalProfit,
+          comparisonData.period2.totalProfit
+        ] : [],
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+      },
+      {
+        label: 'Units Sold',
+        data: comparisonData ? [
+          comparisonData.period1.unitsSold,
+          comparisonData.period2.unitsSold
+        ] : [],
+        backgroundColor: 'rgba(3, 198, 0, 0.6)',
       }
+    ]
   };
 
   const options1 = {
@@ -270,6 +341,22 @@ const SalesChart = () => {
                         comparisonData.period2.totalRevenue
                       ],
                       backgroundColor: 'rgba(53, 162, 235, 0.5)'
+                    },
+                    {
+                      label: 'Profit',
+                      data: [
+                        comparisonData.period1.totalProfit,
+                        comparisonData.period2.totalProfit
+                      ],
+                      backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    },
+                    {
+                      label: 'Units Sold',
+                      data: [
+                        comparisonData.period1.unitsSold,
+                        comparisonData.period2.unitsSold
+                      ],
+                      backgroundColor: 'rgba(3, 198, 0, 0.6)',
                     }
                   ]
                 }}

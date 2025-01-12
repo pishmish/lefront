@@ -34,6 +34,14 @@ export const getSalesByProvince = () => API.get('/analytics/salesByProvince');
 export const getSalesByCity = () => API.get('/analytics/salesByCity');
 export const getSalesByCountry = () => API.get('/analytics/salesByCountry');
 
+// Profit/Loss analytics
+export const getDailyProfit = () => API.get('/analytics/sales/profitloss/daily');
+export const getMonthlyProfit = () => API.get('/analytics/sales/profitloss/monthly');
+export const getQuarterlyProfit = () => API.get('/analytics/sales/profitloss/quarterly');
+export const getYearlyProfit = () => API.get('/analytics/sales/profitloss/yearly');
+export const getProfitComparison = (start1, end1, start2, end2) => 
+    API.get(`/analytics/sales/profitloss/comparison?start1=${start1}&end1=${end1}&start2=${start2}&end2=${end2}`);
+
 // Product management analytics
 export const getLowStockProducts = () => API.get('/analytics/product/lowStock');
 export const getBestSellers = () => API.get('/analytics/product/bestSellers');
