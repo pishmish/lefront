@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllReturns, getReturnRequestStatus, authorizeReturnPayment, refundPayment, getReturnCost, getRefundRequestStatus, updateReturnRequestStatus } from '../../api/returnsapi';
+import { getAllReturns, sendRefundApprovalEmail, authorizeReturnPayment, refundPayment, getReturnCost, getRefundRequestStatus, updateReturnRequestStatus } from '../../api/returnsapi';
 import './Refund.css';
 
 const Refund = ({ searchQuery }) => {
@@ -68,7 +68,6 @@ const Refund = ({ searchQuery }) => {
             if (costResponse.status === 200) {
               costs[request.requestID] = costResponse.data.cost;
             }
-            console.log('costResponse', costResponse.data.cost);
           } catch (err) {
             console.error(`Error fetching cost for request ${request.requestID}:`, err);
           }
@@ -133,6 +132,8 @@ const Refund = ({ searchQuery }) => {
         if (response.status !== 200) {
           throw new Error(response.msg || 'Failed to authorize payment');
         }
+
+        await sendRefundApprovalEmail(id);
         
         const statusResponse = await getRefundRequestStatus(id);
         if (statusResponse.status === 200 && statusResponse.data.length > 0) {

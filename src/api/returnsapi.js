@@ -44,5 +44,9 @@ export const getCustomerReturnRequests = (username) =>
 // Refund payment (Sales Manager only)
 export const refundPayment = (id) => API.post(`/payment/refund/${id}`);
 
+// Send refund approval notification email
+export const sendRefundApprovalEmail = (requestId) => 
+    API.post(`/returns/request/${requestId}/sendRefundNotifMail`);
+
 export default API;
 
